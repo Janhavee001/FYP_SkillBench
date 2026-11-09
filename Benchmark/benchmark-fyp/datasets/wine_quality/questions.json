@@ -1,0 +1,348 @@
+{
+  "dataset": "wine_quality",
+  "csv_path": "wine_quality/winequality-red.csv",
+  "n_rows": 1599,
+  "n_cols": 12,
+  "columns": {
+    "fixed_acidity": "float64",
+    "volatile_acidity": "float64",
+    "citric_acid": "float64",
+    "residual_sugar": "float64",
+    "chlorides": "float64",
+    "free_sulfur_dioxide": "float64",
+    "total_sulfur_dioxide": "float64",
+    "density": "float64",
+    "ph": "float64",
+    "sulphates": "float64",
+    "alcohol": "float64",
+    "quality": "int64"
+  },
+  "description": "UCI Wine Quality, red variant (1599 rows). Eleven continuous physicochemical predictors and an ordinal quality score 3-8.",
+  "source": "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv",
+  "note_on_ground_truth": "Every value under reference_answer was computed by datasets/build_questions.py against the CSV in this folder. Re-run that script if you edit the CSV. Add your own questions by appending objects with the same schema.",
+  "questions": [
+    {
+      "id": "wine_q1",
+      "question": "What is the distribution of wine quality scores in this dataset? Is it balanced?",
+      "kind": "mixed",
+      "difficulty": "easy",
+      "expected_variables": [
+        "quality"
+      ],
+      "expected_method": [
+        "descriptive_statistics",
+        "distribution_analysis"
+      ],
+      "acceptable_methods": [
+        "descriptive_statistics",
+        "distribution_analysis",
+        "frequency_count"
+      ],
+      "expected_chart": [
+        "bar",
+        "hist"
+      ],
+      "reference_answer": {
+        "counts": {
+          "3": 10,
+          "4": 53,
+          "5": 681,
+          "6": 638,
+          "7": 199,
+          "8": 18
+        },
+        "mean_quality": 5.636,
+        "modal_quality": 5,
+        "balanced": false,
+        "pct_in_top_two_classes": 82.49
+      },
+      "tolerance": 0.01,
+      "notes": "Heavily imbalanced: ~82% of wines are quality 5 or 6. Noting the imbalance is part of a correct answer.",
+      "dataset": "wine_quality"
+    },
+    {
+      "id": "wine_q2",
+      "question": "Which physicochemical properties are most strongly correlated with wine quality? Show the relationships.",
+      "kind": "mixed",
+      "difficulty": "medium",
+      "expected_variables": [
+        "fixed_acidity",
+        "volatile_acidity",
+        "citric_acid",
+        "residual_sugar",
+        "chlorides",
+        "free_sulfur_dioxide",
+        "total_sulfur_dioxide",
+        "density",
+        "ph",
+        "sulphates",
+        "alcohol",
+        "quality"
+      ],
+      "expected_method": [
+        "correlation"
+      ],
+      "acceptable_methods": [
+        "correlation",
+        "feature_importance",
+        "linear_regression"
+      ],
+      "expected_chart": [
+        "heatmap",
+        "bar"
+      ],
+      "reference_answer": {
+        "top_3_by_abs_correlation": [
+          "alcohol",
+          "volatile_acidity",
+          "sulphates"
+        ],
+        "correlations": {
+          "alcohol": 0.4762,
+          "volatile_acidity": -0.3906,
+          "sulphates": 0.2514,
+          "citric_acid": 0.2264,
+          "total_sulfur_dioxide": -0.1851,
+          "density": -0.1749,
+          "chlorides": -0.1289,
+          "fixed_acidity": 0.1241,
+          "ph": -0.0577,
+          "free_sulfur_dioxide": -0.0507,
+          "residual_sugar": 0.0137
+        },
+        "strongest_positive": "alcohol",
+        "strongest_negative": "volatile_acidity"
+      },
+      "tolerance": 0.03,
+      "notes": "alcohol (+0.48), then volatile_acidity (-0.39), then sulphates (+0.25). A correlation heatmap is the canonical chart.",
+      "dataset": "wine_quality"
+    },
+    {
+      "id": "wine_q3",
+      "question": "Do high-quality wines (quality >= 7) have significantly higher alcohol content than low-quality wines (quality <= 4)?",
+      "kind": "stat",
+      "difficulty": "medium",
+      "expected_variables": [
+        "alcohol",
+        "quality"
+      ],
+      "expected_method": [
+        "t_test"
+      ],
+      "acceptable_methods": [
+        "t_test",
+        "welch_t_test",
+        "mann_whitney_u"
+      ],
+      "expected_chart": [
+        "box",
+        "violin",
+        "hist",
+        "none"
+      ],
+      "reference_answer": {
+        "test": "Welch two-sample t-test",
+        "mean_alcohol_high": 11.518,
+        "mean_alcohol_low": 10.2159,
+        "n_high": 217,
+        "n_low": 63,
+        "t_statistic": 9.7131,
+        "p_value": 0.0,
+        "significant_at_0.05": true
+      },
+      "tolerance": 0.05,
+      "notes": "Continuous outcome, two independent groups -> t-test. Unequal group sizes (217 vs 63) make Welch the safer choice.",
+      "dataset": "wine_quality"
+    },
+    {
+      "id": "wine_q4",
+      "question": "Visualise how alcohol content varies across every quality level, showing the spread within each level, not just the average.",
+      "kind": "viz",
+      "difficulty": "medium",
+      "expected_variables": [
+        "alcohol",
+        "quality"
+      ],
+      "expected_method": [
+        "groupby_aggregation",
+        "distribution_analysis"
+      ],
+      "acceptable_methods": [
+        "groupby_aggregation",
+        "distribution_analysis"
+      ],
+      "expected_chart": [
+        "box",
+        "violin",
+        "strip"
+      ],
+      "reference_answer": {
+        "mean_alcohol_by_quality": {
+          "3": 9.955,
+          "4": 10.2651,
+          "5": 9.8997,
+          "6": 10.6295,
+          "7": 11.4659,
+          "8": 12.0944
+        },
+        "trend": "increasing above quality 5"
+      },
+      "tolerance": 0.05,
+      "notes": "The question explicitly asks for spread -> box/violin. A plain bar chart of means answers a different question and loses chart-selection credit.",
+      "dataset": "wine_quality"
+    },
+    {
+      "id": "wine_q5",
+      "question": "Are there outliers in residual sugar and total sulfur dioxide? Identify them and say whether they should be removed.",
+      "kind": "mixed",
+      "difficulty": "medium",
+      "expected_variables": [
+        "residual_sugar",
+        "total_sulfur_dioxide"
+      ],
+      "expected_method": [
+        "outlier_detection"
+      ],
+      "acceptable_methods": [
+        "outlier_detection",
+        "descriptive_statistics",
+        "distribution_analysis"
+      ],
+      "expected_chart": [
+        "box",
+        "hist",
+        "scatter"
+      ],
+      "reference_answer": {
+        "iqr_outliers_residual_sugar": 155,
+        "iqr_outliers_total_sulfur_dioxide": 55,
+        "max_residual_sugar": 15.5,
+        "max_total_sulfur_dioxide": 289.0,
+        "method": "1.5 x IQR rule"
+      },
+      "tolerance": 0.05,
+      "notes": "A correct answer states the outlier rule used. Recommending blind removal without noting these are legitimate chemical readings is an interpretation weakness.",
+      "dataset": "wine_quality"
+    },
+    {
+      "id": "wine_q6",
+      "question": "Build a model that predicts wine quality from its physicochemical properties. Report how well it performs and which features drive the prediction.",
+      "kind": "stat",
+      "difficulty": "hard",
+      "expected_variables": [
+        "fixed_acidity",
+        "volatile_acidity",
+        "citric_acid",
+        "residual_sugar",
+        "chlorides",
+        "free_sulfur_dioxide",
+        "total_sulfur_dioxide",
+        "density",
+        "ph",
+        "sulphates",
+        "alcohol",
+        "quality"
+      ],
+      "expected_method": [
+        "linear_regression"
+      ],
+      "acceptable_methods": [
+        "linear_regression",
+        "random_forest",
+        "gradient_boosting",
+        "ridge_regression",
+        "ordinal_regression"
+      ],
+      "expected_chart": [
+        "bar",
+        "scatter",
+        "none"
+      ],
+      "reference_answer": {
+        "model": "OLS linear regression, all 11 predictors",
+        "r_squared_in_sample": 0.3606,
+        "coefficients": {
+          "fixed_acidity": 0.025,
+          "volatile_acidity": -1.0836,
+          "citric_acid": -0.1826,
+          "residual_sugar": 0.0163,
+          "chlorides": -1.8742,
+          "free_sulfur_dioxide": 0.0044,
+          "total_sulfur_dioxide": -0.0033,
+          "density": -17.8812,
+          "ph": -0.4137,
+          "sulphates": 0.9163,
+          "alcohol": 0.2762
+        },
+        "largest_abs_coefficient": "density"
+      },
+      "tolerance": 0.1,
+      "notes": "R^2 is only ~0.36 -- a correct answer reports the weak fit honestly rather than presenting the model as accurate.",
+      "dataset": "wine_quality"
+    },
+    {
+      "id": "wine_q7",
+      "question": "Is volatile acidity negatively associated with wine quality? Quantify the association and comment on whether it implies causation.",
+      "kind": "stat",
+      "difficulty": "medium",
+      "expected_variables": [
+        "volatile_acidity",
+        "quality"
+      ],
+      "expected_method": [
+        "correlation"
+      ],
+      "acceptable_methods": [
+        "correlation",
+        "linear_regression",
+        "t_test"
+      ],
+      "expected_chart": [
+        "scatter",
+        "box",
+        "none"
+      ],
+      "reference_answer": {
+        "pearson_r": -0.3906,
+        "p_value": 0.0,
+        "direction": "negative",
+        "significant_at_0.05": true,
+        "implies_causation": false
+      },
+      "tolerance": 0.03,
+      "notes": "Explicitly probes the correlation-vs-causation distinction; the interpretation dimension should penalise a causal claim.",
+      "dataset": "wine_quality"
+    },
+    {
+      "id": "wine_q8",
+      "question": "Show the relationship between density and alcohol content, with a fitted trend line, and explain the pattern.",
+      "kind": "viz",
+      "difficulty": "easy",
+      "expected_variables": [
+        "density",
+        "alcohol"
+      ],
+      "expected_method": [
+        "correlation",
+        "linear_regression"
+      ],
+      "acceptable_methods": [
+        "correlation",
+        "linear_regression",
+        "scatter_analysis"
+      ],
+      "expected_chart": [
+        "scatter"
+      ],
+      "reference_answer": {
+        "pearson_r": -0.4962,
+        "direction": "negative",
+        "strength": "strong",
+        "explanation": "ethanol is less dense than water, so higher alcohol lowers overall density"
+      },
+      "tolerance": 0.03,
+      "notes": "Scatter plus a regression line is the only correct chart family here.",
+      "dataset": "wine_quality"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+# Python 3.11. Versions are the ones the reported results were produced with.
+# Install:  python -m pip install -r requirements.txt
+
+# statkit (Skills/skills) and the reference answers
+numpy==2.2.6
+pandas==2.2.2
+scipy==1.16.2
+statsmodels==0.15.0
+scikit-learn==1.7.2
+matplotlib==3.10.5
+pyarrow==26.0.0
+
+# benchmark harness (model calls go through an OpenAI-compatible API, here OpenRouter)
+openai==2.54.0
+python-dotenv==1.1.1
+requests==2.32.5
+openpyxl==3.1.5
+
+# deck builder (Skills/deck)
+python-pptx==1.0.2
+
+# tests
+pytest==8.4.2
+
+# Phase-1 runners for third-party systems (LIDA, Data Formulator, nvAgent, DataSciBench) each need
+# their own virtualenv with that repo's requirements.txt; see Benchmark/benchmark-fyp/README.md.

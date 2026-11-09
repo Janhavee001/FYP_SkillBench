@@ -1,0 +1,315 @@
+{
+  "dataset": "titanic",
+  "csv_path": "titanic/titanic.csv",
+  "n_rows": 891,
+  "n_cols": 15,
+  "columns": {
+    "survived": "int64",
+    "pclass": "int64",
+    "sex": "object",
+    "age": "float64",
+    "sibsp": "int64",
+    "parch": "int64",
+    "fare": "float64",
+    "embarked": "object",
+    "class": "object",
+    "who": "object",
+    "adult_male": "bool",
+    "deck": "object",
+    "embark_town": "object",
+    "alive": "object",
+    "alone": "bool"
+  },
+  "description": "Passenger manifest of the RMS Titanic (seaborn distribution, 891 rows). Mixed categorical/numeric with genuine missingness.",
+  "source": "https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv",
+  "note_on_ground_truth": "Every value under reference_answer was computed by datasets/build_questions.py against the CSV in this folder. Re-run that script if you edit the CSV. Add your own questions by appending objects with the same schema.",
+  "questions": [
+    {
+      "id": "titanic_q1",
+      "question": "What is the overall survival rate on the Titanic, and how does it differ between male and female passengers?",
+      "kind": "mixed",
+      "difficulty": "easy",
+      "expected_variables": [
+        "survived",
+        "sex"
+      ],
+      "expected_method": [
+        "descriptive_statistics",
+        "groupby_aggregation"
+      ],
+      "acceptable_methods": [
+        "descriptive_statistics",
+        "groupby_aggregation",
+        "proportion_comparison"
+      ],
+      "expected_chart": [
+        "bar",
+        "grouped_bar"
+      ],
+      "reference_answer": {
+        "overall_survival_rate": 0.3838,
+        "female_survival_rate": 0.742,
+        "male_survival_rate": 0.1889
+      },
+      "tolerance": 0.01,
+      "notes": "Female survival rate is roughly 3.5x the male rate; a correct answer must report both group rates, not just the overall mean.",
+      "dataset": "titanic"
+    },
+    {
+      "id": "titanic_q2",
+      "question": "Is there a statistically significant association between passenger sex and survival? Report the test used, the test statistic and the p-value.",
+      "kind": "stat",
+      "difficulty": "medium",
+      "expected_variables": [
+        "sex",
+        "survived"
+      ],
+      "expected_method": [
+        "chi_square_test"
+      ],
+      "acceptable_methods": [
+        "chi_square_test",
+        "fisher_exact_test",
+        "proportion_z_test"
+      ],
+      "expected_chart": [
+        "bar",
+        "grouped_bar",
+        "none"
+      ],
+      "reference_answer": {
+        "test": "chi-square test of independence",
+        "chi2_statistic": 260.717,
+        "p_value": 0.0,
+        "degrees_of_freedom": 1,
+        "significant_at_0.05": true
+      },
+      "tolerance": 0.05,
+      "notes": "Both variables are categorical -> chi-square (or Fisher). Choosing a t-test or a correlation here is a method-selection error.",
+      "dataset": "titanic"
+    },
+    {
+      "id": "titanic_q3",
+      "question": "Does the mean age of passengers who survived differ significantly from those who did not? Handle the missing age values and state how you handled them.",
+      "kind": "stat",
+      "difficulty": "medium",
+      "expected_variables": [
+        "age",
+        "survived"
+      ],
+      "expected_method": [
+        "t_test"
+      ],
+      "acceptable_methods": [
+        "t_test",
+        "welch_t_test",
+        "mann_whitney_u"
+      ],
+      "expected_chart": [
+        "box",
+        "hist",
+        "violin",
+        "none"
+      ],
+      "reference_answer": {
+        "test": "Welch two-sample t-test",
+        "mean_age_survived": 28.3437,
+        "mean_age_died": 30.6262,
+        "t_statistic": -2.046,
+        "p_value": 0.04119,
+        "significant_at_0.05": true,
+        "n_missing_age": 177,
+        "mann_whitney_p": 0.160493
+      },
+      "tolerance": 0.05,
+      "notes": "177 ages are missing. A correct answer must state a missing-data strategy; silently dropping without mention is a partial-credit case.",
+      "dataset": "titanic"
+    },
+    {
+      "id": "titanic_q4",
+      "question": "How does survival rate vary across passenger classes? Produce a chart that makes the comparison clear.",
+      "kind": "viz",
+      "difficulty": "easy",
+      "expected_variables": [
+        "pclass",
+        "survived"
+      ],
+      "expected_method": [
+        "groupby_aggregation"
+      ],
+      "acceptable_methods": [
+        "groupby_aggregation",
+        "descriptive_statistics"
+      ],
+      "expected_chart": [
+        "bar",
+        "grouped_bar",
+        "point"
+      ],
+      "reference_answer": {
+        "survival_rate_by_pclass": {
+          "1": 0.6296,
+          "2": 0.4728,
+          "3": 0.2424
+        },
+        "monotonic_decreasing_with_class": true
+      },
+      "tolerance": 0.01,
+      "notes": "A bar chart of a rate by an ordinal category. A pie chart or a scatter plot is a chart-selection error.",
+      "dataset": "titanic"
+    },
+    {
+      "id": "titanic_q5",
+      "question": "Describe the distribution of ticket fares. Is it skewed, and what does that imply for choosing summary statistics?",
+      "kind": "mixed",
+      "difficulty": "medium",
+      "expected_variables": [
+        "fare"
+      ],
+      "expected_method": [
+        "descriptive_statistics",
+        "distribution_analysis"
+      ],
+      "acceptable_methods": [
+        "descriptive_statistics",
+        "distribution_analysis",
+        "normality_test"
+      ],
+      "expected_chart": [
+        "hist",
+        "kde",
+        "box"
+      ],
+      "reference_answer": {
+        "mean": 32.2042,
+        "median": 14.4542,
+        "std": 49.6934,
+        "skewness": 4.7793,
+        "right_skewed": true,
+        "shapiro_p": 0.0
+      },
+      "tolerance": 0.05,
+      "notes": "Strong right skew (~4.8). A good interpretation prefers the median over the mean.",
+      "dataset": "titanic"
+    },
+    {
+      "id": "titanic_q6",
+      "question": "Is there a relationship between a passenger's age and the fare they paid? Quantify it and say whether it is strong.",
+      "kind": "stat",
+      "difficulty": "medium",
+      "expected_variables": [
+        "age",
+        "fare"
+      ],
+      "expected_method": [
+        "correlation"
+      ],
+      "acceptable_methods": [
+        "correlation",
+        "linear_regression"
+      ],
+      "expected_chart": [
+        "scatter",
+        "none"
+      ],
+      "reference_answer": {
+        "pearson_r": 0.0961,
+        "pearson_p": 0.010216,
+        "spearman_rho": 0.1351,
+        "spearman_p": 0.000296,
+        "strength": "weak positive"
+      },
+      "tolerance": 0.05,
+      "notes": "r is ~0.1: statistically significant but practically negligible. Calling this a 'strong relationship' is an interpretation error even if the number is right.",
+      "dataset": "titanic"
+    },
+    {
+      "id": "titanic_q7",
+      "question": "Which passenger attributes best predict survival? Fit an appropriate model and report which predictors matter most and in which direction.",
+      "kind": "stat",
+      "difficulty": "hard",
+      "expected_variables": [
+        "survived",
+        "pclass",
+        "sex",
+        "age",
+        "fare",
+        "sibsp",
+        "parch"
+      ],
+      "expected_method": [
+        "logistic_regression"
+      ],
+      "acceptable_methods": [
+        "logistic_regression",
+        "random_forest",
+        "decision_tree",
+        "gradient_boosting"
+      ],
+      "expected_chart": [
+        "bar",
+        "none"
+      ],
+      "reference_answer": {
+        "model": "logistic regression (standardised predictors)",
+        "train_accuracy": 0.8053,
+        "standardised_coefficients": {
+          "pclass": -1.0141,
+          "sex": -1.2506,
+          "age": -0.6195,
+          "fare": 0.1211,
+          "sibsp": -0.3396,
+          "parch": -0.0517
+        },
+        "strongest_predictor": "sex",
+        "sex_effect_direction": "male -> lower survival",
+        "n_used": 714
+      },
+      "tolerance": 0.1,
+      "notes": "Binary outcome -> logistic regression, not linear regression. Sex dominates; pclass is second. Reporting a linear-regression R^2 here is a method error.",
+      "dataset": "titanic"
+    },
+    {
+      "id": "titanic_q8",
+      "question": "Which columns have missing values, how much is missing in each, and what would you do about each one before modelling?",
+      "kind": "mixed",
+      "difficulty": "easy",
+      "expected_variables": [
+        "age",
+        "embarked",
+        "deck",
+        "embark_town"
+      ],
+      "expected_method": [
+        "missing_data_analysis"
+      ],
+      "acceptable_methods": [
+        "missing_data_analysis",
+        "descriptive_statistics"
+      ],
+      "expected_chart": [
+        "bar",
+        "heatmap",
+        "none"
+      ],
+      "reference_answer": {
+        "missing_counts": {
+          "age": 177,
+          "embarked": 2,
+          "deck": 688,
+          "embark_town": 2
+        },
+        "missing_pct": {
+          "age": 19.87,
+          "embarked": 0.22,
+          "deck": 77.22,
+          "embark_town": 0.22
+        },
+        "n_rows": 891
+      },
+      "tolerance": 0.0,
+      "notes": "deck is ~77% missing (drop), age ~20% (impute), embarked/embark_town 2 rows (drop rows). A correct answer differentiates treatment by severity.",
+      "dataset": "titanic"
+    }
+  ]
+}

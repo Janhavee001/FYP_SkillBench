@@ -1,0 +1,15 @@
+.env
+keys.json
+*.pyc
+__pycache__/
+.venv*/
+venvs/
+repos/*/.venv/
+results/**/raw/
+datasets/**/cache/
+*.log
+
+# MetaGPT writes these into whatever directory it is invoked from
+/metagpt/
+/logs/
+/workspace/

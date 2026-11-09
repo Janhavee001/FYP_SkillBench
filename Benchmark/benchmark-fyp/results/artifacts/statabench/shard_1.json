@@ -1,0 +1,16 @@
+[
+  {
+    "question":"How does the number of children in the customer's household (Kidhome) influence the relationship between the amount spent on gold products in the last two years (MntGoldProds) and the amount spent on fish products in the last two years (MntFishProducts)?",
+    "dataset":"Customer Personality Analysis Dataset",
+    "task":"Correlation Analysis",
+    "reference":"StatQA",
+    "ground truth":"{\n  \"correlation_analysis\": {\n    \"data\": \"Customer Personality Analysis Dataset.csv\",\n    \"method\": \"partial\",\n    \"columns\": [\"MntGoldProds\", \"MntFishProducts\", \"Kidhome\"],\n    \"covar\": \"Kidhome\"\n  }\n}",
+    "code":1,
+    "function":"correlation_analysis",
+    "answer_type":"other",
+    "code_result":"                 MntGoldProds  MntFishProducts\nMntGoldProds         1.000000         0.332726\nMntFishProducts      0.332726         1.000000",
+    "ground truth2":"The partial correlation between the amount spent on gold products (MntGoldProds) and fish products (MntFishProducts), controlling for the number of children at home (Kidhome), is 0.333. This indicates a weak positive relationship, meaning that spending on gold and fish products tends to increase together slightly, even after accounting for differences in household size.",
+    "id":"stata306",
+    "mcp_response_gpt4omini":"The answer is: In households with no children (Kidhome = 0) the spending on gold products and fish products is positively correlated (approximately 0.6). In households with one child (Kidhome = 1) the correlation weakens to a moderate positive value (around 0.3). In households with two children (Kidhome = 2) the relationship essentially disappears (correlation near 0) or may even become slightly negative."
+  }
+]

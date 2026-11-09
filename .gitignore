@@ -1,0 +1,62 @@
+# --- Secrets: never commit ------------------------------------------------
+.env
+.env.*
+!.env.example
+keys.json
+
+# --- Logs (phase-1 logs echo the API key; all logs stay local) ------------
+*.log
+Benchmark/skillbench/logs/
+
+# --- Python / tooling ------------------------------------------------------
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv*/
+venvs/
+.claude/
+.vscode/
+.idea/
+
+# --- Office lock files and local scratch ----------------------------------
+~$*
+_local/
+release/
+.DS_Store
+Thumbs.db
+
+# --- Third-party benchmark repos (cloned at pinned commits, see README) ---
+Benchmark/benchmark-fyp/repos/
+Benchmark/benchmark-fyp/workspace/
+Benchmark/benchmark-fyp/output/
+/metagpt/
+/logs/
+
+# --- Phase-1 results that are superseded or invalid ------------------------
+Benchmark/benchmark-fyp/results/_backup_*/
+Benchmark/benchmark-fyp/results/_invalid_*/
+Benchmark/benchmark-fyp/results/**/raw/
+Benchmark/benchmark-fyp/datasets/**/cache/
+
+# --- SkillBench data: 1.8 GB, rebuilt by build_data.py + make_synthetic.py -
+Benchmark/skillbench/data/*
+!Benchmark/skillbench/data/manifest.json
+
+# --- SkillBench scratch directories written by the agents -----------------
+Benchmark/skillbench/work/
+
+# --- SkillBench per-answer files: shipped as a release zip ---------------
+# (answer transcripts and cached judge verdicts, one file per answer).
+# Scores, statistics, summaries and figures ARE committed.
+Benchmark/skillbench/results/_quarantine_*/
+Benchmark/skillbench/results/v2/gpt-oss-*/
+Benchmark/skillbench/results/statabench/gpt-oss-*/
+Benchmark/skillbench/results/**/judgements/
+Benchmark/skillbench/results/judgements/
+Benchmark/skillbench/results/plain/
+Benchmark/skillbench/results/agent/
+Benchmark/skillbench/results/agent_skills/
+
+# --- Built skill zips (rebuilt by Skills/claude_skills/build.py) ----------
+Skills/claude_skills.zip
+Skills/claude_skills/dist/*.zip

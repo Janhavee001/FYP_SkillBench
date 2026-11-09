@@ -1,0 +1,16 @@
+[
+  {
+    "question":"The city of 'Innovateville' (city_id=1) launched a major tech hub initiative in 2015. Given a set of pre-calculated weights ([0.6, 0.1, 0.3]) for three control cities, how would you calculate the estimated effect of the initiative on patent applications for the year 2018?",
+    "dataset":"patent_data.csv",
+    "task":"causal inference",
+    "reference":"Gemini",
+    "ground truth":"{\n  \"synthetic_control\": {\n    \"df\": \"patent_data.csv\",\n    \"time_col\": \"year\",\n    \"unit_col\": \"city_id\",\n    \"outcome_col\": \"patents\",\n    \"treated_unit\": 1,\n    \"intervention_time\": 2015,\n    \"weights\": [0.6, 0.1, 0.3]\n  }\n}",
+    "code":1,
+    "function":"synthetic_control",
+    "answer_type":"other",
+    "code_result":"{'time': [2018], 'treated': array([520], dtype=int64), 'synthetic': array([310.]), 'treatment_effect': array([210.]), 'weights': array([0.6, 0.1, 0.3])}",
+    "ground truth2":"Based on the synthetic control method with pre-calculated weights [0.6, 0.1, 0.3], the estimated effect of Innovateville's tech hub initiative on patent applications in 2018 is an increase of 210 patents. The treated unit had 520 patents, while the synthetic control unit had 310 patents.",
+    "id":"stata375",
+    "mcp_response_gpt4omini":"The answer is 210."
+  }
+]

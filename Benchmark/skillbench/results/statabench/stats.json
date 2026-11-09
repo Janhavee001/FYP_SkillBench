@@ -1,0 +1,1452 @@
+{
+ "accuracy": [
+  {
+   "model": "gpt-oss-120b",
+   "condition": "plain",
+   "acc": 0.6161616161616161,
+   "sd": 0.0,
+   "lo": 0.5454545454545454,
+   "hi": 0.6818181818181818,
+   "runs": 1,
+   "n": 198
+  },
+  {
+   "model": "gpt-oss-120b",
+   "condition": "agent",
+   "acc": 0.6447811447811448,
+   "sd": 0.0077147738972320554,
+   "lo": 0.5841750841750841,
+   "hi": 0.702020202020202,
+   "runs": 3,
+   "n": 198
+  },
+  {
+   "model": "gpt-oss-120b",
+   "condition": "agent_skills",
+   "acc": 0.638047138047138,
+   "sd": 0.019120903521213064,
+   "lo": 0.5774410774410775,
+   "hi": 0.696969696969697,
+   "runs": 3,
+   "n": 198
+  },
+  {
+   "model": "gpt-oss-120b",
+   "condition": "agent_skills_oracle",
+   "acc": 0.6481481481481483,
+   "sd": 0.007714773897232043,
+   "lo": 0.5892255892255892,
+   "hi": 0.7054292929292924,
+   "runs": 3,
+   "n": 198
+  },
+  {
+   "model": "gpt-oss-120b",
+   "condition": "agent_skills_validated",
+   "acc": 0.6313131313131313,
+   "sd": 0.0050505050505050275,
+   "lo": 0.5707070707070707,
+   "hi": 0.6919191919191919,
+   "runs": 3,
+   "n": 198
+  },
+  {
+   "model": "gpt-oss-20b",
+   "condition": "plain",
+   "acc": 0.48484848484848486,
+   "sd": 0.0,
+   "lo": 0.41414141414141414,
+   "hi": 0.5555555555555556,
+   "runs": 1,
+   "n": 198
+  },
+  {
+   "model": "gpt-oss-20b",
+   "condition": "agent",
+   "acc": 0.5437710437710438,
+   "sd": 0.06109510879334699,
+   "lo": 0.4865319865319866,
+   "hi": 0.5993265993265992,
+   "runs": 3,
+   "n": 198
+  },
+  {
+   "model": "gpt-oss-20b",
+   "condition": "agent_skills",
+   "acc": 0.5656565656565656,
+   "sd": 0.038130476945811835,
+   "lo": 0.5084175084175083,
+   "hi": 0.6212121212121212,
+   "runs": 3,
+   "n": 198
+  },
+  {
+   "model": "gpt-oss-20b",
+   "condition": "agent_skills_oracle",
+   "acc": 0.5909090909090908,
+   "sd": 0.02525252525252525,
+   "lo": 0.5319865319865319,
+   "hi": 0.6481481481481483,
+   "runs": 3,
+   "n": 198
+  },
+  {
+   "model": "gpt-oss-20b",
+   "condition": "agent_skills_validated",
+   "acc": 0.6043771043771043,
+   "sd": 0.030442998855261128,
+   "lo": 0.5471380471380471,
+   "hi": 0.6616161616161617,
+   "runs": 3,
+   "n": 198
+  }
+ ],
+ "paired": [
+  {
+   "model": "gpt-oss-120b",
+   "a": "plain",
+   "b": "agent",
+   "diff": 0.02861952861952861,
+   "lo": -0.018518518518518535,
+   "hi": 0.07407407407407407,
+   "p": 0.25915,
+   "n": 198
+  },
+  {
+   "model": "gpt-oss-120b",
+   "a": "agent",
+   "b": "agent_skills",
+   "diff": -0.006734006734006739,
+   "lo": -0.04208754208754209,
+   "hi": 0.028619528619528618,
+   "p": 0.78215,
+   "n": 198
+  },
+  {
+   "model": "gpt-oss-120b",
+   "a": "agent",
+   "b": "agent_skills_oracle",
+   "diff": 0.0033670033670033664,
+   "lo": -0.03703703703703704,
+   "hi": 0.04377104377104376,
+   "p": 0.9341,
+   "n": 198
+  },
+  {
+   "model": "gpt-oss-120b",
+   "a": "agent_skills",
+   "b": "agent_skills_oracle",
+   "diff": 0.010101010101010102,
+   "lo": -0.026936026936026935,
+   "hi": 0.04713804713804713,
+   "p": 0.65835,
+   "n": 198
+  },
+  {
+   "model": "gpt-oss-120b",
+   "a": "plain",
+   "b": "agent_skills",
+   "diff": 0.02188552188552187,
+   "lo": -0.026936026936026942,
+   "hi": 0.0707070707070707,
+   "p": 0.4158,
+   "n": 198
+  },
+  {
+   "model": "gpt-oss-120b",
+   "a": "agent_skills",
+   "b": "agent_skills_validated",
+   "diff": -0.006734006734006733,
+   "lo": -0.03198653198653199,
+   "hi": 0.01851851851851852,
+   "p": 0.70565,
+   "n": 198
+  },
+  {
+   "model": "gpt-oss-20b",
+   "a": "plain",
+   "b": "agent",
+   "diff": 0.058922558922558904,
+   "lo": -0.005050505050505068,
+   "hi": 0.12121212121212122,
+   "p": 0.07715,
+   "n": 198
+  },
+  {
+   "model": "gpt-oss-20b",
+   "a": "agent",
+   "b": "agent_skills",
+   "diff": 0.021885521885521883,
+   "lo": -0.023569023569023566,
+   "hi": 0.06734006734006734,
+   "p": 0.38275,
+   "n": 198
+  },
+  {
+   "model": "gpt-oss-20b",
+   "a": "agent",
+   "b": "agent_skills_oracle",
+   "diff": 0.04713804713804715,
+   "lo": -0.005050505050505049,
+   "hi": 0.09932659932659935,
+   "p": 0.0959,
+   "n": 198
+  },
+  {
+   "model": "gpt-oss-20b",
+   "a": "agent_skills",
+   "b": "agent_skills_oracle",
+   "diff": 0.025252525252525252,
+   "lo": -0.016835016835016835,
+   "hi": 0.06902356902356903,
+   "p": 0.28405,
+   "n": 198
+  },
+  {
+   "model": "gpt-oss-20b",
+   "a": "plain",
+   "b": "agent_skills",
+   "diff": 0.08080808080808079,
+   "lo": 0.02356902356902355,
+   "hi": 0.1397306397306397,
+   "p": 0.0107,
+   "n": 198
+  },
+  {
+   "model": "gpt-oss-20b",
+   "a": "agent_skills",
+   "b": "agent_skills_validated",
+   "diff": 0.03872053872053872,
+   "lo": 0.010101010101010102,
+   "hi": 0.06902356902356901,
+   "p": 0.01345,
+   "n": 198
+  }
+ ],
+ "by_task": [
+  {
+   "model": "gpt-oss-120b",
+   "task": "ABtest",
+   "n": 10,
+   "condition": "plain",
+   "acc": 0.4
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "ABtest",
+   "n": 10,
+   "condition": "agent",
+   "acc": 0.43333333333333335
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "ABtest",
+   "n": 10,
+   "condition": "agent_skills",
+   "acc": 0.43333333333333335
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "ABtest",
+   "n": 10,
+   "condition": "agent_skills_oracle",
+   "acc": 0.36666666666666664
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "ABtest",
+   "n": 10,
+   "condition": "agent_skills_validated",
+   "acc": 0.5333333333333333
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "Contingency Table Test",
+   "n": 20,
+   "condition": "plain",
+   "acc": 0.85
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "Contingency Table Test",
+   "n": 20,
+   "condition": "agent",
+   "acc": 0.7833333333333333
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "Contingency Table Test",
+   "n": 20,
+   "condition": "agent_skills",
+   "acc": 0.8166666666666667
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "Contingency Table Test",
+   "n": 20,
+   "condition": "agent_skills_oracle",
+   "acc": 0.8166666666666667
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "Contingency Table Test",
+   "n": 20,
+   "condition": "agent_skills_validated",
+   "acc": 0.7666666666666667
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "Correlation Analysis",
+   "n": 23,
+   "condition": "plain",
+   "acc": 0.6956521739130435
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "Correlation Analysis",
+   "n": 23,
+   "condition": "agent",
+   "acc": 0.6376811594202898
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "Correlation Analysis",
+   "n": 23,
+   "condition": "agent_skills",
+   "acc": 0.5797101449275363
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "Correlation Analysis",
+   "n": 23,
+   "condition": "agent_skills_oracle",
+   "acc": 0.5217391304347826
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "Correlation Analysis",
+   "n": 23,
+   "condition": "agent_skills_validated",
+   "acc": 0.5942028985507246
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "Descriptive Statistics",
+   "n": 18,
+   "condition": "plain",
+   "acc": 0.7777777777777778
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "Descriptive Statistics",
+   "n": 18,
+   "condition": "agent",
+   "acc": 0.8333333333333334
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "Descriptive Statistics",
+   "n": 18,
+   "condition": "agent_skills",
+   "acc": 0.6666666666666666
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "Descriptive Statistics",
+   "n": 18,
+   "condition": "agent_skills_oracle",
+   "acc": 0.8148148148148148
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "Descriptive Statistics",
+   "n": 18,
+   "condition": "agent_skills_validated",
+   "acc": 0.7037037037037037
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "Distribution Compliance Test",
+   "n": 21,
+   "condition": "plain",
+   "acc": 0.8095238095238095
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "Distribution Compliance Test",
+   "n": 21,
+   "condition": "agent",
+   "acc": 0.8412698412698413
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "Distribution Compliance Test",
+   "n": 21,
+   "condition": "agent_skills",
+   "acc": 0.8412698412698413
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "Distribution Compliance Test",
+   "n": 21,
+   "condition": "agent_skills_oracle",
+   "acc": 0.8095238095238095
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "Distribution Compliance Test",
+   "n": 21,
+   "condition": "agent_skills_validated",
+   "acc": 0.8095238095238095
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "EDA",
+   "n": 8,
+   "condition": "plain",
+   "acc": 0.875
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "EDA",
+   "n": 8,
+   "condition": "agent",
+   "acc": 0.875
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "EDA",
+   "n": 8,
+   "condition": "agent_skills",
+   "acc": 0.8333333333333334
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "EDA",
+   "n": 8,
+   "condition": "agent_skills_oracle",
+   "acc": 0.9166666666666666
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "EDA",
+   "n": 8,
+   "condition": "agent_skills_validated",
+   "acc": 0.7916666666666666
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "High dimension data",
+   "n": 6,
+   "condition": "plain",
+   "acc": 0.5
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "High dimension data",
+   "n": 6,
+   "condition": "agent",
+   "acc": 0.2222222222222222
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "High dimension data",
+   "n": 6,
+   "condition": "agent_skills",
+   "acc": 0.5
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "High dimension data",
+   "n": 6,
+   "condition": "agent_skills_oracle",
+   "acc": 0.5
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "High dimension data",
+   "n": 6,
+   "condition": "agent_skills_validated",
+   "acc": 0.4444444444444444
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "NonpStat",
+   "n": 6,
+   "condition": "plain",
+   "acc": 0.5
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "NonpStat",
+   "n": 6,
+   "condition": "agent",
+   "acc": 0.7777777777777778
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "NonpStat",
+   "n": 6,
+   "condition": "agent_skills",
+   "acc": 0.9444444444444444
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "NonpStat",
+   "n": 6,
+   "condition": "agent_skills_oracle",
+   "acc": 0.8888888888888888
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "NonpStat",
+   "n": 6,
+   "condition": "agent_skills_validated",
+   "acc": 0.8888888888888888
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "Variance Test",
+   "n": 15,
+   "condition": "plain",
+   "acc": 0.0
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "Variance Test",
+   "n": 15,
+   "condition": "agent",
+   "acc": 0.13333333333333333
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "Variance Test",
+   "n": 15,
+   "condition": "agent_skills",
+   "acc": 0.06666666666666667
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "Variance Test",
+   "n": 15,
+   "condition": "agent_skills_oracle",
+   "acc": 0.3111111111111111
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "Variance Test",
+   "n": 15,
+   "condition": "agent_skills_validated",
+   "acc": 0.044444444444444446
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "bayesian method",
+   "n": 8,
+   "condition": "plain",
+   "acc": 0.625
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "bayesian method",
+   "n": 8,
+   "condition": "agent",
+   "acc": 0.75
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "bayesian method",
+   "n": 8,
+   "condition": "agent_skills",
+   "acc": 0.7083333333333334
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "bayesian method",
+   "n": 8,
+   "condition": "agent_skills_oracle",
+   "acc": 0.7083333333333334
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "bayesian method",
+   "n": 8,
+   "condition": "agent_skills_validated",
+   "acc": 0.7083333333333334
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "causal inference",
+   "n": 5,
+   "condition": "plain",
+   "acc": 0.4
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "causal inference",
+   "n": 5,
+   "condition": "agent",
+   "acc": 0.5333333333333333
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "causal inference",
+   "n": 5,
+   "condition": "agent_skills",
+   "acc": 0.4666666666666667
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "causal inference",
+   "n": 5,
+   "condition": "agent_skills_oracle",
+   "acc": 0.4
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "causal inference",
+   "n": 5,
+   "condition": "agent_skills_validated",
+   "acc": 0.4
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "confidence interval",
+   "n": 9,
+   "condition": "plain",
+   "acc": 0.8888888888888888
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "confidence interval",
+   "n": 9,
+   "condition": "agent",
+   "acc": 1.0
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "confidence interval",
+   "n": 9,
+   "condition": "agent_skills",
+   "acc": 0.9629629629629629
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "confidence interval",
+   "n": 9,
+   "condition": "agent_skills_oracle",
+   "acc": 1.0
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "confidence interval",
+   "n": 9,
+   "condition": "agent_skills_validated",
+   "acc": 1.0
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "generalized linear model",
+   "n": 14,
+   "condition": "plain",
+   "acc": 0.5714285714285714
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "generalized linear model",
+   "n": 14,
+   "condition": "agent",
+   "acc": 0.5476190476190477
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "generalized linear model",
+   "n": 14,
+   "condition": "agent_skills",
+   "acc": 0.5238095238095238
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "generalized linear model",
+   "n": 14,
+   "condition": "agent_skills_oracle",
+   "acc": 0.4523809523809524
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "generalized linear model",
+   "n": 14,
+   "condition": "agent_skills_validated",
+   "acc": 0.5714285714285714
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "multiple comparison",
+   "n": 5,
+   "condition": "plain",
+   "acc": 0.4
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "multiple comparison",
+   "n": 5,
+   "condition": "agent",
+   "acc": 0.5333333333333333
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "multiple comparison",
+   "n": 5,
+   "condition": "agent_skills",
+   "acc": 0.6
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "multiple comparison",
+   "n": 5,
+   "condition": "agent_skills_oracle",
+   "acc": 0.6
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "multiple comparison",
+   "n": 5,
+   "condition": "agent_skills_validated",
+   "acc": 0.4666666666666667
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "regression",
+   "n": 8,
+   "condition": "plain",
+   "acc": 0.875
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "regression",
+   "n": 8,
+   "condition": "agent",
+   "acc": 0.875
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "regression",
+   "n": 8,
+   "condition": "agent_skills",
+   "acc": 0.9166666666666666
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "regression",
+   "n": 8,
+   "condition": "agent_skills_oracle",
+   "acc": 0.8333333333333334
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "regression",
+   "n": 8,
+   "condition": "agent_skills_validated",
+   "acc": 0.9166666666666666
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "survial analysis",
+   "n": 13,
+   "condition": "plain",
+   "acc": 0.38461538461538464
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "survial analysis",
+   "n": 13,
+   "condition": "agent",
+   "acc": 0.41025641025641024
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "survial analysis",
+   "n": 13,
+   "condition": "agent_skills",
+   "acc": 0.5128205128205128
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "survial analysis",
+   "n": 13,
+   "condition": "agent_skills_oracle",
+   "acc": 0.4358974358974359
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "survial analysis",
+   "n": 13,
+   "condition": "agent_skills_validated",
+   "acc": 0.48717948717948717
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "time series",
+   "n": 9,
+   "condition": "plain",
+   "acc": 0.4444444444444444
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "time series",
+   "n": 9,
+   "condition": "agent",
+   "acc": 0.5555555555555556
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "time series",
+   "n": 9,
+   "condition": "agent_skills",
+   "acc": 0.5925925925925926
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "time series",
+   "n": 9,
+   "condition": "agent_skills_oracle",
+   "acc": 0.6666666666666666
+  },
+  {
+   "model": "gpt-oss-120b",
+   "task": "time series",
+   "n": 9,
+   "condition": "agent_skills_validated",
+   "acc": 0.5925925925925926
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "ABtest",
+   "n": 10,
+   "condition": "plain",
+   "acc": 0.3
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "ABtest",
+   "n": 10,
+   "condition": "agent",
+   "acc": 0.3
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "ABtest",
+   "n": 10,
+   "condition": "agent_skills",
+   "acc": 0.43333333333333335
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "ABtest",
+   "n": 10,
+   "condition": "agent_skills_oracle",
+   "acc": 0.3333333333333333
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "ABtest",
+   "n": 10,
+   "condition": "agent_skills_validated",
+   "acc": 0.5333333333333333
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "Contingency Table Test",
+   "n": 20,
+   "condition": "plain",
+   "acc": 0.6
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "Contingency Table Test",
+   "n": 20,
+   "condition": "agent",
+   "acc": 0.5
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "Contingency Table Test",
+   "n": 20,
+   "condition": "agent_skills",
+   "acc": 0.65
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "Contingency Table Test",
+   "n": 20,
+   "condition": "agent_skills_oracle",
+   "acc": 0.6666666666666666
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "Contingency Table Test",
+   "n": 20,
+   "condition": "agent_skills_validated",
+   "acc": 0.7166666666666667
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "Correlation Analysis",
+   "n": 23,
+   "condition": "plain",
+   "acc": 0.5217391304347826
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "Correlation Analysis",
+   "n": 23,
+   "condition": "agent",
+   "acc": 0.6811594202898551
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "Correlation Analysis",
+   "n": 23,
+   "condition": "agent_skills",
+   "acc": 0.6376811594202898
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "Correlation Analysis",
+   "n": 23,
+   "condition": "agent_skills_oracle",
+   "acc": 0.6376811594202898
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "Correlation Analysis",
+   "n": 23,
+   "condition": "agent_skills_validated",
+   "acc": 0.6376811594202898
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "Descriptive Statistics",
+   "n": 18,
+   "condition": "plain",
+   "acc": 0.7222222222222222
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "Descriptive Statistics",
+   "n": 18,
+   "condition": "agent",
+   "acc": 0.7222222222222222
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "Descriptive Statistics",
+   "n": 18,
+   "condition": "agent_skills",
+   "acc": 0.7777777777777778
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "Descriptive Statistics",
+   "n": 18,
+   "condition": "agent_skills_oracle",
+   "acc": 0.7592592592592593
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "Descriptive Statistics",
+   "n": 18,
+   "condition": "agent_skills_validated",
+   "acc": 0.7777777777777778
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "Distribution Compliance Test",
+   "n": 21,
+   "condition": "plain",
+   "acc": 0.6190476190476191
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "Distribution Compliance Test",
+   "n": 21,
+   "condition": "agent",
+   "acc": 0.5714285714285714
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "Distribution Compliance Test",
+   "n": 21,
+   "condition": "agent_skills",
+   "acc": 0.6984126984126984
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "Distribution Compliance Test",
+   "n": 21,
+   "condition": "agent_skills_oracle",
+   "acc": 0.7301587301587301
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "Distribution Compliance Test",
+   "n": 21,
+   "condition": "agent_skills_validated",
+   "acc": 0.7777777777777778
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "EDA",
+   "n": 8,
+   "condition": "plain",
+   "acc": 0.75
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "EDA",
+   "n": 8,
+   "condition": "agent",
+   "acc": 0.7916666666666666
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "EDA",
+   "n": 8,
+   "condition": "agent_skills",
+   "acc": 0.9583333333333334
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "EDA",
+   "n": 8,
+   "condition": "agent_skills_oracle",
+   "acc": 0.875
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "EDA",
+   "n": 8,
+   "condition": "agent_skills_validated",
+   "acc": 0.9166666666666666
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "High dimension data",
+   "n": 6,
+   "condition": "plain",
+   "acc": 0.3333333333333333
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "High dimension data",
+   "n": 6,
+   "condition": "agent",
+   "acc": 0.3888888888888889
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "High dimension data",
+   "n": 6,
+   "condition": "agent_skills",
+   "acc": 0.2222222222222222
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "High dimension data",
+   "n": 6,
+   "condition": "agent_skills_oracle",
+   "acc": 0.4444444444444444
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "High dimension data",
+   "n": 6,
+   "condition": "agent_skills_validated",
+   "acc": 0.2777777777777778
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "NonpStat",
+   "n": 6,
+   "condition": "plain",
+   "acc": 0.6666666666666666
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "NonpStat",
+   "n": 6,
+   "condition": "agent",
+   "acc": 0.7777777777777778
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "NonpStat",
+   "n": 6,
+   "condition": "agent_skills",
+   "acc": 0.6111111111111112
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "NonpStat",
+   "n": 6,
+   "condition": "agent_skills_oracle",
+   "acc": 0.9444444444444444
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "NonpStat",
+   "n": 6,
+   "condition": "agent_skills_validated",
+   "acc": 0.6111111111111112
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "Variance Test",
+   "n": 15,
+   "condition": "plain",
+   "acc": 0.06666666666666667
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "Variance Test",
+   "n": 15,
+   "condition": "agent",
+   "acc": 0.1111111111111111
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "Variance Test",
+   "n": 15,
+   "condition": "agent_skills",
+   "acc": 0.06666666666666667
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "Variance Test",
+   "n": 15,
+   "condition": "agent_skills_oracle",
+   "acc": 0.26666666666666666
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "Variance Test",
+   "n": 15,
+   "condition": "agent_skills_validated",
+   "acc": 0.044444444444444446
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "bayesian method",
+   "n": 8,
+   "condition": "plain",
+   "acc": 0.5
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "bayesian method",
+   "n": 8,
+   "condition": "agent",
+   "acc": 0.625
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "bayesian method",
+   "n": 8,
+   "condition": "agent_skills",
+   "acc": 0.625
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "bayesian method",
+   "n": 8,
+   "condition": "agent_skills_oracle",
+   "acc": 0.7083333333333334
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "bayesian method",
+   "n": 8,
+   "condition": "agent_skills_validated",
+   "acc": 0.6666666666666666
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "causal inference",
+   "n": 5,
+   "condition": "plain",
+   "acc": 0.4
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "causal inference",
+   "n": 5,
+   "condition": "agent",
+   "acc": 0.6666666666666666
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "causal inference",
+   "n": 5,
+   "condition": "agent_skills",
+   "acc": 0.5333333333333333
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "causal inference",
+   "n": 5,
+   "condition": "agent_skills_oracle",
+   "acc": 0.4666666666666667
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "causal inference",
+   "n": 5,
+   "condition": "agent_skills_validated",
+   "acc": 0.5333333333333333
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "confidence interval",
+   "n": 9,
+   "condition": "plain",
+   "acc": 0.5555555555555556
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "confidence interval",
+   "n": 9,
+   "condition": "agent",
+   "acc": 0.5925925925925926
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "confidence interval",
+   "n": 9,
+   "condition": "agent_skills",
+   "acc": 0.8888888888888888
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "confidence interval",
+   "n": 9,
+   "condition": "agent_skills_oracle",
+   "acc": 0.8888888888888888
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "confidence interval",
+   "n": 9,
+   "condition": "agent_skills_validated",
+   "acc": 0.8518518518518519
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "generalized linear model",
+   "n": 14,
+   "condition": "plain",
+   "acc": 0.2857142857142857
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "generalized linear model",
+   "n": 14,
+   "condition": "agent",
+   "acc": 0.5476190476190477
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "generalized linear model",
+   "n": 14,
+   "condition": "agent_skills",
+   "acc": 0.47619047619047616
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "generalized linear model",
+   "n": 14,
+   "condition": "agent_skills_oracle",
+   "acc": 0.2619047619047619
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "generalized linear model",
+   "n": 14,
+   "condition": "agent_skills_validated",
+   "acc": 0.5238095238095238
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "multiple comparison",
+   "n": 5,
+   "condition": "plain",
+   "acc": 0.6
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "multiple comparison",
+   "n": 5,
+   "condition": "agent",
+   "acc": 0.4
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "multiple comparison",
+   "n": 5,
+   "condition": "agent_skills",
+   "acc": 0.4666666666666667
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "multiple comparison",
+   "n": 5,
+   "condition": "agent_skills_oracle",
+   "acc": 0.5333333333333333
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "multiple comparison",
+   "n": 5,
+   "condition": "agent_skills_validated",
+   "acc": 0.4666666666666667
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "regression",
+   "n": 8,
+   "condition": "plain",
+   "acc": 0.875
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "regression",
+   "n": 8,
+   "condition": "agent",
+   "acc": 0.7916666666666666
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "regression",
+   "n": 8,
+   "condition": "agent_skills",
+   "acc": 0.5416666666666666
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "regression",
+   "n": 8,
+   "condition": "agent_skills_oracle",
+   "acc": 0.7916666666666666
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "regression",
+   "n": 8,
+   "condition": "agent_skills_validated",
+   "acc": 0.6666666666666666
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "survial analysis",
+   "n": 13,
+   "condition": "plain",
+   "acc": 0.15384615384615385
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "survial analysis",
+   "n": 13,
+   "condition": "agent",
+   "acc": 0.3076923076923077
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "survial analysis",
+   "n": 13,
+   "condition": "agent_skills",
+   "acc": 0.3076923076923077
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "survial analysis",
+   "n": 13,
+   "condition": "agent_skills_oracle",
+   "acc": 0.3076923076923077
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "survial analysis",
+   "n": 13,
+   "condition": "agent_skills_validated",
+   "acc": 0.41025641025641024
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "time series",
+   "n": 9,
+   "condition": "plain",
+   "acc": 0.3333333333333333
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "time series",
+   "n": 9,
+   "condition": "agent",
+   "acc": 0.5925925925925926
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "time series",
+   "n": 9,
+   "condition": "agent_skills",
+   "acc": 0.5185185185185185
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "time series",
+   "n": 9,
+   "condition": "agent_skills_oracle",
+   "acc": 0.5185185185185185
+  },
+  {
+   "model": "gpt-oss-20b",
+   "task": "time series",
+   "n": 9,
+   "condition": "agent_skills_validated",
+   "acc": 0.6296296296296297
+  }
+ ],
+ "selection": [
+  {
+   "model": "gpt-oss-120b",
+   "loaded": 0.6666666666666666,
+   "hit": 0.468013468013468
+  },
+  {
+   "model": "gpt-oss-20b",
+   "loaded": 0.27441077441077444,
+   "hit": 0.1835016835016835
+  }
+ ],
+ "validator": [
+  {
+   "model": "gpt-oss-120b",
+   "n": 594,
+   "flagged": 0.367003367003367,
+   "detection": 0.4930232558139535,
+   "false_alarm": 0.2955145118733509,
+   "fixed": 23,
+   "broken": 27,
+   "net": -4
+  },
+  {
+   "model": "gpt-oss-20b",
+   "n": 594,
+   "flagged": 0.37373737373737376,
+   "detection": 0.5697674418604651,
+   "false_alarm": 0.22321428571428573,
+   "fixed": 45,
+   "broken": 22,
+   "net": 23
+  }
+ ]
+}

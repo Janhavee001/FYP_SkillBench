@@ -1,0 +1,774 @@
+{
+  "system": "nvagent",
+  "paper": "nvAgent (Ge et al., ACL 2025)",
+  "architecture": "multi-agent (Processor -> Composer -> Validator), explicit validator agent with execution-feedback refinement loop",
+  "native_evaluation": "VisEval benchmark: per-chart pass rate decomposed into code execution validity, data accuracy (deconstructed chart vs ground-truth table), chart-type/ordering/scale checks, and a readability score from an MLLM-as-judge over the rendered PNG.",
+  "meta": {
+    "model": "openai/gpt-oss-120b",
+    "library": "matplotlib",
+    "provider": "openrouter",
+    "base_url": "https://openrouter.ai/api/v1",
+    "adaptations": [
+      "core.llm.api_func monkeypatched from AzureOpenAI to OpenAI",
+      "shared CSVs materialised into VisEval folder layout"
+    ]
+  },
+  "n_records": 16,
+  "records": [
+    {
+      "id": "titanic_q1",
+      "dataset": "titanic",
+      "question": "What is the overall survival rate on the Titanic, and how does it differ between male and female passengers?",
+      "declared_method": null,
+      "declared_chart": "bar",
+      "code": "\nimport matplotlib.pyplot as plt\nimport pandas as pd\nimport os\nimport duckdb\n\n\ndata_folder = 'C:/Users/janha/Downloads/FYP/Benchmark/benchmark-fyp/results/artifacts/nvagent_workspace/databases/titanic'\n\n\ncon = duckdb.connect(database=':memory:')\n\n\ncsv_files = [f for f in os.listdir(data_folder) if f.endswith('.csv')]\nfor file in csv_files:\n    table_name = os.path.splitext(file)[0]\n    con.execute(f\"CREATE VIEW {table_name} AS SELECT * FROM read_csv_auto('{os.path.join(data_folder, file)}')\")\n\n\nsql = f'''\nSELECT sex, AVG(survived) AS avg_survived FROM titanic GROUP BY sex\n'''\ndf = con.execute(sql).fetchdf()\ncon.close()\n\n# rename columns\ndf.columns = ['sex','avg_survived']\n\n\n# print(\"Columns in the dataframe:\", df.columns)\n\n\n\n\n\n\nfig,ax = plt.subplots(1,1,figsize=(10,4))\nax.spines['top'].set_visible(False)\nax.spines['right'].set_visible(False)\nax.bar(df['sex'], df['avg_survived'])\n\n\n\nax.set_xlabel('sex')\nax.set_ylabel('avg_survived')\nax.set_title(f'BAR Chart of avg_survived by sex')\nplt.xticks(rotation=45)\nplt.tight_layout()\n\n\n# Print data\nprint(\"x_data:\", df['sex'].tolist())\nprint(\"y_data:\", df['avg_survived'].tolist())\n\nplt.show()",
+      "executed": true,
+      "execution_error": null,
+      "stdout": "x_data: ['female', 'male']\ny_data: [0.7420382165605095, 0.18890814558058924]\n",
+      "artifact": null,
+      "final_answer": "The filtered schema contains a single table, **titanic**, with 2 relevant columns: **survived** (binary indicator of survival) and **sex** (passenger gender). No joins or relationships are needed because all required information resides in this one table. The query will calculate the overall survival rate (average of `survived`) and compare it across the two gender groups.",
+      "numeric_outputs": {},
+      "repair_attempts": 1,
+      "self_corrected": false,
+      "ground_truth": {
+        "overall_survival_rate": 0.3838,
+        "female_survival_rate": 0.742,
+        "male_survival_rate": 0.1889
+      },
+      "expected_method": [
+        "descriptive_statistics",
+        "groupby_aggregation"
+      ],
+      "acceptable_methods": [
+        "descriptive_statistics",
+        "groupby_aggregation",
+        "proportion_comparison"
+      ],
+      "expected_chart": [
+        "bar",
+        "grouped_bar"
+      ],
+      "tolerance": 0.01,
+      "kind": "mixed",
+      "error": null,
+      "raw": {
+        "vql": "Visualize BAR SELECT sex, AVG(survived) FROM titanic GROUP BY sex",
+        "query_difficulty": "SINGLE",
+        "augmented_explanation": "The filtered schema contains a single table, **titanic**, with 2 relevant columns: **survived** (binary indicator of survival) and **sex** (passenger gender). No joins or relationships are needed because all required information resides in this one table. The query will calculate the overall survival rate (average of `survived`) and compare it across the two gender groups."
+      }
+    },
+    {
+      "id": "titanic_q2",
+      "dataset": "titanic",
+      "question": "Is there a statistically significant association between passenger sex and survival? Report the test used, the test statistic and the p-value.",
+      "declared_method": null,
+      "declared_chart": "stacked bar",
+      "code": "\nimport matplotlib.pyplot as plt\nimport pandas as pd\nimport os\nimport duckdb\n\n\ndata_folder = 'C:/Users/janha/Downloads/FYP/Benchmark/benchmark-fyp/results/artifacts/nvagent_workspace/databases/titanic'\n\n\ncon = duckdb.connect(database=':memory:')\n\n\ncsv_files = [f for f in os.listdir(data_folder) if f.endswith('.csv')]\nfor file in csv_files:\n    table_name = os.path.splitext(file)[0]\n    con.execute(f\"CREATE VIEW {table_name} AS SELECT * FROM read_csv_auto('{os.path.join(data_folder, file)}')\")\n\n\nsql = f'''\nSELECT sex, COUNT(*) AS \"count_*\", survived FROM titanic GROUP BY sex, survived\n'''\ndf = con.execute(sql).fetchdf()\n\n\ndf.columns = ['sex', 'count_*', 'survived']\n\n\n# print(\"Columns in the dataframe:\", df.columns)\n\n\n\n\n\n\nfig,ax = plt.subplots(1,1,figsize=(10,4))\nax.spines['top'].set_visible(False)\nax.spines['right'].set_visible(False)\ndf_pivot = df.pivot(index='sex', columns='survived', values='count_*')\ndf_pivot.plot(kind='bar', stacked=True, ax=ax, alpha=0.8)\nax.set_xlabel('sex')\nax.set_ylabel('count_*')\nax.set_title('Stacked Bar Chart of count_* by sex and survived')\nax.legend(title='survived', bbox_to_anchor=(1.05, 1), loc='upper left')\nax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right')\nplt.tight_layout()\n\n\n# Print data\nx_data = [df.index.tolist()]\ny_data = [df[col].tolist() for col in df.columns]\nprint(\"x_data:\", x_data)\nprint(\"y_data:\", y_data)\nprint(\"groups:\", df.columns.tolist())\n\nplt.show()",
+      "executed": true,
+      "execution_error": null,
+      "stdout": "x_data: [[0, 1, 2, 3]]\ny_data: [['male', 'male', 'female', 'female'], [468, 109, 233, 81], [0, 1, 1, 0]]\ngroups: ['sex', 'count_*', 'survived']\n",
+      "artifact": null,
+      "final_answer": "The filtered schema contains a single table, **titanic**, with two relevant columns: **sex** (categorical) and **survived** (binary). These columns capture the variables needed to assess the association between passenger gender and survival outcome. No foreign\u2011key relationships are present because the dataset is flat.",
+      "numeric_outputs": {},
+      "repair_attempts": 1,
+      "self_corrected": false,
+      "ground_truth": {
+        "test": "chi-square test of independence",
+        "chi2_statistic": 260.717,
+        "p_value": 0.0,
+        "degrees_of_freedom": 1,
+        "significant_at_0.05": true
+      },
+      "expected_method": [
+        "chi_square_test"
+      ],
+      "acceptable_methods": [
+        "chi_square_test",
+        "fisher_exact_test",
+        "proportion_z_test"
+      ],
+      "expected_chart": [
+        "bar",
+        "grouped_bar",
+        "none"
+      ],
+      "tolerance": 0.05,
+      "kind": "stat",
+      "error": null,
+      "raw": {
+        "vql": "Visualize STACKED BAR SELECT sex, COUNT(*), survived FROM titanic GROUP BY sex, survived",
+        "query_difficulty": "SINGLE",
+        "augmented_explanation": "The filtered schema contains a single table, **titanic**, with two relevant columns: **sex** (categorical) and **survived** (binary). These columns capture the variables needed to assess the association between passenger gender and survival outcome. No foreign\u2011key relationships are present because the dataset is flat."
+      }
+    },
+    {
+      "id": "titanic_q3",
+      "dataset": "titanic",
+      "question": "Does the mean age of passengers who survived differ significantly from those who did not? Handle the missing age values and state how you handled them.",
+      "declared_method": null,
+      "declared_chart": "bar",
+      "code": "\nimport matplotlib.pyplot as plt\nimport pandas as pd\nimport os\nimport duckdb\n\n\ndata_folder = 'C:/Users/janha/Downloads/FYP/Benchmark/benchmark-fyp/results/artifacts/nvagent_workspace/databases/titanic'\n\n\ncon = duckdb.connect(database=':memory:')\n\n\ncsv_files = [f for f in os.listdir(data_folder) if f.endswith('.csv')]\nfor file in csv_files:\n    table_name = os.path.splitext(file)[0]\n    con.execute(f\"CREATE VIEW {table_name} AS SELECT * FROM read_csv_auto('{os.path.join(data_folder, file)}')\")\n\n\nsql = f'''\nSELECT survived, AVG(age) AS avg_age FROM titanic WHERE NOT age IS NULL GROUP BY survived\n'''\ndf = con.execute(sql).fetchdf()\ncon.close()\n\n# rename columns\ndf.columns = ['survived','avg_age']\n\n\n# print(\"Columns in the dataframe:\", df.columns)\n\n\n\n\n\n\nfig,ax = plt.subplots(1,1,figsize=(10,4))\nax.spines['top'].set_visible(False)\nax.spines['right'].set_visible(False)\nax.bar(df['survived'], df['avg_age'])\n\n\n\nax.set_xlabel('survived')\nax.set_ylabel('avg_age')\nax.set_title(f'BAR Chart of avg_age by survived')\nplt.xticks(rotation=45)\nplt.tight_layout()\n\n\n# Print data\nprint(\"x_data:\", df['survived'].tolist())\nprint(\"y_data:\", df['avg_age'].tolist())\n\nplt.show()",
+      "executed": true,
+      "execution_error": null,
+      "stdout": "x_data: [1, 0]\ny_data: [28.343689655172415, 30.62617924528302]\n",
+      "artifact": null,
+      "final_answer": "",
+      "numeric_outputs": {},
+      "repair_attempts": 2,
+      "self_corrected": true,
+      "ground_truth": {
+        "test": "Welch two-sample t-test",
+        "mean_age_survived": 28.3437,
+        "mean_age_died": 30.6262,
+        "t_statistic": -2.046,
+        "p_value": 0.04119,
+        "significant_at_0.05": true,
+        "n_missing_age": 177,
+        "mann_whitney_p": 0.160493
+      },
+      "expected_method": [
+        "t_test"
+      ],
+      "acceptable_methods": [
+        "t_test",
+        "welch_t_test",
+        "mann_whitney_u"
+      ],
+      "expected_chart": [
+        "box",
+        "hist",
+        "violin",
+        "none"
+      ],
+      "tolerance": 0.05,
+      "kind": "stat",
+      "error": null,
+      "raw": {
+        "vql": "Visualize BAR SELECT survived, AVG(age) FROM titanic WHERE age IS NOT NULL GROUP BY survived",
+        "query_difficulty": "",
+        "augmented_explanation": ""
+      }
+    },
+    {
+      "id": "titanic_q4",
+      "dataset": "titanic",
+      "question": "How does survival rate vary across passenger classes? Produce a chart that makes the comparison clear.",
+      "declared_method": null,
+      "declared_chart": "bar",
+      "code": "\nimport matplotlib.pyplot as plt\nimport pandas as pd\nimport os\nimport duckdb\n\n\ndata_folder = 'C:/Users/janha/Downloads/FYP/Benchmark/benchmark-fyp/results/artifacts/nvagent_workspace/databases/titanic'\n\n\ncon = duckdb.connect(database=':memory:')\n\n\ncsv_files = [f for f in os.listdir(data_folder) if f.endswith('.csv')]\nfor file in csv_files:\n    table_name = os.path.splitext(file)[0]\n    con.execute(f\"CREATE VIEW {table_name} AS SELECT * FROM read_csv_auto('{os.path.join(data_folder, file)}')\")\n\n\nsql = f'''\nSELECT pclass, CAST(SUM(survived) AS DOUBLE) / COUNT(*) FROM titanic GROUP BY pclass\n'''\ndf = con.execute(sql).fetchdf()\ncon.close()\n\n# rename columns\ndf.columns = ['pclass','']\n\n\n# print(\"Columns in the dataframe:\", df.columns)\n\n\n\n\n\n\nfig,ax = plt.subplots(1,1,figsize=(10,4))\nax.spines['top'].set_visible(False)\nax.spines['right'].set_visible(False)\nax.bar(df['pclass'], df[''])\n\n\n\nax.set_xlabel('pclass')\nax.set_ylabel('')\nax.set_title(f'BAR Chart of  by pclass')\nplt.xticks(rotation=45)\nplt.tight_layout()\n\n\n# Print data\nprint(\"x_data:\", df['pclass'].tolist())\nprint(\"y_data:\", df[''].tolist())\n\nplt.show()",
+      "executed": true,
+      "execution_error": null,
+      "stdout": "x_data: [2, 3, 1]\ny_data: [0.47282608695652173, 0.24236252545824846, 0.6296296296296297]\n",
+      "artifact": null,
+      "final_answer": "",
+      "numeric_outputs": {},
+      "repair_attempts": 2,
+      "self_corrected": true,
+      "ground_truth": {
+        "survival_rate_by_pclass": {
+          "1": 0.6296,
+          "2": 0.4728,
+          "3": 0.2424
+        },
+        "monotonic_decreasing_with_class": true
+      },
+      "expected_method": [
+        "groupby_aggregation"
+      ],
+      "acceptable_methods": [
+        "groupby_aggregation",
+        "descriptive_statistics"
+      ],
+      "expected_chart": [
+        "bar",
+        "grouped_bar",
+        "point"
+      ],
+      "tolerance": 0.01,
+      "kind": "viz",
+      "error": null,
+      "raw": {
+        "vql": "Visualize BAR SELECT pclass, CAST(SUM(survived) AS DOUBLE) / COUNT(*) FROM titanic GROUP BY pclass",
+        "query_difficulty": "",
+        "augmented_explanation": ""
+      }
+    },
+    {
+      "id": "titanic_q5",
+      "dataset": "titanic",
+      "question": "Describe the distribution of ticket fares. Is it skewed, and what does that imply for choosing summary statistics?",
+      "declared_method": null,
+      "declared_chart": "bar",
+      "code": "\nimport matplotlib.pyplot as plt\nimport pandas as pd\nimport os\nimport duckdb\n\n\ndata_folder = 'C:/Users/janha/Downloads/FYP/Benchmark/benchmark-fyp/results/artifacts/nvagent_workspace/databases/titanic'\n\n\ncon = duckdb.connect(database=':memory:')\n\n\ncsv_files = [f for f in os.listdir(data_folder) if f.endswith('.csv')]\nfor file in csv_files:\n    table_name = os.path.splitext(file)[0]\n    con.execute(f\"CREATE VIEW {table_name} AS SELECT * FROM read_csv_auto('{os.path.join(data_folder, file)}')\")\n\n\nsql = f'''\nSELECT fare, COUNT(*) AS \"count_*\" FROM fares GROUP BY fare ORDER BY fare\n'''\ndf = con.execute(sql).fetchdf()\ncon.close()\n\n# rename columns\ndf.columns = ['fare','count_*']\n\n\n# print(\"Columns in the dataframe:\", df.columns)\n\n\n\n\n\n\nfig,ax = plt.subplots(1,1,figsize=(10,4))\nax.spines['top'].set_visible(False)\nax.spines['right'].set_visible(False)\nax.bar(df['fare'], df['count_*'])\n\n\n\nax.set_xlabel('fare')\nax.set_ylabel('count_*')\nax.set_title(f'BAR Chart of count_* by fare')\nplt.xticks(rotation=45)\nplt.tight_layout()\n\n\n# Print data\nprint(\"x_data:\", df['fare'].tolist())\nprint(\"y_data:\", df['count_*'].tolist())\n\nplt.show()",
+      "executed": false,
+      "execution_error": "Traceback (most recent call last):\n  File \"C:\\Users\\janha\\Downloads\\FYP\\Benchmark\\benchmark-fyp\\results\\artifacts\\nvagent_workspace\\exec\\titanic_q5\\snippet.py\", line 26, in <module>\n    df = con.execute(sql).fetchdf()\n         ^^^^^^^^^^^^^^^^\nduckdb.duckdb.CatalogException: Catalog Error: Table with name fares does not exist!\nDid you mean \"pg_namespace\"?\nLINE 2: ...SELECT fare, COUNT(*) AS \"count_*\" FROM fares GROUP BY fare ORDER BY fare\n                                                  ^\n",
+      "stdout": "",
+      "artifact": null,
+      "final_answer": "",
+      "numeric_outputs": {},
+      "repair_attempts": 3,
+      "self_corrected": true,
+      "ground_truth": {
+        "mean": 32.2042,
+        "median": 14.4542,
+        "std": 49.6934,
+        "skewness": 4.7793,
+        "right_skewed": true,
+        "shapiro_p": 0.0
+      },
+      "expected_method": [
+        "descriptive_statistics",
+        "distribution_analysis"
+      ],
+      "acceptable_methods": [
+        "descriptive_statistics",
+        "distribution_analysis",
+        "normality_test"
+      ],
+      "expected_chart": [
+        "hist",
+        "kde",
+        "box"
+      ],
+      "tolerance": 0.05,
+      "kind": "mixed",
+      "error": null,
+      "raw": {
+        "vql": "Visualize BAR SELECT fare_amount, COUNT(*) FROM nyc_taxi_data GROUP BY fare_amount ORDER BY fare_amount",
+        "query_difficulty": "",
+        "augmented_explanation": ""
+      }
+    },
+    {
+      "id": "titanic_q6",
+      "dataset": "titanic",
+      "question": "Is there a relationship between a passenger's age and the fare they paid? Quantify it and say whether it is strong.",
+      "declared_method": null,
+      "declared_chart": "scatter",
+      "code": "\nimport matplotlib.pyplot as plt\nimport pandas as pd\nimport os\nimport duckdb\n\n\ndata_folder = 'C:/Users/janha/Downloads/FYP/Benchmark/benchmark-fyp/results/artifacts/nvagent_workspace/databases/titanic'\n\n\ncon = duckdb.connect(database=':memory:')\n\n\ncsv_files = [f for f in os.listdir(data_folder) if f.endswith('.csv')]\nfor file in csv_files:\n    table_name = os.path.splitext(file)[0]\n    con.execute(f\"CREATE VIEW {table_name} AS SELECT * FROM read_csv_auto('{os.path.join(data_folder, file)}')\")\n\n\nsql = f'''\nSELECT age, fare FROM titanic\n'''\ndf = con.execute(sql).fetchdf()\ncon.close()\n\n# rename columns\ndf.columns = ['age','fare']\n\n\n# print(\"Columns in the dataframe:\", df.columns)\n\n\n\n\n\n\nfig,ax = plt.subplots(1,1,figsize=(10,4))\nax.spines['top'].set_visible(False)\nax.spines['right'].set_visible(False)\n\n\nax.scatter(df['age'], df['fare'])\n\nax.set_xlabel('age')\nax.set_ylabel('fare')\nax.set_title(f'SCATTER Chart of fare by age')\nplt.xticks(rotation=45)\nplt.tight_layout()\n\n\n# Print data\nprint(\"x_data:\", df['age'].tolist())\nprint(\"y_data:\", df['fare'].tolist())\n\nplt.show()",
+      "executed": true,
+      "execution_error": null,
+      "stdout": "x_data: [22.0, 38.0, 26.0, 35.0, 35.0, nan, 54.0, 2.0, 27.0, 14.0, 4.0, 58.0, 20.0, 39.0, 14.0, 55.0, 2.0, nan, 31.0, nan, 35.0, 34.0, 15.0, 28.0, 8.0, 38.0, nan, 19.0, nan, nan, 40.0, nan, nan, 66.0, 28.0, 42.0, nan, 21.0, 18.0, 14.0, 40.0, 27.0, nan, 3.0, 19.0, nan, nan, nan, nan, 18.0, 7.0, 21.0, 49.0, 29.0, 65.0, nan, 21.0, 28.5, 5.0, 11.0, 22.0, 38.0, 45.0, 4.0, nan, nan, 29.0, 19.0, 17.0, 26.0, 32.0, 16.0, 21.0, 26.0, 32.0, 25.0, nan, nan, 0.83, 30.0, 22.0, 29.0, nan, 28.0, 17.0, 33.0, 16.0, nan, 23.0, 24.0, 29.0, 20.0, 46.0, 26.0, 59.0, nan, 71.0, 23.0, 34.0, 34.0, 28.0, nan, 21.0, 33.0, 37.0, 28.0, 21.0, nan, 38.0, nan, 47.0, 14.5, 22.0, 20.0, 17.0, 21.0, 70.5, 29.0, 24.0, 2.0, 21.0, nan, 32.5, 32.5, 54.0, 12.0, nan, 24.0, nan, 45.0, 33.0, 20.0, 47.0, 29.0, 25.0, 23.0, 19.0, 37.0, 16.0, 24.0, nan, 22.0, 24.0, 19.0, 18.0, 19.0, 27.0, 9.0, 36.5, 42.0, 51.0, 22.0, 55.5, 40.5, nan, 51.0, 16.0, 30.0, nan, nan, 44.0, 40.0, 26.0, 17.0, 1.0, 9.0, nan, 45.0, nan, 28.0, 61.0, 4.0, 1.0, 21.0, 56.0, 18.0, nan, 50.0, 30.0, 36.0, nan, nan, 9.0, 1.0, 4.0, nan, nan, 45.0, 40.0, 36.0, 32.0, 19.0, 19.0, 3.0, 44.0, 58.0, nan, 42.0, nan, 24.0, 28.0, nan, 34.0, 45.5, 18.0, 2.0, 32.0, 26.0, 16.0, 40.0, 24.0, 35.0, 22.0, 30.0, nan, 31.0, 27.0, 42.0, 32.0, 30.0, 16.0, 27.0, 51.0, nan, 38.0, 22.0, 19.0, 20.5, 18.0, nan, 35.0, 29.0, 59.0, 5.0, 24.0, nan, 44.0, 8.0, 19.0, 33.0, nan, nan, 29.0, 22.0, 30.0, 44.0, 25.0, 24.0, 37.0, 54.0, nan, 29.0, 62.0, 30.0, 41.0, 29.0, nan, 30.0, 35.0, 50.0, nan, 3.0, 52.0, 40.0, nan, 36.0, 16.0, 25.0, 58.0, 35.0, nan, 25.0, 41.0, 37.0, nan, 63.0, 45.0, nan, 7.0, 35.0, 65.0, 28.0, 16.0, 19.0, nan, 33.0, 30.0, 22.0, 42.0, 22.0, 26.0, 19.0, 36.0, 24.0, 24.0, nan, 23.5, 2.0, nan, 50.0, nan, nan, 19.0, nan, nan, 0.92, nan, 17.0, 30.0, 30.0, 24.0, 18.0, 26.0, 28.0, 43.0, 26.0, 24.0, 54.0, 31.0, 40.0, 22.0, 27.0, 30.0, 22.0, nan, 36.0, 61.0, 36.0, 31.0, 16.0, nan, 45.5, 38.0, 16.0, nan, nan, 29.0, 41.0, 45.0, 45.0, 2.0, 24.0, 28.0, 25.0, 36.0, 24.0, 40.0, nan, 3.0, 42.0, 23.0, nan, 15.0, 25.0, nan, 28.0, 22.0, 38.0, nan, nan, 40.0, 29.0, 45.0, 35.0, nan, 30.0, 60.0, nan, nan, 24.0, 25.0, 18.0, 19.0, 22.0, 3.0, nan, 22.0, 27.0, 20.0, 19.0, 42.0, 1.0, 32.0, 35.0, nan, 18.0, 1.0, 36.0, nan, 17.0, 36.0, 21.0, 28.0, 23.0, 24.0, 22.0, 31.0, 46.0, 23.0, 28.0, 39.0, 26.0, 21.0, 28.0, 20.0, 34.0, 51.0, 3.0, 21.0, nan, nan, nan, 33.0, nan, 44.0, nan, 34.0, 18.0, 30.0, 10.0, nan, 21.0, 29.0, 28.0, 18.0, nan, 28.0, 19.0, nan, 32.0, 28.0, nan, 42.0, 17.0, 50.0, 14.0, 21.0, 24.0, 64.0, 31.0, 45.0, 20.0, 25.0, 28.0, nan, 4.0, 13.0, 34.0, 5.0, 52.0, 36.0, nan, 30.0, 49.0, nan, 29.0, 65.0, nan, 50.0, nan, 48.0, 34.0, 47.0, 48.0, nan, 38.0, nan, 56.0, nan, 0.75, nan, 38.0, 33.0, 23.0, 22.0, nan, 34.0, 29.0, 22.0, 2.0, 9.0, nan, 50.0, 63.0, 25.0, nan, 35.0, 58.0, 30.0, 9.0, nan, 21.0, 55.0, 71.0, 21.0, nan, 54.0, nan, 25.0, 24.0, 17.0, 21.0, nan, 37.0, 16.0, 18.0, 33.0, nan, 28.0, 26.0, 29.0, nan, 36.0, 54.0, 24.0, 47.0, 34.0, nan, 36.0, 32.0, 30.0, 22.0, nan, 44.0, nan, 40.5, 50.0, nan, 39.0, 23.0, 2.0, nan, 17.0, nan, 30.0, 7.0, 45.0, 30.0, nan, 22.0, 36.0, 9.0, 11.0, 32.0, 50.0, 64.0, 19.0, nan, 33.0, 8.0, 17.0, 27.0, nan, 22.0, 22.0, 62.0, 48.0, nan, 39.0, 36.0, nan, 40.0, 28.0, nan, nan, 24.0, 19.0, 29.0, nan, 32.0, 62.0, 53.0, 36.0, nan, 16.0, 19.0, 34.0, 39.0, nan, 32.0, 25.0, 39.0, 54.0, 36.0, nan, 18.0, 47.0, 60.0, 22.0, nan, 35.0, 52.0, 47.0, nan, 37.0, 36.0, nan, 49.0, nan, 49.0, 24.0, nan, nan, 44.0, 35.0, 36.0, 30.0, 27.0, 22.0, 40.0, 39.0, nan, nan, nan, 35.0, 24.0, 34.0, 26.0, 4.0, 26.0, 27.0, 42.0, 20.0, 21.0, 21.0, 61.0, 57.0, 21.0, 26.0, nan, 80.0, 51.0, 32.0, nan, 9.0, 28.0, 32.0, 31.0, 41.0, nan, 20.0, 24.0, 2.0, nan, 0.75, 48.0, 19.0, 56.0, nan, 23.0, nan, 18.0, 21.0, nan, 18.0, 24.0, nan, 32.0, 23.0, 58.0, 50.0, 40.0, 47.0, 36.0, 20.0, 32.0, 25.0, nan, 43.0, nan, 40.0, 31.0, 70.0, 31.0, nan, 18.0, 24.5, 18.0, 43.0, 36.0, nan, 27.0, 20.0, 14.0, 60.0, 25.0, 14.0, 19.0, 18.0, 15.0, 31.0, 4.0, nan, 25.0, 60.0, 52.0, 44.0, nan, 49.0, 42.0, 18.0, 35.0, 18.0, 25.0, 26.0, 39.0, 45.0, 42.0, 22.0, nan, 24.0, nan, 48.0, 29.0, 52.0, 19.0, 38.0, 27.0, nan, 33.0, 6.0, 17.0, 34.0, 50.0, 27.0, 20.0, 30.0, nan, 25.0, 25.0, 29.0, 11.0, nan, 23.0, 23.0, 28.5, 48.0, 35.0, nan, nan, nan, 36.0, 21.0, 24.0, 31.0, 70.0, 16.0, 30.0, 19.0, 31.0, 4.0, 6.0, 33.0, 23.0, 48.0, 0.67, 28.0, 18.0, 34.0, 33.0, nan, 41.0, 20.0, 36.0, 16.0, 51.0, nan, 30.5, nan, 32.0, 24.0, 48.0, 57.0, nan, 54.0, 18.0, nan, 5.0, nan, 43.0, 13.0, 17.0, 29.0, nan, 25.0, 25.0, 18.0, 8.0, 1.0, 46.0, nan, 16.0, nan, nan, 25.0, 39.0, 49.0, 31.0, 30.0, 30.0, 34.0, 31.0, 11.0, 0.42, 27.0, 31.0, 39.0, 18.0, 39.0, 33.0, 26.0, 39.0, 35.0, 6.0, 30.5, nan, 23.0, 31.0, 43.0, 10.0, 52.0, 27.0, 38.0, 27.0, 2.0, nan, nan, 1.0, nan, 62.0, 15.0, 0.83, nan, 23.0, 18.0, 39.0, 21.0, nan, 32.0, nan, 20.0, 16.0, 30.0, 34.5, 17.0, 42.0, nan, 35.0, 28.0, nan, 4.0, 74.0, 9.0, 16.0, 44.0, 18.0, 45.0, 51.0, 24.0, nan, 41.0, 21.0, 48.0, nan, 24.0, 42.0, 27.0, 31.0, nan, 4.0, 26.0, 47.0, 33.0, 47.0, 28.0, 15.0, 20.0, 19.0, nan, 56.0, 25.0, 33.0, 22.0, 28.0, 25.0, 39.0, 27.0, 19.0, nan, 26.0, 32.0]\ny_data: [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583, 51.8625, 21.075, 11.1333, 30.0708, 16.7, 26.55, 8.05, 31.275, 7.8542, 16.0, 29.125, 13.0, 18.0, 7.225, 26.0, 13.0, 8.0292, 35.5, 21.075, 31.3875, 7.225, 263.0, 7.8792, 7.8958, 27.7208, 146.5208, 7.75, 10.5, 82.1708, 52.0, 7.2292, 8.05, 18.0, 11.2417, 9.475, 21.0, 7.8958, 41.5792, 7.8792, 8.05, 15.5, 7.75, 21.6792, 17.8, 39.6875, 7.8, 76.7292, 26.0, 61.9792, 35.5, 10.5, 7.2292, 27.75, 46.9, 7.2292, 80.0, 83.475, 27.9, 27.7208, 15.2458, 10.5, 8.1583, 7.925, 8.6625, 10.5, 46.9, 73.5, 14.4542, 56.4958, 7.65, 7.8958, 8.05, 29.0, 12.475, 9.0, 9.5, 7.7875, 47.1, 10.5, 15.85, 34.375, 8.05, 263.0, 8.05, 8.05, 7.8542, 61.175, 20.575, 7.25, 8.05, 34.6542, 63.3583, 23.0, 26.0, 7.8958, 7.8958, 77.2875, 8.6542, 7.925, 7.8958, 7.65, 7.775, 7.8958, 24.15, 52.0, 14.4542, 8.05, 9.825, 14.4583, 7.925, 7.75, 21.0, 247.5208, 31.275, 73.5, 8.05, 30.0708, 13.0, 77.2875, 11.2417, 7.75, 7.1417, 22.3583, 6.975, 7.8958, 7.05, 14.5, 26.0, 13.0, 15.0458, 26.2833, 53.1, 9.2167, 79.2, 15.2458, 7.75, 15.85, 6.75, 11.5, 36.75, 7.7958, 34.375, 26.0, 13.0, 12.525, 66.6, 8.05, 14.5, 7.3125, 61.3792, 7.7333, 8.05, 8.6625, 69.55, 16.1, 15.75, 7.775, 8.6625, 39.6875, 20.525, 55.0, 27.9, 25.925, 56.4958, 33.5, 29.125, 11.1333, 7.925, 30.6958, 7.8542, 25.4667, 28.7125, 13.0, 0.0, 69.55, 15.05, 31.3875, 39.0, 22.025, 50.0, 15.5, 26.55, 15.5, 7.8958, 13.0, 13.0, 7.8542, 26.0, 27.7208, 146.5208, 7.75, 8.4042, 7.75, 13.0, 9.5, 69.55, 6.4958, 7.225, 8.05, 10.4625, 15.85, 18.7875, 7.75, 31.0, 7.05, 21.0, 7.25, 13.0, 7.75, 113.275, 7.925, 27.0, 76.2917, 10.5, 8.05, 13.0, 8.05, 7.8958, 90.0, 9.35, 10.5, 7.25, 13.0, 25.4667, 83.475, 7.775, 13.5, 31.3875, 10.5, 7.55, 26.0, 26.25, 10.5, 12.275, 14.4542, 15.5, 10.5, 7.125, 7.225, 90.0, 7.775, 14.5, 52.5542, 26.0, 7.25, 10.4625, 26.55, 16.1, 20.2125, 15.2458, 79.2, 86.5, 512.3292, 26.0, 7.75, 31.3875, 79.65, 0.0, 7.75, 10.5, 39.6875, 7.775, 153.4625, 135.6333, 31.0, 0.0, 19.5, 29.7, 7.75, 77.9583, 7.75, 0.0, 29.125, 20.25, 7.75, 7.8542, 9.5, 8.05, 26.0, 8.6625, 9.5, 7.8958, 13.0, 7.75, 78.85, 91.0792, 12.875, 8.85, 7.8958, 27.7208, 7.2292, 151.55, 30.5, 247.5208, 7.75, 23.25, 0.0, 12.35, 8.05, 151.55, 110.8833, 108.9, 24.0, 56.9292, 83.1583, 262.375, 26.0, 7.8958, 26.25, 7.8542, 26.0, 14.0, 164.8667, 134.5, 7.25, 7.8958, 12.35, 29.0, 69.55, 135.6333, 6.2375, 13.0, 20.525, 57.9792, 23.25, 28.5, 153.4625, 18.0, 133.65, 7.8958, 66.6, 134.5, 8.05, 35.5, 26.0, 263.0, 13.0, 13.0, 13.0, 13.0, 13.0, 16.1, 15.9, 8.6625, 9.225, 35.0, 7.2292, 17.8, 7.225, 9.5, 55.0, 13.0, 7.8792, 7.8792, 27.9, 27.7208, 14.4542, 7.05, 15.5, 7.25, 75.25, 7.2292, 7.75, 69.3, 55.4417, 6.4958, 8.05, 135.6333, 21.075, 82.1708, 7.25, 211.5, 4.0125, 7.775, 227.525, 15.7417, 7.925, 52.0, 7.8958, 73.5, 46.9, 13.0, 7.7292, 12.0, 120.0, 7.7958, 7.925, 113.275, 16.7, 7.7958, 7.8542, 26.0, 10.5, 12.65, 7.925, 8.05, 9.82",
+      "artifact": null,
+      "final_answer": "",
+      "numeric_outputs": {},
+      "repair_attempts": 2,
+      "self_corrected": true,
+      "ground_truth": {
+        "pearson_r": 0.0961,
+        "pearson_p": 0.010216,
+        "spearman_rho": 0.1351,
+        "spearman_p": 0.000296,
+        "strength": "weak positive"
+      },
+      "expected_method": [
+        "correlation"
+      ],
+      "acceptable_methods": [
+        "correlation",
+        "linear_regression"
+      ],
+      "expected_chart": [
+        "scatter",
+        "none"
+      ],
+      "tolerance": 0.05,
+      "kind": "stat",
+      "error": null,
+      "raw": {
+        "vql": "Visualize SCATTER SELECT age, fare FROM titanic",
+        "query_difficulty": "",
+        "augmented_explanation": ""
+      }
+    },
+    {
+      "id": "titanic_q7",
+      "dataset": "titanic",
+      "question": "Which passenger attributes best predict survival? Fit an appropriate model and report which predictors matter most and in which direction.",
+      "declared_method": null,
+      "declared_chart": null,
+      "code": "",
+      "executed": false,
+      "execution_error": null,
+      "stdout": "",
+      "artifact": null,
+      "final_answer": "",
+      "numeric_outputs": {},
+      "repair_attempts": 0,
+      "self_corrected": false,
+      "ground_truth": {
+        "model": "logistic regression (standardised predictors)",
+        "train_accuracy": 0.8053,
+        "standardised_coefficients": {
+          "pclass": -1.0141,
+          "sex": -1.2506,
+          "age": -0.6195,
+          "fare": 0.1211,
+          "sibsp": -0.3396,
+          "parch": -0.0517
+        },
+        "strongest_predictor": "sex",
+        "sex_effect_direction": "male -> lower survival",
+        "n_used": 714
+      },
+      "expected_method": [
+        "logistic_regression"
+      ],
+      "acceptable_methods": [
+        "logistic_regression",
+        "random_forest",
+        "decision_tree",
+        "gradient_boosting"
+      ],
+      "expected_chart": [
+        "bar",
+        "none"
+      ],
+      "tolerance": 0.1,
+      "kind": "stat",
+      "error": "TypeError: expected string or bytes-like object, got 'NoneType'",
+      "raw": {
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\janha\\Downloads\\FYP\\Benchmark\\benchmark-fyp\\harness\\runners\\run_nvagent.py\", line 185, in main\n    code = manager.start(msg)\n           ^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\janha\\Downloads\\FYP\\Benchmark\\benchmark-fyp\\repos\\nvAgent\\core\\chat_manager.py\", line 71, in start\n    self._chat_single_round(user_message)\n  File \"C:\\Users\\janha\\Downloads\\FYP\\Benchmark\\benchmark-fyp\\repos\\nvAgent\\core\\chat_manager.py\", line 64, in _chat_single_round\n    agent.talk(message)\n  File \"C:\\Users\\janha\\Downloads\\FYP\\Benchmark\\benchmark-fyp\\repos\\nvAgent\\core\\agents.py\", line 351, in talk\n    sql_match = re.search(r'SELECT\\s+.+', vql, re.IGNORECASE | re.DOTALL)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.11_3.11.2544.0_x64__qbz5n2kfra8p0\\Lib\\re\\__init__.py\", line 176, in search\n    return _compile(pattern, flags).search(string)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: expected string or bytes-like object, got 'NoneType'\n"
+      }
+    },
+    {
+      "id": "titanic_q8",
+      "dataset": "titanic",
+      "question": "Which columns have missing values, how much is missing in each, and what would you do about each one before modelling?",
+      "declared_method": null,
+      "declared_chart": null,
+      "code": "",
+      "executed": false,
+      "execution_error": null,
+      "stdout": "",
+      "artifact": null,
+      "final_answer": "",
+      "numeric_outputs": {},
+      "repair_attempts": 0,
+      "self_corrected": false,
+      "ground_truth": {
+        "missing_counts": {
+          "age": 177,
+          "embarked": 2,
+          "deck": 688,
+          "embark_town": 2
+        },
+        "missing_pct": {
+          "age": 19.87,
+          "embarked": 0.22,
+          "deck": 77.22,
+          "embark_town": 0.22
+        },
+        "n_rows": 891
+      },
+      "expected_method": [
+        "missing_data_analysis"
+      ],
+      "acceptable_methods": [
+        "missing_data_analysis",
+        "descriptive_statistics"
+      ],
+      "expected_chart": [
+        "bar",
+        "heatmap",
+        "none"
+      ],
+      "tolerance": 0.0,
+      "kind": "mixed",
+      "error": "TypeError: expected string or bytes-like object, got 'NoneType'",
+      "raw": {
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\janha\\Downloads\\FYP\\Benchmark\\benchmark-fyp\\harness\\runners\\run_nvagent.py\", line 185, in main\n    code = manager.start(msg)\n           ^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\janha\\Downloads\\FYP\\Benchmark\\benchmark-fyp\\repos\\nvAgent\\core\\chat_manager.py\", line 71, in start\n    self._chat_single_round(user_message)\n  File \"C:\\Users\\janha\\Downloads\\FYP\\Benchmark\\benchmark-fyp\\repos\\nvAgent\\core\\chat_manager.py\", line 64, in _chat_single_round\n    agent.talk(message)\n  File \"C:\\Users\\janha\\Downloads\\FYP\\Benchmark\\benchmark-fyp\\repos\\nvAgent\\core\\agents.py\", line 351, in talk\n    sql_match = re.search(r'SELECT\\s+.+', vql, re.IGNORECASE | re.DOTALL)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.11_3.11.2544.0_x64__qbz5n2kfra8p0\\Lib\\re\\__init__.py\", line 176, in search\n    return _compile(pattern, flags).search(string)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: expected string or bytes-like object, got 'NoneType'\n"
+      }
+    },
+    {
+      "id": "wine_q1",
+      "dataset": "wine_quality",
+      "question": "What is the distribution of wine quality scores in this dataset? Is it balanced?",
+      "declared_method": null,
+      "declared_chart": "bar",
+      "code": "\nimport matplotlib.pyplot as plt\nimport pandas as pd\nimport os\nimport duckdb\n\n\ndata_folder = 'C:/Users/janha/Downloads/FYP/Benchmark/benchmark-fyp/results/artifacts/nvagent_workspace/databases/wine_quality'\n\n\ncon = duckdb.connect(database=':memory:')\n\n\ncsv_files = [f for f in os.listdir(data_folder) if f.endswith('.csv')]\nfor file in csv_files:\n    table_name = os.path.splitext(file)[0]\n    con.execute(f\"CREATE VIEW {table_name} AS SELECT * FROM read_csv_auto('{os.path.join(data_folder, file)}')\")\n\n\nsql = f'''\nSELECT quality, COUNT(*) AS \"count_*\" FROM wine_quality GROUP BY quality ORDER BY quality ASC\n'''\ndf = con.execute(sql).fetchdf()\ncon.close()\n\n# rename columns\ndf.columns = ['quality','count_*']\n\n\n# print(\"Columns in the dataframe:\", df.columns)\n\n\n\n\n\n\nfig,ax = plt.subplots(1,1,figsize=(10,4))\nax.spines['top'].set_visible(False)\nax.spines['right'].set_visible(False)\nax.bar(df['quality'], df['count_*'])\n\n\n\nax.set_xlabel('quality')\nax.set_ylabel('count_*')\nax.set_title(f'BAR Chart of count_* by quality')\nplt.xticks(rotation=45)\nplt.tight_layout()\n\n\n# Print data\nprint(\"x_data:\", df['quality'].tolist())\nprint(\"y_data:\", df['count_*'].tolist())\n\nplt.show()",
+      "executed": true,
+      "execution_error": null,
+      "stdout": "x_data: [3, 4, 5, 6, 7, 8]\ny_data: [10, 53, 681, 638, 199, 18]\n",
+      "artifact": null,
+      "final_answer": "",
+      "numeric_outputs": {},
+      "repair_attempts": 2,
+      "self_corrected": true,
+      "ground_truth": {
+        "counts": {
+          "3": 10,
+          "4": 53,
+          "5": 681,
+          "6": 638,
+          "7": 199,
+          "8": 18
+        },
+        "mean_quality": 5.636,
+        "modal_quality": 5,
+        "balanced": false,
+        "pct_in_top_two_classes": 82.49
+      },
+      "expected_method": [
+        "descriptive_statistics",
+        "distribution_analysis"
+      ],
+      "acceptable_methods": [
+        "descriptive_statistics",
+        "distribution_analysis",
+        "frequency_count"
+      ],
+      "expected_chart": [
+        "bar",
+        "hist"
+      ],
+      "tolerance": 0.01,
+      "kind": "mixed",
+      "error": null,
+      "raw": {
+        "vql": "Visualize BAR SELECT quality, COUNT(*) FROM wine_quality GROUP BY quality ORDER BY quality ASC",
+        "query_difficulty": "",
+        "augmented_explanation": ""
+      }
+    },
+    {
+      "id": "wine_q2",
+      "dataset": "wine_quality",
+      "question": "Which physicochemical properties are most strongly correlated with wine quality? Show the relationships.",
+      "declared_method": null,
+      "declared_chart": "scatter",
+      "code": "\nimport matplotlib.pyplot as plt\nimport pandas as pd\nimport os\nimport duckdb\n\n\ndata_folder = 'C:/Users/janha/Downloads/FYP/Benchmark/benchmark-fyp/results/artifacts/nvagent_workspace/databases/wine_quality'\n\n\ncon = duckdb.connect(database=':memory:')\n\n\ncsv_files = [f for f in os.listdir(data_folder) if f.endswith('.csv')]\nfor file in csv_files:\n    table_name = os.path.splitext(file)[0]\n    con.execute(f\"CREATE VIEW {table_name} AS SELECT * FROM read_csv_auto('{os.path.join(data_folder, file)}')\")\n\n\nsql = f'''\nSELECT alcohol, quality FROM wine_quality\n'''\ndf = con.execute(sql).fetchdf()\ncon.close()\n\n# rename columns\ndf.columns = ['alcohol','quality']\n\n\n# print(\"Columns in the dataframe:\", df.columns)\n\n\n\n\n\n\nfig,ax = plt.subplots(1,1,figsize=(10,4))\nax.spines['top'].set_visible(False)\nax.spines['right'].set_visible(False)\n\n\nax.scatter(df['alcohol'], df['quality'])\n\nax.set_xlabel('alcohol')\nax.set_ylabel('quality')\nax.set_title(f'SCATTER Chart of quality by alcohol')\nplt.xticks(rotation=45)\nplt.tight_layout()\n\n\n# Print data\nprint(\"x_data:\", df['alcohol'].tolist())\nprint(\"y_data:\", df['quality'].tolist())\n\nplt.show()",
+      "executed": true,
+      "execution_error": null,
+      "stdout": "x_data: [9.4, 9.8, 9.8, 9.8, 9.4, 9.4, 9.4, 10.0, 9.5, 10.5, 9.2, 10.5, 9.9, 9.1, 9.2, 9.2, 10.5, 9.3, 9.0, 9.2, 9.4, 9.7, 9.5, 9.4, 9.7, 9.3, 9.5, 9.5, 9.4, 9.8, 10.1, 10.6, 9.8, 9.4, 9.2, 9.6, 10.8, 9.7, 9.8, 10.5, 10.5, 9.3, 10.5, 10.3, 9.5, 13.1, 9.2, 9.5, 9.2, 9.2, 9.2, 9.4, 9.4, 9.4, 10.2, 9.5, 9.6, 9.4, 10.0, 9.4, 9.2, 9.3, 9.5, 9.8, 10.9, 10.9, 9.6, 10.7, 10.7, 10.5, 9.5, 9.5, 9.5, 9.2, 9.6, 10.5, 10.5, 10.7, 10.1, 9.1, 9.2, 9.4, 9.1, 9.4, 10.3, 10.1, 9.9, 9.6, 9.5, 9.0, 9.5, 9.9, 9.8, 9.6, 10.5, 12.9, 10.7, 9.2, 9.8, 9.0, 10.2, 10.4, 9.0, 9.2, 9.4, 9.2, 9.3, 9.3, 9.6, 9.3, 9.5, 9.8, 9.8, 9.7, 9.5, 10.5, 10.0, 9.4, 10.9, 9.2, 9.0, 10.9, 9.2, 9.5, 9.5, 9.4, 10.9, 10.9, 10.5, 9.4, 9.4, 13.0, 13.0, 9.8, 9.9, 9.6, 9.5, 9.2, 9.5, 9.5, 9.6, 9.5, 14.0, 9.4, 14.0, 9.4, 10.0, 9.3, 10.2, 10.5, 10.3, 9.4, 10.1, 10.1, 10.5, 10.5, 10.5, 10.5, 9.3, 9.3, 9.6, 9.2, 10.0, 9.4, 9.4, 9.5, 10.2, 9.0, 10.4, 9.5, 9.1, 9.2, 9.2, 11.5, 9.5, 9.5, 9.5, 10.5, 9.6, 9.5, 9.5, 9.3, 9.3, 9.3, 9.3, 9.7, 9.2, 9.7, 9.5, 9.5, 9.4, 9.8, 9.5, 9.7, 9.7, 9.4, 10.2, 10.1, 13.0, 11.4, 10.3, 9.3, 9.5, 9.2, 9.2, 10.8, 10.8, 9.3, 9.4, 10.5, 12.4, 10.0, 10.2, 10.1, 9.8, 10.5, 11.0, 9.1, 9.7, 9.5, 9.4, 9.4, 9.5, 10.0, 10.4, 10.5, 9.5, 9.8, 10.5, 11.0, 12.2, 9.9, 9.6, 11.0, 9.0, 9.0, 9.0, 9.2, 9.0, 9.0, 9.3, 10.9, 9.8, 9.2, 9.2, 9.9, 9.5, 9.3, 9.8, 9.9, 10.0, 9.9, 10.5, 9.5, 9.9, 9.3, 9.2, 9.2, 9.4, 10.5, 9.3, 9.4, 10.0, 9.3, 10.9, 10.2, 9.8, 12.8, 9.4, 10.1, 10.7, 10.1, 10.1, 9.4, 9.4, 10.7, 9.4, 10.1, 12.6, 10.5, 9.3, 9.9, 9.1, 10.5, 9.8, 9.8, 10.3, 10.3, 10.6, 9.2, 10.6, 10.5, 10.3, 10.1, 9.5, 9.5, 9.9, 9.6, 9.7, 9.6, 10.7, 10.1, 10.0, 9.5, 9.2, 9.3, 9.4, 9.5, 9.5, 9.5, 9.3, 9.4, 9.5, 9.4, 11.0, 11.0, 10.1, 10.4, 11.5, 10.4, 11.5, 9.7, 9.3, 9.5, 9.2, 9.2, 11.5, 11.5, 9.7, 9.5, 12.5, 12.5, 9.4, 11.0, 11.7, 12.2, 12.5, 10.3, 11.5, 9.8, 9.2, 11.3, 9.8, 9.8, 10.7, 9.9, 12.3, 12.0, 10.0, 9.4, 9.9, 9.4, 9.3, 13.0, 11.9, 12.8, 11.0, 11.7, 10.4, 9.8, 9.4, 9.9, 10.0, 10.2, 10.0, 11.8, 10.0, 9.0, 9.4, 12.0, 9.9, 8.7, 10.6, 9.2, 10.8, 11.8, 11.0, 12.0, 13.3, 10.8, 9.4, 10.0, 9.4, 9.4, 9.2, 9.7, 9.2, 9.6, 9.2, 10.0, 12.9, 10.0, 9.5, 9.1, 9.9, 13.0, 9.9, 11.0, 11.0, 9.4, 9.9, 10.8, 10.5, 10.5, 9.1, 10.1, 10.8, 10.8, 11.3, 9.6, 9.5, 9.5, 9.3, 11.7, 9.5, 9.3, 11.7, 10.5, 10.4, 9.9, 11.8, 12.3, 10.9, 11.0, 10.9, 12.3, 11.4, 10.6, 9.3, 10.4, 11.0, 9.2, 12.8, 9.5, 9.9, 9.5, 10.2, 11.2, 9.9, 9.3, 9.8, 11.3, 11.2, 11.6, 12.5, 10.1, 10.5, 11.2, 10.2, 10.8, 10.8, 9.1, 10.0, 11.2, 11.1, 13.4, 10.3, 9.6, 11.2, 9.0, 11.3, 9.3, 11.8, 9.0, 9.2, 9.7, 11.5, 14.0, 9.2, 9.8, 10.6, 11.4, 10.4, 10.6, 9.4, 10.2, 9.7, 11.0, 10.2, 10.1, 9.2, 11.7, 9.4, 9.4, 13.4, 10.0, 10.0, 10.0, 10.8, 10.2, 10.6, 13.3, 13.4, 11.6, 12.1, 11.0, 9.0, 11.1, 11.0, 11.6, 9.0, 12.0, 12.0, 10.9, 10.8, 12.5, 10.8, 9.5, 10.2, 11.4, 9.5, 10.2, 9.7, 11.8, 11.8, 9.3, 11.9, 8.4, 11.7, 11.0, 10.0, 9.1, 9.8, 9.4, 9.5, 9.9, 11.0, 11.4, 8.7, 9.4, 10.3, 10.3, 10.3, 12.8, 10.0, 10.3, 9.4, 10.7, 12.0, 11.2, 9.6, 11.0, 9.9, 11.0, 8.4, 9.1, 9.5, 10.7, 10.4, 9.4, 9.5, 10.0, 10.0, 11.5, 11.1, 11.1, 11.7, 11.1, 11.7, 12.7, 11.4, 9.2, 9.2, 10.1, 12.7, 11.4, 9.0, 9.0, 10.7, 11.7, 11.0, 11.7, 10.4, 9.6, 10.0, 10.2, 10.0, 9.5, 9.8, 9.8, 9.6, 9.6, 9.2, 9.9, 10.7, 9.6, 10.6, 9.3, 14.0, 10.5, 9.7, 11.5, 9.7, 9.0, 9.5, 9.3, 9.3, 10.0, 9.8, 9.3, 10.0, 9.0, 9.3, 9.0, 9.1, 9.2, 12.2, 10.5, 10.4, 12.7, 9.2, 9.4, 10.0, 9.8, 10.2, 9.7, 9.7, 9.8, 10.2, 9.3, 9.4, 9.4, 9.5, 12.1, 10.2, 10.2, 9.1, 9.1, 9.3, 9.3, 9.3, 9.5, 10.5, 11.3, 9.5, 9.7, 9.4, 9.4, 10.2, 10.3, 9.4, 9.5, 9.4, 9.5, 9.4, 10.1, 10.1, 11.0, 11.2, 11.3, 9.6, 11.2, 14.9, 12.0, 9.5, 9.4, 9.6, 10.5, 9.6, 11.0, 9.6, 9.0, 9.6, 10.2, 10.2, 9.7, 9.5, 9.2, 11.0, 9.2, 10.0, 9.5, 9.5, 9.5, 9.3, 10.2, 9.3, 9.9, 10.0, 9.6, 9.0, 10.2, 9.8, 11.3, 9.4, 11.3, 9.1, 9.7, 9.4, 9.4, 10.7, 9.8, 9.0, 9.4, 9.4, 12.8, 9.5, 9.5, 9.7, 10.8, 10.1, 9.5, 9.4, 9.6, 9.7, 9.9, 10.0, 10.5, 11.6, 10.0, 10.1, 9.5, 9.4, 9.4, 9.8, 9.2, 9.4, 10.0, 9.6, 9.5, 9.6, 9.2, 10.0, 9.5, 11.2, 10.4, 11.1, 9.5, 9.5, 12.7, 9.6, 11.5, 9.6, 9.5, 9.3, 9.5, 9.5, 9.3, 9.2, 9.3, 11.5, 9.5, 9.2, 10.0, 9.5, 9.5, 9.0, 9.4, 9.6, 9.5, 9.5, 9.5, 9.4, 9.5, 9.1, 10.7, 11.2, 9.8, 9.8, 9.2, 9.7, 9.6, 10.0, 9.6, 9.5, 9.5, 9.4, 9.5, 9.7, 9.6, 9.7, 9.4, 9.4, 9.5, 9.5, 10.0, 10.3, 10.3, 10.5, 9.8, 9.4, 9.8, 10.0, 9.8, 9.8, 9.5, 9.5, 10.1, 10.1, 9.3, 9.7, 9.6, 9.7, 10.8, 12.5, 10.2, 9.6, 10.8, 10.7, 10.7, 9.4, 10.0, 12.9, 9.6, 9.9, 12.8, 12.5, 12.8, 9.2, 10.3, 10.5, 10.9, 10.8, 11.4, 11.3, 10.8, 10.5, 11.9, 9.4, 9.6, 9.7, 14.0, 9.8, 9.8, 10.3, 10.7, 11.0, 10.7, 12.7, 11.1, 10.9, 11.1, 9.9, 9.9, 9.4, 9.3, 11.7, 11.7, 11.2, 10.0, 12.1, 10.3, 10.9, 9.4, 10.6, 9.8, 9.8, 9.9, 9.8, 9.8, 9.5, 9.5, 9.7, 10.9, 10.9, 11.7, 10.9, 11.3, 10.6, 11.2, 9.5, 11.5, 10.4, 9.7, 9.5, 9.7, 11.3, 11.2, 11.2, 10.9, 11.8, 10.6, 10.0, 11.1, 11.8, 11.8, 10.9, 11.8, 10.0, 9.5, 9.9, 11.4, 12.0, 9.5, 10.0, 10.5, 10.4, 12.1, 11.2, 9.3, 10.1, 9.7, 9.3, 9.7, 9.8, 10.7, 12.5, 10.7, 12.5, 11.0, 11.8, 10.8, 10.8, 10.8, 10.8, 9.5, 11.0, 11.5, 10.8, 11.5, 13.2, 10.9, 12.2, 12.2, 11.5, 11.9, 11.0, 10.1, 11.0, 11.8, 10.5, 11.0, 11.8, 10.1, 11.2, 11.0, 10.2, 9.2, 11.2, 12.0, 10.5, 9.8, 9.5, 9.8, 10.5, 11.8, 11.8, 10.4, 12.9, 11.4, 12.4, 12.5, 10.0, 9.7, 12.1, 11.1, 12.0, 12.4, 11.9, 11.9, 11.9, 12.4, 11.2, 12.1, 12.2, 10.4, 11.3, 11.1, 11.3, 10.0, 11.1, 9.3, 9.5, 11.2, 11.1, 11.0, 11.9, 9.2, 12.2, 10.2, 10.9, 10.9, 11.6, 10.7, 12.1, 9.4, 9.4, 9.1, 11.3, 10.4, 10.5, 10.0, 12.9, 10.5, 10.4, 11.3, 11.4, 9.4, 9.4, 10.9, 9.4, 9.4, 9.4, 9.4, 9.4, 10.1, 12.8, 12.8, 9.1, 12.9, 11.5, 10.6, 11.7, 12.8, 10.3, 12.8, 11.7, 11.7, 12.0, 10.9, 12.3, 10.4, 10.0, 10.0, 11.2, 11.4, 12.6, 12.7, 12.7, 10.4, 11.9, 11.9, 10.5, 12.3, 10.5, 10.4, 12.6, 11.6, 10.1, 10.5, 11.5, 11.0, 9.6, 10.4, 9.7, 10.6, 12.5, 9.2, 12.6, 11.1, 10.2, 9.8, 11.1, 10.9, 12.2, 11.4, 10.7, 10.4, 10.9, 10.8, 10.4, 9.2, 12.9, 12.7, 9.1, 9.1, 12.1, 9.1, 11.6, 12.1, 9.9, 12.5, 11.4, 11.8, 11.8, 10.2, 12.5, 10.9, 10.9, 10.8, 11.1, 9.2, 9.5, 10.7, 9.2, 10.2, 11.4, 11.0, 11.0, 12.3, 11.8, 12.3, 9.5, 12.0, 9.5, 9.6, 11.6, 11.2, 9.9, 9.9, 11.8, 11.4, 11.5, 12.0, 10.8, 10.5, 10.8, 9.4, 12.5, 9.4, 12.4, 12.0, 11.2, 12.0, 12.4, 12.8, 12.3, 11.7, 9.5, 10.8, 10.0, 12.3, 11.0, 9.5, 13.6, 11.3, 11.3, 11.3, 13.3, 12.9, 13.1, 12.3, 12.3, 11.2, 11.5, 11.3, 13.5, 11.5, 10.0, 10.5, 10.4, 9.5, 13.6, 11.2, 11.8, 11.9, 11.4, 11.4, 9.1, 9.5, 9.5, 11.0, 11.4, 10.0, 10.1, 10.4, 9.8, 11.8, 11.6, 12.0, 12.8, 12.5, 9.8, 11.1, 11.4, 9.8, 11.8, 12.9, 10.6, 10.8, 11.1, 10.2, 11.8, 10.0, 10.0, 9.4, 10.2, 12.4, 12.0, 11.5, 10.5, 10.8, 12.3, 9.5, 9.5, 11.5, 11.2, 12.7, 11.4, 11.0, 11.0, 11.4, 10.5, 9.3, 10.9, 11.9, 12.2, 11.9, 10.9, 9.6, 12.5, 10.8, 12.4, 10.8, 9.5, 9.5, 9.5, 9.8, 10.9, 9.5, 9.8, 11.2, 11.7, 9.4, 11.0, 11.0, 11.0, 10.0, 11.0, 11.2, 10.4, 9.3, 10.4, 10.5, 10.4, 11.3, 9.5, 12.0, 10.6, 10.9, 11.5, 11.5, 9.6, 12.0, 10.3, 9.4, 9.2, 9.6, 13.6, 9.5, 11.8, 10.8, 9.5, 9.3, 12.8, 11.5, 9.4, 12.8, 9.6, 11.8, 9.3, 9.8, 12.2, 9.5, 10.3, 10.5, 10.0, 10.5, 11.1, 10.9, 10.9, 9.8, 9.8, 9.5, 10.9, 11.0, 9.2, 11.0, 11.3, 11.3, 9.3, 11.2, 9.8, 9.6, 11.8, 10.3, 10.3, 11.4, 9.5, 14.0, 14.0, 11.7, 11.2, 9.3, 11.2, 9.5, 12.0, 9.7, 9.5, 11.5, 10.4, 10.4, 10.9, 10.2, 10.9, 10.5, 12.4, 13.0, 10.2, 10.2, 11.0, 10.9, 12.4, 9.7, 10.9, 9.5, 9.5, 12.1, 12.2, 10.9, 12.5, 11.7, 11.2, 11.2, 9.2, 9.8, 10.1, 11.1, 10.1, 9.2, 9.8, 12.8, 10.5, 10.1, 10.1, 9.8, 12.5, 11.9, 9.8, 9.1, 10.1, 12.5, 11.4, 11.0, 10.6, 10.6, 10.6, 10.6, 9.3, 9.8, 9.8, 9.2, 9.7, 9.6, 10.0, 12.6, 9.5, 9.5, 9.5, 10.5, 10.5, 10.5, 10.4, 10.5, 11.0, 10.2, 11.4, 9.5, 9.5, 10.8, 10.0, 11.8, 10.3, 10.3, 10.0, 10.1, 10.1, 11.1, 9.5, 10.0333333333333, 10.9, 10.1, 10.0333333333333, 9.8, 11.8, 9.5, 9.8, 10.5, 9.8, 10.4, 9.2, 11.6, 9.2, 9.3, 9.8, 9.9, 10.0, 12.2, 9.9, 10.8, 10.8, 9.6, 9.9, 9.9, 9.5, 9.2, 9.6, 9.6, 10.3, 9.7, 12.5, 11.0, 9.8, 10.2, 9.2, 9.55, 9.55, 9.9, 10.2, 11.1, 9.9, 9.9, 11.9, 10.0, 10.7, 11.3, 10.9, 10.7, 12.4, 10.7, 11.9, 10.6, 10.9, 10.1, 9.6, 9.4, 9.6, 12.1, 9.8, 9.9, 9.8, 9.4, 11.4, 11.0, 9.6, 9.6, 12.1, 11.2, 11.0, 11.3, 10.4, 9.9, 11.7,",
+      "artifact": null,
+      "final_answer": "",
+      "numeric_outputs": {},
+      "repair_attempts": 2,
+      "self_corrected": true,
+      "ground_truth": {
+        "top_3_by_abs_correlation": [
+          "alcohol",
+          "volatile_acidity",
+          "sulphates"
+        ],
+        "correlations": {
+          "alcohol": 0.4762,
+          "volatile_acidity": -0.3906,
+          "sulphates": 0.2514,
+          "citric_acid": 0.2264,
+          "total_sulfur_dioxide": -0.1851,
+          "density": -0.1749,
+          "chlorides": -0.1289,
+          "fixed_acidity": 0.1241,
+          "ph": -0.0577,
+          "free_sulfur_dioxide": -0.0507,
+          "residual_sugar": 0.0137
+        },
+        "strongest_positive": "alcohol",
+        "strongest_negative": "volatile_acidity"
+      },
+      "expected_method": [
+        "correlation"
+      ],
+      "acceptable_methods": [
+        "correlation",
+        "feature_importance",
+        "linear_regression"
+      ],
+      "expected_chart": [
+        "heatmap",
+        "bar"
+      ],
+      "tolerance": 0.03,
+      "kind": "mixed",
+      "error": null,
+      "raw": {
+        "vql": "Visualize SCATTER SELECT alcohol, quality FROM wine_quality",
+        "query_difficulty": "",
+        "augmented_explanation": ""
+      }
+    },
+    {
+      "id": "wine_q3",
+      "dataset": "wine_quality",
+      "question": "Do high-quality wines (quality >= 7) have significantly higher alcohol content than low-quality wines (quality <= 4)?",
+      "declared_method": null,
+      "declared_chart": "bar",
+      "code": "\nimport matplotlib.pyplot as plt\nimport pandas as pd\nimport os\nimport duckdb\n\n\ndata_folder = 'C:/Users/janha/Downloads/FYP/Benchmark/benchmark-fyp/results/artifacts/nvagent_workspace/databases/wine_quality'\n\n\ncon = duckdb.connect(database=':memory:')\n\n\ncsv_files = [f for f in os.listdir(data_folder) if f.endswith('.csv')]\nfor file in csv_files:\n    table_name = os.path.splitext(file)[0]\n    con.execute(f\"CREATE VIEW {table_name} AS SELECT * FROM read_csv_auto('{os.path.join(data_folder, file)}')\")\n\n\nsql = f'''\nSELECT CASE WHEN quality >= 7 THEN 'High' WHEN quality <= 4 THEN 'Low' END AS quality_group, AVG(alcohol) AS avg_alcohol FROM wine_quality WHERE quality >= 7 OR quality <= 4 GROUP BY 1\n'''\ndf = con.execute(sql).fetchdf()\ncon.close()\n\n# rename columns\ndf.columns = ['quality_group','avg_alcohol']\n\n\n# print(\"Columns in the dataframe:\", df.columns)\n\n\n\n\n\n\nfig,ax = plt.subplots(1,1,figsize=(10,4))\nax.spines['top'].set_visible(False)\nax.spines['right'].set_visible(False)\nax.bar(df['quality_group'], df['avg_alcohol'])\n\n\n\nax.set_xlabel('quality_group')\nax.set_ylabel('avg_alcohol')\nax.set_title(f'BAR Chart of avg_alcohol by quality_group')\nplt.xticks(rotation=45)\nplt.tight_layout()\n\n\n# Print data\nprint(\"x_data:\", df['quality_group'].tolist())\nprint(\"y_data:\", df['avg_alcohol'].tolist())\n\nplt.show()",
+      "executed": true,
+      "execution_error": null,
+      "stdout": "x_data: ['High', 'Low']\ny_data: [11.518049155145922, 10.215873015873015]\n",
+      "artifact": null,
+      "final_answer": "",
+      "numeric_outputs": {},
+      "repair_attempts": 2,
+      "self_corrected": true,
+      "ground_truth": {
+        "test": "Welch two-sample t-test",
+        "mean_alcohol_high": 11.518,
+        "mean_alcohol_low": 10.2159,
+        "n_high": 217,
+        "n_low": 63,
+        "t_statistic": 9.7131,
+        "p_value": 0.0,
+        "significant_at_0.05": true
+      },
+      "expected_method": [
+        "t_test"
+      ],
+      "acceptable_methods": [
+        "t_test",
+        "welch_t_test",
+        "mann_whitney_u"
+      ],
+      "expected_chart": [
+        "box",
+        "violin",
+        "hist",
+        "none"
+      ],
+      "tolerance": 0.05,
+      "kind": "stat",
+      "error": null,
+      "raw": {
+        "vql": "Visualize BAR SELECT CASE WHEN quality >= 7 THEN 'High' WHEN quality <= 4 THEN 'Low' END AS quality_group, AVG(alcohol) FROM wine_quality WHERE quality >= 7 OR quality <= 4 GROUP BY 1",
+        "query_difficulty": "",
+        "augmented_explanation": ""
+      }
+    },
+    {
+      "id": "wine_q4",
+      "dataset": "wine_quality",
+      "question": "Visualise how alcohol content varies across every quality level, showing the spread within each level, not just the average.",
+      "declared_method": null,
+      "declared_chart": "scatter",
+      "code": "\nimport matplotlib.pyplot as plt\nimport pandas as pd\nimport os\nimport duckdb\n\n\ndata_folder = 'C:/Users/janha/Downloads/FYP/Benchmark/benchmark-fyp/results/artifacts/nvagent_workspace/databases/wine_quality'\n\n\ncon = duckdb.connect(database=':memory:')\n\n\ncsv_files = [f for f in os.listdir(data_folder) if f.endswith('.csv')]\nfor file in csv_files:\n    table_name = os.path.splitext(file)[0]\n    con.execute(f\"CREATE VIEW {table_name} AS SELECT * FROM read_csv_auto('{os.path.join(data_folder, file)}')\")\n\n\nsql = f'''\nSELECT quality, alcohol FROM wine_quality\n'''\ndf = con.execute(sql).fetchdf()\ncon.close()\n\n# rename columns\ndf.columns = ['quality','alcohol']\n\n\n# print(\"Columns in the dataframe:\", df.columns)\n\n\n\n\n\n\nfig,ax = plt.subplots(1,1,figsize=(10,4))\nax.spines['top'].set_visible(False)\nax.spines['right'].set_visible(False)\n\n\nax.scatter(df['quality'], df['alcohol'])\n\nax.set_xlabel('quality')\nax.set_ylabel('alcohol')\nax.set_title(f'SCATTER Chart of alcohol by quality')\nplt.xticks(rotation=45)\nplt.tight_layout()\n\n\n# Print data\nprint(\"x_data:\", df['quality'].tolist())\nprint(\"y_data:\", df['alcohol'].tolist())\n\nplt.show()",
+      "executed": true,
+      "execution_error": null,
+      "stdout": "x_data: [5, 5, 5, 6, 5, 5, 5, 7, 7, 5, 5, 5, 5, 5, 5, 5, 7, 5, 4, 6, 6, 5, 5, 5, 6, 5, 5, 5, 5, 6, 5, 6, 5, 6, 5, 6, 6, 7, 4, 5, 5, 4, 6, 5, 5, 4, 5, 5, 5, 5, 5, 6, 6, 5, 6, 5, 5, 5, 5, 6, 5, 5, 7, 5, 5, 5, 5, 5, 5, 6, 6, 5, 5, 4, 5, 5, 5, 6, 5, 4, 5, 5, 5, 5, 6, 5, 6, 5, 5, 5, 5, 6, 5, 5, 4, 6, 5, 5, 5, 6, 6, 6, 6, 5, 5, 5, 5, 5, 6, 5, 5, 5, 5, 6, 5, 6, 6, 6, 6, 6, 5, 6, 5, 5, 5, 5, 5, 5, 7, 5, 5, 5, 5, 6, 6, 5, 5, 5, 5, 5, 5, 5, 6, 5, 6, 5, 5, 5, 6, 6, 6, 4, 5, 5, 5, 5, 5, 5, 5, 6, 5, 4, 6, 5, 5, 5, 5, 4, 6, 5, 4, 6, 6, 6, 5, 5, 5, 6, 5, 5, 5, 5, 5, 5, 6, 5, 5, 5, 5, 5, 5, 6, 5, 5, 5, 5, 5, 6, 7, 4, 7, 5, 5, 5, 6, 7, 7, 5, 5, 7, 6, 6, 6, 5, 6, 5, 5, 5, 5, 5, 6, 5, 5, 6, 4, 6, 6, 5, 6, 5, 7, 6, 6, 5, 6, 6, 6, 6, 6, 6, 5, 6, 6, 7, 7, 6, 5, 5, 6, 6, 6, 6, 5, 5, 6, 5, 5, 5, 5, 7, 5, 4, 5, 5, 5, 7, 4, 8, 6, 6, 6, 6, 5, 5, 5, 6, 6, 6, 8, 7, 6, 7, 5, 7, 5, 5, 6, 6, 7, 5, 7, 5, 6, 6, 6, 5, 5, 5, 5, 5, 6, 6, 5, 5, 5, 6, 5, 6, 6, 6, 6, 6, 6, 5, 5, 6, 5, 6, 7, 6, 7, 5, 5, 6, 6, 6, 7, 5, 6, 5, 6, 6, 6, 5, 7, 7, 6, 5, 6, 7, 6, 6, 6, 6, 6, 5, 7, 6, 6, 6, 6, 6, 5, 5, 6, 6, 5, 7, 7, 6, 5, 6, 5, 5, 7, 6, 7, 5, 5, 7, 5, 6, 6, 5, 6, 7, 6, 7, 6, 6, 6, 6, 6, 6, 5, 6, 6, 6, 6, 7, 8, 6, 5, 5, 5, 7, 5, 6, 6, 5, 5, 6, 6, 6, 5, 6, 6, 7, 6, 4, 6, 5, 5, 7, 5, 5, 6, 5, 6, 5, 7, 7, 5, 7, 5, 7, 6, 6, 5, 6, 7, 5, 6, 5, 6, 5, 6, 6, 6, 5, 8, 6, 7, 7, 7, 6, 5, 5, 6, 6, 6, 6, 6, 7, 5, 8, 5, 5, 7, 3, 6, 5, 5, 5, 6, 5, 6, 6, 6, 5, 5, 6, 6, 5, 6, 5, 5, 6, 5, 6, 5, 8, 5, 5, 6, 5, 5, 6, 7, 6, 6, 7, 7, 6, 6, 8, 6, 5, 8, 6, 6, 7, 7, 7, 7, 7, 7, 6, 6, 7, 5, 6, 6, 7, 7, 5, 6, 3, 6, 5, 6, 5, 5, 5, 5, 5, 5, 6, 6, 5, 6, 5, 5, 6, 6, 6, 5, 6, 7, 5, 5, 6, 5, 6, 6, 5, 6, 6, 6, 6, 6, 6, 6, 5, 5, 5, 6, 5, 6, 6, 5, 5, 5, 6, 6, 5, 6, 6, 6, 6, 6, 6, 5, 4, 6, 6, 4, 5, 5, 6, 5, 5, 5, 7, 7, 6, 7, 5, 8, 7, 5, 6, 5, 5, 5, 5, 6, 6, 6, 6, 4, 6, 5, 6, 6, 6, 7, 6, 6, 6, 5, 5, 6, 5, 6, 5, 5, 6, 5, 5, 5, 5, 5, 6, 5, 5, 5, 5, 6, 5, 6, 5, 6, 4, 5, 5, 5, 5, 7, 6, 5, 5, 5, 5, 5, 7, 5, 4, 7, 6, 5, 5, 5, 6, 5, 5, 5, 7, 6, 4, 6, 5, 6, 6, 5, 5, 6, 6, 5, 6, 5, 5, 5, 5, 6, 5, 6, 5, 5, 5, 5, 6, 5, 5, 5, 5, 5, 5, 5, 5, 3, 5, 5, 5, 5, 6, 6, 6, 5, 6, 6, 6, 6, 4, 4, 5, 5, 5, 6, 6, 5, 5, 5, 5, 5, 6, 5, 5, 5, 5, 5, 5, 5, 5, 4, 5, 6, 5, 5, 6, 5, 5, 5, 5, 5, 5, 5, 6, 5, 5, 6, 5, 5, 5, 5, 6, 6, 5, 6, 6, 5, 5, 5, 5, 6, 6, 6, 5, 5, 5, 5, 5, 6, 5, 6, 6, 5, 5, 6, 5, 6, 5, 5, 6, 6, 5, 6, 6, 5, 5, 6, 5, 5, 5, 5, 5, 5, 6, 6, 5, 6, 5, 6, 5, 6, 5, 5, 7, 6, 6, 5, 5, 7, 6, 6, 7, 7, 7, 5, 6, 5, 6, 5, 4, 6, 5, 6, 6, 5, 5, 5, 7, 5, 5, 5, 5, 7, 5, 8, 6, 4, 6, 3, 4, 5, 5, 7, 7, 7, 5, 7, 5, 6, 5, 6, 5, 5, 6, 5, 5, 5, 5, 5, 6, 6, 7, 6, 7, 7, 6, 5, 6, 5, 5, 5, 5, 6, 6, 6, 6, 6, 5, 4, 7, 7, 7, 4, 6, 6, 5, 5, 6, 6, 5, 6, 5, 6, 7, 6, 5, 5, 5, 6, 5, 6, 6, 7, 6, 7, 3, 5, 7, 7, 7, 7, 5, 5, 6, 6, 6, 6, 6, 6, 7, 6, 6, 5, 6, 6, 6, 5, 6, 6, 6, 5, 7, 6, 4, 5, 7, 5, 5, 6, 5, 5, 6, 6, 4, 7, 5, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 5, 6, 6, 7, 5, 6, 5, 5, 6, 6, 6, 7, 5, 6, 5, 6, 6, 7, 5, 7, 5, 5, 5, 7, 5, 6, 5, 6, 6, 5, 6, 7, 5, 5, 6, 5, 5, 6, 5, 5, 6, 7, 7, 6, 6, 7, 7, 7, 7, 5, 7, 7, 7, 7, 5, 7, 6, 5, 6, 6, 6, 7, 6, 6, 5, 6, 6, 5, 6, 7, 6, 6, 5, 6, 7, 7, 7, 5, 6, 6, 7, 7, 5, 7, 6, 5, 6, 6, 7, 6, 6, 6, 5, 6, 6, 5, 5, 5, 7, 6, 6, 7, 5, 7, 7, 6, 8, 6, 6, 6, 6, 7, 7, 7, 5, 7, 5, 6, 6, 5, 7, 6, 5, 5, 7, 6, 7, 6, 6, 6, 5, 7, 6, 7, 7, 8, 6, 6, 7, 6, 5, 6, 5, 7, 5, 6, 6, 6, 6, 6, 5, 6, 7, 5, 6, 6, 7, 6, 6, 6, 6, 6, 6, 6, 5, 8, 6, 6, 6, 4, 7, 6, 6, 5, 6, 6, 5, 7, 7, 7, 6, 6, 6, 5, 6, 6, 6, 6, 6, 5, 6, 6, 7, 6, 6, 7, 6, 5, 6, 6, 5, 7, 7, 6, 5, 7, 6, 7, 5, 5, 5, 5, 7, 6, 6, 6, 6, 6, 6, 6, 6, 4, 7, 5, 6, 6, 5, 6, 5, 5, 6, 5, 6, 5, 4, 6, 5, 7, 5, 6, 6, 6, 6, 6, 6, 6, 7, 8, 5, 7, 7, 7, 5, 7, 7, 6, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 5, 5, 5, 7, 5, 6, 5, 5, 4, 6, 4, 6, 6, 4, 4, 5, 5, 6, 5, 6, 5, 5, 5, 6, 6, 6, 5, 5, 5, 5, 5, 5, 6, 6, 6, 5, 4, 5, 4, 6, 6, 6, 6, 6, 8, 6, 6, 5, 5, 6, 6, 4, 6, 6, 7, 6, 6, 6, 6, 5, 5, 6, 5, 5, 5, 5, 6, 6, 4, 6, 5, 5, 6, 6, 3, 6, 6, 6, 5, 5, 5, 5, 4, 5, 5, 5, 6, 5, 6, 6, 6, 6, 6, 6, 6, 5, 6, 5, 7, 6, 6, 6, 6, 5, 6, 6, 5, 6, 5, 5, 6, 5, 5, 5, 6, 6, 6, 6, 6, 5, 6, 5, 5, 5, 5, 5, 6, 5, 5, 5, 5, 5, 6, 5, 6, 5, 5, 6, 4, 6, 5, 5, 6, 6, 4, 5, 6, 5, 5, 3, 5, 5, 6, 6, 6, 6, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 5, 5, 5, 5, 6, 5, 5, 7, 6, 5, 5, 6, 8, 6, 7, 6, 6, 7, 6, 6, 6, 6, 5, 5, 5, 5, 7, 5, 5, 5, 5, 6, 4, 6, 6, 6, 5, 5, 5, 5, 6, 6, 7, 6, 6, 5, 5, 5, 6, 7, 6, 5, 5, 6, 6, 5, 5, 5, 8, 7, 7, 7, 5, 6, 6, 6, 5, 5, 7, 6, 4, 6, 6, 5, 5, 7, 4, 7, 3, 5, 5, 6, 5, 5, 7, 5, 7, 3, 5, 4, 5, 4, 5, 4, 5, 5, 5, 5, 6, 6, 5, 5, 5, 7, 6, 5, 6, 6, 6, 5, 5, 5, 6, 6, 3, 6, 6, 6, 5, 6, 5, 6, 6, 6, 6, 5, 6, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 6, 6, 6, 5, 6, 5, 7, 6, 6, 6, 5, 5, 6, 7, 6, 6, 7, 6, 5, 5, 5, 8, 5, 5, 6, 5, 6, 7, 5, 6, 5, 5, 5, 5, 5, 5, 5, 6, 6, 5, 5, 6, 6, 6, 5, 6, 6, 6, 6, 6, 6, 5, 6, 5, 5, 5, 7, 6, 6, 6, 6, 5, 6, 6, 6, 6, 5, 6, 6, 5, 6]\ny_data: [9.4, 9.8, 9.8, 9.8, 9.4, 9.4, 9.4, 10.0, 9.5, 10.5, 9.2, 10.5, 9.9, 9.1, 9.2, 9.2, 10.5, 9.3, 9.0, 9.2, 9.4, 9.7, 9.5, 9.4, 9.7, 9.3, 9.5, 9.5, 9.4, 9.8, 10.1, 10.6, 9.8, 9.4, 9.2, 9.6, 10.8, 9.7, 9.8, 10.5, 10.5, 9.3, 10.5, 10.3, 9.5, 13.1, 9.2, 9.5, 9.2, 9.2, 9.2, 9.4, 9.4, 9.4, 10.2, 9.5, 9.6, 9.4, 10.0, 9.4, 9.2, 9.3, 9.5, 9.8, 10.9, 10.9, 9.6, 10.7, 10.7, 10.5, 9.5, 9.5, 9.5, 9.2, 9.6, 10.5, 10.5, 10.7, 10.1, 9.1, 9.2, 9.4, 9.1, 9.4, 10.3, 10.1, 9.9, 9.6, 9.5, 9.0, 9.5, 9.9, 9.8, 9.6, 10.5, 12.9, 10.7, 9.2, 9.8, 9.0, 10.2, 10.4, 9.0, 9.2, 9.4, 9.2, 9.3, 9.3, 9.6, 9.3, 9.5, 9.8, 9.8, 9.7, 9.5, 10.5, 10.0, 9.4, 10.9, 9.2, 9.0, 10.9, 9.2, 9.5, 9.5, 9.4, 10.9, 10.9, 10.5, 9.4, 9.4, 13.0, 13.0, 9.8, 9.9, 9.6, 9.5, 9.2, 9.5, 9.5, 9.6, 9.5, 14.0, 9.4, 14.0, 9.4, 10.0, 9.3, 10.2, 10.5, 10.3, 9.4, 10.1, 10.1, 10.5, 10.5, 10.5, 10.5, 9.3, 9.3, 9.6, 9.2, 10.0, 9.4, 9.4, 9.5, 10.2, 9.0, 10.4, 9.5, 9.1, 9.2, 9.2, 11.5, 9.5, 9.5, 9.5, 10.5, 9.6, 9.5, 9.5, 9.3, 9.3, 9.3, 9.3, 9.7, 9.2, 9.7, 9.5, 9.5, 9.4, 9.8, 9.5, 9.7, 9.7, 9.4, 10.2, 10.1, 13.0, 11.4, 10.3, 9.3, 9.5, 9.2, 9.2, 10.8, 10.8, 9.3, 9.4, 10.5, 12.4, 10.0, 10.2, 10.1, 9.8, 10.5, 11.0, 9.1, 9.7, 9.5, 9.4, 9.4, 9.5, 10.0, 10.4, 10.5, 9.5, 9.8, 10.5, 11.0, 12.2, 9.9, 9.6, 11.0, 9.0, 9.0, 9.0, 9.2, 9.0, 9.0, 9.3, 10.9, 9.8, 9.2, 9.2, 9.9, 9.5, 9.3, 9.8, 9.9, 10.0, 9.9, 10.5, 9.5, 9.9, 9.3, 9.2, 9.2, 9.4, 10.5, 9.3, 9.4, 10.0, 9.3, 10.9, 10.2, 9.8, 12.8, 9.4, 10.1, 10.7, 10.1, 10.1, 9.4, 9.4, 10.7, 9.4, 10.1, 12.6, 10.5, 9.3, 9.9, 9.1, 10.5, 9.8, 9.8, 10.3, 10.3, 10.6, 9.2, 10.6, 10.5, 10.3, 10.1, 9.5, 9.5, 9.9, 9.6, 9.7, 9.6, 10.7, 10.1, 10.0, 9.5, 9.2, 9.3, 9.4, 9.5, 9.5, 9.5, 9.3, 9.4, 9.5, 9.4, 11.0, 11.0, 10.1, 10.4, 11.5, 10.4, 11.5, 9.7, 9.3, 9.5, 9.2, 9.2, 11.5, 11.5, 9.7, 9.5, 12.5, 12.5, 9.4, 11.0, 11.7, 12.2, 12.5, 10.3, 11.5, 9.8, 9.2, 11.3, 9.8, 9.8, 10.7, 9.9, 12.3, 12.0, 10.0, 9.4, 9.9, 9.4, 9.3, 13.0, 11.9, 12.8, 11.0, 11.7, 10.4, 9.8, 9.4, 9.9, 10.0, 10.2, 10.0, 11.8, 10.0, 9.0, 9.4, 12.0, 9.9, 8.7, 10.6, 9.2, 10.8, 11.8, 11.0, 12.0, 13.3, 10.8, 9.4, 10.0, 9.4, 9.4, 9.2, 9.7, 9.2, 9.6, 9.2, 10.0, 12.9, 10.0, 9.5, 9.1, 9.9, 13.0, 9.9, 11.0, 11.0, 9.4, 9.9, 10.8, 10.5, 10.5, 9.1, 10.1, 10.8, 10.8, 11.3, 9.6, 9.5, 9.5, 9.3, 11.7, 9.5, 9.3, 11.7, 10.5, 10.4, 9.9, 11.8, 12.3, 10.9, 11.0, 10.9, 12.3, 11.4, 10.6, 9.3, 10.4, 11.0, 9.2, 12.8, 9.5, 9.9, 9.5, 10.2, 11.2, 9.9, 9.3, 9.8, 11.3, 11.2, 11.6, 12.5, 10.1, 10.5, 11.2, 10.2, 10.8, 10.8, 9.1, 10.0, 11.2, 11.1, 13.4, 10.3, 9.6, 11.2, 9.0, 11.3, 9.3, 11.8, 9.0, 9.2, 9.7, 11.5, 14.0, 9.2, 9.8, 10.6, 11.4, 10.4, 10.6, 9.4, 10.2, 9.7, 11.0, 10.2, 10.1, 9.2, 11.7, 9.4, 9.4, 13.4, 10.0, 10.0, 10.0, 10.8, 10.2, 10.6, 13.3, 13.4, 11.6, 12.1, 11.0, 9.0, 11.1, 11.0, 11.6, 9.0, 12.0, 12.0, 10.9, 10.8, 12.5, 10.8, 9.5, 10.2, 11.4, 9.5, 10.2, 9.7, 11.8, 11.8, 9.3, 11.9, 8.4, 11.7, 11.0, 10.0, 9.1, 9.8, 9.4, 9.5, 9.9, 11.0, 11.4, 8.7, 9.4, 10.3, 10.3, 10.3, 12.8, 10.0, 10.3, 9.4, 10.7, 12.0, 11.2, 9.6, 11.0, 9.9, 11.0, 8.4, 9.1, 9.5, 10.7, 10.4, 9.4, 9.5, 10.0, 10.0, 11.5, 11.1, 11.1, 11.7, 11.1, 11.7, 12.7, 11.4, 9.2, 9.2, 10.1, 12.7, 11.4, 9.0, 9.0, 10.7, 11.7, 11.0, 11.7, 10.4, 9.6, 10.0, 10.2, 10.0, 9.5, 9.8, 9.8, 9.6, 9.6, 9.2,",
+      "artifact": null,
+      "final_answer": "",
+      "numeric_outputs": {},
+      "repair_attempts": 2,
+      "self_corrected": true,
+      "ground_truth": {
+        "mean_alcohol_by_quality": {
+          "3": 9.955,
+          "4": 10.2651,
+          "5": 9.8997,
+          "6": 10.6295,
+          "7": 11.4659,
+          "8": 12.0944
+        },
+        "trend": "increasing above quality 5"
+      },
+      "expected_method": [
+        "groupby_aggregation",
+        "distribution_analysis"
+      ],
+      "acceptable_methods": [
+        "groupby_aggregation",
+        "distribution_analysis"
+      ],
+      "expected_chart": [
+        "box",
+        "violin",
+        "strip"
+      ],
+      "tolerance": 0.05,
+      "kind": "viz",
+      "error": null,
+      "raw": {
+        "vql": "Visualize SCATTER SELECT quality, alcohol FROM wine_quality",
+        "query_difficulty": "",
+        "augmented_explanation": ""
+      }
+    },
+    {
+      "id": "wine_q5",
+      "dataset": "wine_quality",
+      "question": "Are there outliers in residual sugar and total sulfur dioxide? Identify them and say whether they should be removed.",
+      "declared_method": null,
+      "declared_chart": "scatter",
+      "code": "\nimport matplotlib.pyplot as plt\nimport pandas as pd\nimport os\nimport duckdb\n\n\ndata_folder = 'C:/Users/janha/Downloads/FYP/Benchmark/benchmark-fyp/results/artifacts/nvagent_workspace/databases/wine_quality'\n\n\ncon = duckdb.connect(database=':memory:')\n\n\ncsv_files = [f for f in os.listdir(data_folder) if f.endswith('.csv')]\nfor file in csv_files:\n    table_name = os.path.splitext(file)[0]\n    con.execute(f\"CREATE VIEW {table_name} AS SELECT * FROM read_csv_auto('{os.path.join(data_folder, file)}')\")\n\n\nsql = f'''\nSELECT residual_sugar, total_sulfur_dioxide FROM wine_quality\n'''\ndf = con.execute(sql).fetchdf()\ncon.close()\n\n# rename columns\ndf.columns = ['residual_sugar','total_sulfur_dioxide']\n\n\n# print(\"Columns in the dataframe:\", df.columns)\n\n\n\n\n\n\nfig,ax = plt.subplots(1,1,figsize=(10,4))\nax.spines['top'].set_visible(False)\nax.spines['right'].set_visible(False)\n\n\nax.scatter(df['residual_sugar'], df['total_sulfur_dioxide'])\n\nax.set_xlabel('residual_sugar')\nax.set_ylabel('total_sulfur_dioxide')\nax.set_title(f'SCATTER Chart of total_sulfur_dioxide by residual_sugar')\nplt.xticks(rotation=45)\nplt.tight_layout()\n\n\n# Print data\nprint(\"x_data:\", df['residual_sugar'].tolist())\nprint(\"y_data:\", df['total_sulfur_dioxide'].tolist())\n\nplt.show()",
+      "executed": true,
+      "execution_error": null,
+      "stdout": "x_data: [1.9, 2.6, 2.3, 1.9, 1.9, 1.8, 1.6, 1.2, 2.0, 6.1, 1.8, 6.1, 1.6, 1.6, 3.8, 3.9, 1.8, 1.7, 4.4, 1.8, 1.8, 2.3, 1.6, 2.3, 2.4, 1.4, 1.8, 1.6, 1.9, 2.0, 2.4, 2.5, 2.3, 10.7, 1.8, 5.5, 2.4, 2.1, 1.5, 5.9, 5.9, 2.8, 2.6, 2.2, 1.8, 2.1, 2.2, 1.6, 1.6, 1.4, 1.7, 2.2, 2.1, 3.0, 2.8, 3.8, 3.4, 5.1, 2.3, 2.4, 2.2, 1.8, 1.9, 2.0, 4.65, 4.65, 1.5, 1.6, 2.0, 1.9, 1.9, 2.1, 1.9, 2.1, 2.5, 2.2, 2.2, 2.4, 2.0, 1.5, 1.6, 1.9, 2.0, 1.8, 1.8, 2.2, 1.9, 1.9, 2.1, 1.8, 1.9, 1.9, 2.0, 1.9, 1.4, 2.3, 3.0, 2.0, 2.5, 1.9, 2.1, 1.9, 1.9, 2.1, 2.2, 2.1, 1.7, 1.7, 2.5, 2.0, 1.8, 2.2, 2.2, 2.3, 1.8, 2.2, 1.9, 2.0, 2.2, 1.8, 1.7, 2.2, 2.5, 2.6, 1.6, 1.9, 1.7, 1.8, 1.8, 1.8, 2.0, 2.3, 2.3, 1.5, 2.2, 1.9, 1.8, 2.0, 2.1, 2.0, 1.9, 1.8, 1.8, 1.7, 1.8, 1.8, 1.8, 1.6, 2.3, 2.8, 2.1, 3.4, 1.8, 1.8, 5.5, 5.5, 5.5, 5.5, 2.2, 1.9, 2.0, 1.3, 1.7, 7.3, 7.2, 1.7, 2.1, 1.6, 2.1, 1.8, 1.8, 2.0, 2.0, 1.9, 2.0, 1.5, 2.0, 2.3, 2.5, 2.4, 2.4, 2.0, 2.5, 1.8, 1.9, 2.0, 2.0, 2.6, 2.0, 1.9, 2.9, 1.9, 3.8, 2.2, 2.2, 2.0, 2.4, 2.0, 1.2, 2.1, 1.4, 2.1, 1.5, 1.6, 1.6, 2.6, 2.6, 1.8, 2.7, 2.1, 2.0, 2.8, 2.1, 2.2, 2.4, 5.6, 2.0, 2.2, 1.9, 2.4, 2.0, 2.0, 1.5, 2.0, 2.0, 2.6, 2.0, 2.6, 2.6, 2.6, 1.6, 1.8, 2.8, 2.6, 2.3, 1.9, 1.9, 1.9, 1.9, 2.3, 1.7, 2.1, 1.8, 2.2, 2.2, 2.0, 1.9, 2.3, 1.7, 2.0, 1.6, 1.8, 3.1, 1.9, 1.8, 3.2, 2.2, 2.1, 1.8, 2.6, 1.7, 2.0, 1.7, 1.8, 2.4, 1.8, 3.3, 3.6, 3.0, 4.0, 4.0, 4.0, 4.0, 2.4, 7.0, 4.0, 3.0, 4.0, 6.4, 5.6, 3.6, 3.5, 3.0, 5.6, 3.4, 3.4, 2.0, 3.0, 2.5, 3.3, 2.5, 2.0, 2.7, 2.4, 3.2, 2.5, 2.6, 2.0, 2.3, 2.1, 2.6, 1.5, 2.6, 1.6, 2.1, 2.5, 2.2, 2.4, 2.4, 1.7, 2.5, 2.0, 2.8, 3.0, 2.6, 2.5, 3.4, 2.9, 3.2, 2.9, 3.2, 3.4, 2.3, 2.8, 11.0, 11.0, 3.65, 4.5, 2.6, 2.0, 2.9, 2.9, 3.2, 2.1, 2.5, 3.4, 1.9, 2.8, 3.0, 2.3, 2.4, 2.7, 1.8, 1.8, 2.6, 1.9, 2.7, 3.0, 2.8, 2.6, 2.7, 2.6, 2.4, 4.8, 1.4, 2.4, 3.0, 2.95, 3.1, 2.6, 2.0, 2.6, 2.5, 2.0, 5.8, 3.4, 5.8, 2.6, 2.8, 2.4, 2.3, 1.6, 1.8, 2.2, 3.8, 4.4, 3.0, 2.4, 6.2, 2.5, 2.0, 2.9, 2.0, 2.0, 2.1, 2.4, 2.0, 1.9, 1.9, 2.5, 1.4, 2.9, 2.0, 2.0, 2.3, 4.2, 7.9, 2.6, 2.6, 2.3, 7.9, 1.7, 2.6, 2.7, 2.7, 1.4, 2.5, 3.0, 3.7, 4.5, 2.5, 2.4, 1.9, 6.7, 2.7, 6.6, 2.2, 1.9, 2.0, 1.8, 2.4, 2.3, 2.0, 2.1, 2.0, 2.3, 2.1, 1.9, 1.3, 2.4, 2.1, 2.2, 2.3, 2.3, 3.2, 2.3, 2.0, 3.2, 3.2, 1.5, 2.2, 2.15, 3.7, 2.7, 1.7, 2.1, 2.6, 2.1, 2.0, 2.8, 2.8, 1.8, 1.7, 2.8, 1.6, 5.2, 2.3, 2.7, 2.8, 2.2, 2.3, 2.6, 2.55, 2.2, 2.1, 2.9, 2.0, 2.6, 2.1, 1.2, 2.6, 2.4, 2.6, 2.1, 1.7, 2.2, 2.0, 1.8, 2.2, 2.7, 15.5, 2.8, 2.2, 2.2, 4.1, 1.9, 1.9, 1.8, 2.8, 2.6, 2.8, 2.5, 2.6, 3.0, 8.3, 2.6, 1.9, 2.5, 2.6, 3.0, 1.9, 6.55, 6.55, 1.9, 1.8, 2.9, 1.8, 2.3, 2.2, 2.8, 4.6, 2.2, 2.1, 2.4, 2.4, 6.1, 4.3, 2.1, 2.8, 2.5, 2.7, 2.0, 2.3, 2.5, 2.4, 2.8, 2.5, 2.5, 2.6, 2.4, 2.1, 2.7, 2.7, 2.1, 2.7, 2.1, 2.4, 2.1, 5.8, 5.15, 3.3, 6.3, 2.1, 2.5, 1.8, 2.6, 2.0, 2.5, 2.6, 1.9, 2.1, 2.8, 2.7, 1.6, 4.2, 4.2, 4.6, 4.2, 4.6, 4.3, 2.8, 2.4, 2.9, 2.7, 4.3, 2.8, 2.5, 2.5, 2.6, 2.2, 3.3, 2.2, 2.4, 2.1, 3.2, 3.1, 2.3, 2.8, 2.9, 2.2, 2.2, 2.2, 2.2, 1.9, 3.4, 2.4, 2.7, 1.9, 2.0, 2.6, 2.6, 1.7, 2.6, 3.5, 2.6, 7.9, 2.0, 1.9, 2.1, 2.3, 2.1, 2.2, 2.6, 2.2, 2.9, 2.6, 4.6, 3.3, 5.1, 3.2, 2.5, 2.7, 2.4, 1.5, 2.2, 2.3, 2.3, 2.2, 2.7, 2.3, 3.4, 3.4, 1.9, 2.9, 5.6, 5.6, 2.2, 2.2, 2.5, 2.3, 2.5, 2.7, 3.0, 3.4, 1.9, 1.4, 2.4, 2.3, 2.2, 1.9, 2.3, 2.3, 2.3, 2.3, 2.3, 6.0, 3.6, 2.2, 2.8, 8.6, 2.2, 2.5, 7.5, 2.8, 2.4, 2.9, 2.2, 1.4, 1.4, 4.4, 1.4, 1.6, 1.6, 1.8, 2.0, 2.0, 1.8, 2.0, 2.3, 2.0, 2.5, 1.7, 2.0, 1.7, 2.2, 2.2, 2.2, 2.3, 2.6, 3.3, 1.9, 2.2, 2.25, 2.6, 2.3, 2.6, 1.8, 3.1, 1.6, 1.8, 4.25, 2.6, 2.0, 2.8, 2.7, 1.3, 2.1, 2.1, 3.2, 2.1, 2.9, 2.1, 2.1, 2.6, 1.6, 6.0, 2.0, 3.0, 2.5, 1.6, 2.8, 3.0, 3.2, 2.3, 2.6, 2.7, 2.3, 2.6, 2.0, 3.9, 2.0, 2.85, 2.7, 2.2, 3.1, 3.0, 2.8, 1.8, 1.8, 3.2, 2.3, 3.45, 2.1, 2.7, 2.0, 2.1, 2.1, 2.5, 2.8, 2.4, 4.2, 2.6, 1.9, 2.8, 2.7, 2.1, 2.5, 2.6, 2.1, 2.1, 2.9, 2.9, 2.5, 2.9, 1.7, 1.9, 2.0, 2.2, 2.2, 2.5, 2.8, 2.0, 1.7, 2.0, 2.8, 3.0, 2.9, 2.7, 2.3, 1.9, 2.3, 2.4, 2.3, 1.8, 1.8, 3.0, 2.4, 2.4, 3.4, 2.6, 2.0, 2.4, 2.4, 2.4, 2.5, 2.3, 2.3, 2.2, 2.2, 2.9, 2.6, 2.9, 2.5, 2.6, 2.3, 2.6, 2.5, 1.6, 3.6, 3.6, 4.0, 3.3, 1.7, 2.5, 2.7, 2.4, 2.0, 2.4, 1.9, 2.8, 2.6, 2.8, 2.5, 2.1, 2.8, 2.5, 3.2, 1.6, 2.35, 3.2, 1.9, 2.1, 2.0, 2.0, 2.8, 2.8, 2.3, 2.8, 2.3, 2.1, 2.5, 2.1, 1.5, 1.6, 1.6, 1.5, 2.4, 2.4, 1.6, 2.2, 2.65, 3.0, 2.6, 2.0, 1.7, 1.8, 1.8, 1.8, 1.8, 1.6, 1.9, 1.9, 2.5, 1.5, 1.5, 2.5, 1.5, 2.5, 1.7, 1.8, 2.7, 2.0, 2.7, 2.5, 2.7, 2.6, 2.3, 2.0, 1.8, 2.0, 2.1, 1.5, 2.0, 1.6, 2.1, 2.8, 2.2, 2.1, 4.0, 2.5, 1.6, 2.1, 3.1, 2.5, 4.0, 2.5, 2.4, 2.6, 2.5, 6.6, 2.0, 2.3, 1.9, 2.3, 2.2, 2.3, 2.4, 2.3, 2.4, 3.4, 2.6, 2.4, 2.4, 6.0, 6.0, 3.0, 2.6, 2.2, 2.4, 1.2, 3.8, 9.0, 2.9, 4.6, 1.2, 2.2, 1.5, 8.8, 2.2, 1.8, 2.3, 2.2, 1.8, 8.8, 2.3, 1.9, 2.3, 2.2, 2.3, 3.3, 1.9, 2.0, 1.9, 2.0, 1.9, 2.3, 2.3, 1.4, 2.8, 1.6, 2.2, 5.0, 2.6, 2.3, 3.8, 2.0, 4.1, 2.1, 1.8, 1.8, 1.8, 2.1, 2.2, 2.1, 2.7, 1.9, 2.1, 2.0, 2.3, 2.0, 1.9, 1.6, 2.1, 2.0, 1.9, 2.4, 2.4, 2.1, 2.4, 2.9, 1.9, 1.9, 2.4, 1.7, 5.9, 2.1, 2.1, 2.6, 3.6, 1.4, 1.9, 1.9, 2.1, 1.9, 1.4, 2.0, 1.4, 1.6, 1.7, 1.5, 1.7, 2.0, 2.0, 2.0, 2.5, 2.0, 2.2, 2.2, 1.4, 1.65, 2.2, 1.5, 2.05, 1.8, 1.6, 1.8, 2.05, 2.0, 3.6, 2.8, 1.7, 2.0, 2.1, 1.6, 2.0, 2.2, 2.2, 0.9, 0.9, 1.8, 2.4, 2.4, 2.1, 2.3, 1.8, 2.8, 1.9, 2.2, 2.5, 1.8, 2.1, 1.8, 4.1, 2.6, 2.5, 2.4, 2.5, 1.8, 6.2, 2.2, 2.2, 1.7, 2.2, 8.9, 3.3, 1.4, 1.7, 1.8, 1.7, 1.8, 1.8, 1.4, 2.4, 2.3, 2.0, 2.0, 4.0, 3.9, 2.4, 4.0, 1.8, 1.8, 1.9, 2.4, 2.0, 2.4, 2.4, 2.2, 2.2, 2.8, 1.5, 8.1, 1.8, 2.7, 8.1, 2.0, 2.0, 6.4, 6.4, 8.3, 1.4, 8.3, 1.8, 2.4, 1.8, 1.8, 4.7, 1.6, 1.5, 1.5, 1.9, 2.0, 2.0, 2.2, 5.5, 2.5, 5.5, 1.5, 2.1, 1.5, 2.1, 2.1, 1.7, 2.1, 2.2, 2.1, 1.9, 2.0, 3.3, 2.1, 1.4, 2.0, 1.5, 1.6, 4.3, 2.5, 2.5, 2.5, 2.1, 2.5, 2.5, 1.8, 1.4, 1.9, 2.2, 1.7, 1.7, 2.9, 2.7, 3.3, 1.9, 1.7, 1.8, 5.5, 1.7, 1.7, 2.0, 2.0, 3.7, 2.0, 1.7, 2.5, 2.4, 1.8, 2.3, 2.5, 1.8, 6.2, 2.0, 2.0, 2.8, 2.5, 2.2, 2.1, 2.2, 2.2, 1.75, 2.1, 2.8, 2.2, 2.3, 1.4, 2.3, 1.7, 1.7, 1.9, 2.0, 2.5, 2.8, 2.3, 1.6, 2.2, 2.1, 1.7, 1.7, 2.2, 5.6, 2.4, 2.1, 2.4, 2.4, 1.65, 2.5, 1.6, 2.1, 2.0, 7.8, 2.0, 2.1, 1.8, 4.6, 2.3, 2.5, 2.3, 1.8, 1.8, 2.3, 1.5, 2.0, 2.3, 1.5, 1.9, 1.8, 5.8, 2.1, 2.1, 2.1, 1.7, 2.1, 2.0, 2.1, 2.1, 2.1, 1.9, 1.9, 2.1, 2.0, 1.9, 1.9, 1.3, 1.8, 1.8, 2.2, 2.2, 2.5, 2.6, 4.1, 2.0, 1.8, 2.1, 2.7, 2.6, 2.1, 2.2, 2.2, 12.9, 1.7, 2.2, 2.5, 4.3, 1.7, 2.5, 2.0, 2.4, 13.4, 1.8, 1.7, 1.8, 2.2, 2.3, 2.3, 2.2, 1.8, 1.4, 1.9, 2.4, 1.8, 4.8, 2.7, 2.7, 1.8, 2.0, 2.5, 2.2, 1.8, 2.3, 2.3, 2.3, 2.0, 1.8, 1.6, 1.6, 1.9, 2.0, 2.1, 2.3, 6.3, 1.9, 2.3, 1.7, 1.9, 1.9, 2.0, 2.7, 2.3, 1.8, 2.5, 2.6, 4.5, 4.5, 1.9, 2.1, 2.4, 1.9, 2.1, 4.3, 4.3, 2.1, 1.4, 2.1, 2.15, 2.0, 2.1, 1.8, 2.3, 1.9, 2.5, 3.9, 2.5, 1.4, 1.9, 3.0, 1.9, 2.3, 2.4, 2.0, 1.2, 2.2, 2.0, 1.7, 2.6, 1.2, 1.8, 1.8, 1.7, 1.7, 1.7, 1.7, 1.8, 2.1, 2.1, 3.8, 1.7, 2.2, 2.0, 2.4, 1.4, 1.4, 1.4, 1.7, 1.7, 1.7, 1.7, 1.7, 2.6, 2.3, 2.1, 1.8, 1.8, 2.8, 2.0, 2.3, 1.9, 1.9, 2.3, 1.8, 1.8, 2.5, 5.4, 1.4, 2.3, 2.5, 1.4, 2.0, 1.9, 2.2, 1.7, 2.2, 2.1, 1.6, 1.7, 3.1, 1.7, 3.8, 1.2, 2.0, 1.4, 2.3, 2.0, 2.6, 2.6, 1.8, 2.1, 2.1, 1.8, 3.4, 1.8, 1.8, 6.1, 2.2, 2.3, 2.4, 1.3, 2.0, 3.9, 1.6, 1.6, 2.0, 2.2, 2.2, 2.1, 2.1, 2.0, 1.7, 2.6, 2.0, 5.1, 2.1, 2.2, 2.1, 1.8, 2.4, 5.1, 2.0, 2.2, 1.6, 2.2, 2.5, 1.6, 2.2, 1.6, 1.6, 2.1, 3.9, 1.4, 1.4, 1.8, 2.5, 1.9, 2.2, 1.8, 2.1, 1.6, 1.8, 15.4, 15.4, 1.6, 4.8, 1.7, 2.2, 2.0, 5.2, 1.9, 1.75, 2.2, 5.2, 1.9, 1.9, 1.9, 2.0, 2.0, 2.7, 2.0, 1.9, 2.2, 1.6, 1.8, 1.9, 1.7, 1.7, 2.3, 2.1, 2.3, 2.4, 1.7, 1.7, 2.1, 2.3, 2.1, 2.1, 1.4, 3.75, 2.6, 1.8, 13.8, 2.2, 13.8, 2.2, 5.7, 3.0, 1.5, 3.0, 2.1, 1.5, 2.0, 2.1, 2.1, 1.9, 1.7, 2.1, 1.8, 1.7, 1.6, 1.9, 1.4, 1.9, 1.9, 2.3, 2.3, 2.3, 1.5, 4.3, 2.4, 2.5, 2.3, 1.8, 2.0, 2.3, 2.1, 1.8, 2.2, 2.1, 2.2, 1.8, 4.1, 4.1, 2.3, 2.0, 2.2, 2.6, 2.0, 1.9, 2.3, 2.0, 2.0, 2.1, 2.2, 1.7, 2.2, 2.1, 2.2, 2.8, 2.0, 1.9, 2.4, 2.2, 1.9, 1.9, 2.5, 1.8, 4.4, 2.2, 1.9, 2.2, 2.3, 1.8, 2.0, 1.6, 2.0, 1.8, 2.3, 2.3, 3.7, 2.2, 2.4, 1.7, 2.2, 2.4, 6.7, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 1.9, 2.1, 2.0, 1.6, 1.9, 2.2, 2.2, 2.2, 2.4, 13.9, 2.2, 1.6, 5.1, 1.8, 1.7, 2.4, 1.7, 2.6, 2.1, 2.4, 2.6, 2.4, 1.8, 2.5, 7.8, 1.8, 1.",
+      "artifact": null,
+      "final_answer": "The filtered schema consists of 1 table (wine_quality) with 2 relevant numeric columns: residual_sugar and total_sulfur_dioxide. These columns are the targets for outlier analysis; no keys or relationships are required for this single\u2011table query.",
+      "numeric_outputs": {},
+      "repair_attempts": 1,
+      "self_corrected": false,
+      "ground_truth": {
+        "iqr_outliers_residual_sugar": 155,
+        "iqr_outliers_total_sulfur_dioxide": 55,
+        "max_residual_sugar": 15.5,
+        "max_total_sulfur_dioxide": 289.0,
+        "method": "1.5 x IQR rule"
+      },
+      "expected_method": [
+        "outlier_detection"
+      ],
+      "acceptable_methods": [
+        "outlier_detection",
+        "descriptive_statistics",
+        "distribution_analysis"
+      ],
+      "expected_chart": [
+        "box",
+        "hist",
+        "scatter"
+      ],
+      "tolerance": 0.05,
+      "kind": "mixed",
+      "error": null,
+      "raw": {
+        "vql": "Visualize SCATTER SELECT residual_sugar, total_sulfur_dioxide FROM wine_quality",
+        "query_difficulty": "SINGLE",
+        "augmented_explanation": "The filtered schema consists of 1 table (wine_quality) with 2 relevant numeric columns: residual_sugar and total_sulfur_dioxide. These columns are the targets for outlier analysis; no keys or relationships are required for this single\u2011table query."
+      }
+    },
+    {
+      "id": "wine_q6",
+      "dataset": "wine_quality",
+      "question": "Build a model that predicts wine quality from its physicochemical properties. Report how well it performs and which features drive the prediction.",
+      "declared_method": null,
+      "declared_chart": null,
+      "code": "",
+      "executed": false,
+      "execution_error": null,
+      "stdout": "",
+      "artifact": null,
+      "final_answer": "",
+      "numeric_outputs": {},
+      "repair_attempts": 0,
+      "self_corrected": false,
+      "ground_truth": {
+        "model": "OLS linear regression, all 11 predictors",
+        "r_squared_in_sample": 0.3606,
+        "coefficients": {
+          "fixed_acidity": 0.025,
+          "volatile_acidity": -1.0836,
+          "citric_acid": -0.1826,
+          "residual_sugar": 0.0163,
+          "chlorides": -1.8742,
+          "free_sulfur_dioxide": 0.0044,
+          "total_sulfur_dioxide": -0.0033,
+          "density": -17.8812,
+          "ph": -0.4137,
+          "sulphates": 0.9163,
+          "alcohol": 0.2762
+        },
+        "largest_abs_coefficient": "density"
+      },
+      "expected_method": [
+        "linear_regression"
+      ],
+      "acceptable_methods": [
+        "linear_regression",
+        "random_forest",
+        "gradient_boosting",
+        "ridge_regression",
+        "ordinal_regression"
+      ],
+      "expected_chart": [
+        "bar",
+        "scatter",
+        "none"
+      ],
+      "tolerance": 0.1,
+      "kind": "stat",
+      "error": "TypeError: expected string or bytes-like object, got 'NoneType'",
+      "raw": {
+        "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\janha\\Downloads\\FYP\\Benchmark\\benchmark-fyp\\harness\\runners\\run_nvagent.py\", line 185, in main\n    code = manager.start(msg)\n           ^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\janha\\Downloads\\FYP\\Benchmark\\benchmark-fyp\\repos\\nvAgent\\core\\chat_manager.py\", line 71, in start\n    self._chat_single_round(user_message)\n  File \"C:\\Users\\janha\\Downloads\\FYP\\Benchmark\\benchmark-fyp\\repos\\nvAgent\\core\\chat_manager.py\", line 64, in _chat_single_round\n    agent.talk(message)\n  File \"C:\\Users\\janha\\Downloads\\FYP\\Benchmark\\benchmark-fyp\\repos\\nvAgent\\core\\agents.py\", line 351, in talk\n    sql_match = re.search(r'SELECT\\s+.+', vql, re.IGNORECASE | re.DOTALL)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.11_3.11.2544.0_x64__qbz5n2kfra8p0\\Lib\\re\\__init__.py\", line 176, in search\n    return _compile(pattern, flags).search(string)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: expected string or bytes-like object, got 'NoneType'\n"
+      }
+    },
+    {
+      "id": "wine_q7",
+      "dataset": "wine_quality",
+      "question": "Is volatile acidity negatively associated with wine quality? Quantify the association and comment on whether it implies causation.",
+      "declared_method": null,
+      "declared_chart": "scatter",
+      "code": "\nimport matplotlib.pyplot as plt\nimport pandas as pd\nimport os\nimport duckdb\n\n\ndata_folder = 'C:/Users/janha/Downloads/FYP/Benchmark/benchmark-fyp/results/artifacts/nvagent_workspace/databases/wine_quality'\n\n\ncon = duckdb.connect(database=':memory:')\n\n\ncsv_files = [f for f in os.listdir(data_folder) if f.endswith('.csv')]\nfor file in csv_files:\n    table_name = os.path.splitext(file)[0]\n    con.execute(f\"CREATE VIEW {table_name} AS SELECT * FROM read_csv_auto('{os.path.join(data_folder, file)}')\")\n\n\nsql = f'''\nSELECT volatile_acidity, quality FROM wine_quality\n'''\ndf = con.execute(sql).fetchdf()\ncon.close()\n\n# rename columns\ndf.columns = ['volatile_acidity','quality']\n\n\n# print(\"Columns in the dataframe:\", df.columns)\n\n\n\n\n\n\nfig,ax = plt.subplots(1,1,figsize=(10,4))\nax.spines['top'].set_visible(False)\nax.spines['right'].set_visible(False)\n\n\nax.scatter(df['volatile_acidity'], df['quality'])\n\nax.set_xlabel('volatile_acidity')\nax.set_ylabel('quality')\nax.set_title(f'SCATTER Chart of quality by volatile_acidity')\nplt.xticks(rotation=45)\nplt.tight_layout()\n\n\n# Print data\nprint(\"x_data:\", df['volatile_acidity'].tolist())\nprint(\"y_data:\", df['quality'].tolist())\n\nplt.show()",
+      "executed": true,
+      "execution_error": null,
+      "stdout": "x_data: [0.7, 0.88, 0.76, 0.28, 0.7, 0.66, 0.6, 0.65, 0.58, 0.5, 0.58, 0.5, 0.615, 0.61, 0.62, 0.62, 0.28, 0.56, 0.59, 0.32, 0.22, 0.39, 0.43, 0.49, 0.4, 0.39, 0.41, 0.43, 0.71, 0.645, 0.675, 0.685, 0.655, 0.605, 0.32, 0.645, 0.6, 0.38, 1.13, 0.45, 0.45, 0.61, 0.49, 0.66, 0.67, 0.52, 0.935, 0.29, 0.4, 0.31, 0.66, 0.52, 0.5, 0.38, 0.51, 0.62, 0.42, 0.63, 0.59, 0.39, 0.4, 0.69, 0.52, 0.735, 0.725, 0.725, 0.52, 0.705, 0.32, 0.705, 0.63, 0.67, 0.69, 0.675, 0.32, 0.41, 0.41, 0.785, 0.75, 0.625, 0.45, 0.43, 0.5, 0.67, 0.3, 0.55, 0.49, 0.49, 0.39, 0.62, 0.52, 0.49, 0.49, 0.49, 1.02, 0.6, 0.775, 0.5, 0.9, 0.545, 0.61, 0.5, 0.545, 0.575, 0.49, 0.575, 0.41, 0.63, 0.33, 0.785, 0.56, 0.62, 0.6, 0.31, 0.56, 0.4, 0.54, 0.56, 0.55, 0.69, 1.07, 0.55, 0.695, 0.71, 0.5, 0.62, 1.33, 1.33, 0.59, 0.38, 0.745, 0.5, 0.5, 0.5, 1.04, 0.745, 0.715, 0.415, 0.56, 0.56, 0.745, 0.715, 0.34, 0.39, 0.34, 0.67, 0.68, 0.49, 0.49, 0.4, 0.33, 0.52, 0.6, 0.6, 0.43, 0.43, 0.43, 0.43, 0.68, 0.6, 0.95, 0.68, 0.53, 0.6, 0.59, 0.63, 0.64, 0.55, 0.63, 0.705, 0.885, 0.42, 0.42, 0.62, 0.38, 0.5, 0.38, 0.52, 0.805, 0.61, 0.61, 0.61, 0.73, 0.61, 0.62, 0.31, 0.39, 0.705, 0.5, 0.49, 0.5, 0.37, 0.63, 0.55, 0.55, 0.59, 0.58, 0.3, 0.835, 1.09, 0.32, 0.37, 0.5, 0.42, 0.43, 0.3, 0.3, 0.57, 0.44, 0.3, 0.53, 0.725, 0.44, 0.57, 0.735, 0.49, 0.625, 0.725, 0.49, 0.53, 0.34, 0.53, 0.61, 0.645, 0.635, 0.43, 0.59, 0.82, 0.43, 0.52, 0.48, 0.38, 0.37, 0.52, 1.0, 0.63, 0.63, 0.645, 0.63, 1.0, 0.635, 0.38, 0.58, 0.21, 0.21, 0.66, 0.68, 0.6, 0.53, 0.66, 0.32, 0.6, 0.35, 0.775, 0.6, 0.57, 0.34, 0.695, 0.41, 0.31, 0.33, 0.975, 0.52, 0.37, 0.56, 0.26, 0.87, 0.35, 0.54, 0.18, 0.545, 0.18, 0.37, 0.715, 0.65, 0.545, 0.54, 0.18, 0.32, 0.4, 0.26, 0.27, 0.52, 0.4, 0.59, 0.59, 0.45, 0.4, 0.52, 0.42, 0.52, 0.2, 0.55, 0.36, 0.34, 0.5, 0.83, 0.63, 0.65, 0.67, 0.53, 0.18, 0.705, 0.67, 0.65, 0.53, 0.62, 0.41, 0.43, 0.29, 0.53, 0.53, 0.46, 0.47, 0.36, 0.35, 0.56, 0.77, 0.66, 0.77, 0.66, 0.61, 0.62, 0.59, 0.49, 0.49, 0.53, 0.44, 0.27, 0.46, 0.36, 0.36, 0.58, 0.56, 0.65, 0.695, 0.43, 0.43, 0.49, 0.28, 0.34, 0.42, 0.39, 0.39, 0.57, 0.685, 0.815, 0.49, 0.56, 0.785, 0.67, 0.795, 0.665, 0.53, 0.21, 0.75, 0.41, 0.42, 0.43, 0.38, 0.7, 0.45, 0.58, 0.46, 0.615, 0.42, 0.615, 0.575, 0.34, 0.27, 0.765, 0.24, 0.28, 0.55, 0.41, 0.54, 0.45, 0.27, 0.625, 0.42, 0.26, 0.415, 0.26, 0.26, 0.51, 0.63, 0.54, 0.66, 0.46, 0.38, 0.85, 0.415, 0.37, 0.665, 0.6, 0.37, 0.735, 0.59, 0.59, 0.765, 0.735, 0.26, 0.48, 0.6, 0.69, 0.31, 0.44, 0.39, 0.34, 0.46, 0.43, 0.45, 0.735, 0.4, 0.52, 0.725, 0.48, 0.58, 0.38, 0.77, 0.56, 0.84, 0.96, 0.24, 0.96, 0.84, 0.67, 0.78, 0.52, 0.84, 0.24, 0.55, 0.37, 0.39, 0.41, 0.39, 0.67, 0.45, 0.41, 0.62, 0.31, 0.4, 0.685, 0.44, 0.57, 0.735, 0.38, 0.48, 0.53, 0.39, 0.39, 0.37, 0.56, 0.33, 0.23, 0.62, 0.59, 0.63, 0.33, 0.58, 0.43, 0.615, 0.26, 0.66, 0.315, 0.29, 0.5, 0.46, 0.36, 0.82, 0.32, 0.54, 0.37, 0.35, 0.28, 0.68, 0.27, 0.24, 0.68, 0.685, 0.28, 0.3, 0.36, 0.36, 0.44, 0.67, 0.67, 0.645, 0.32, 0.39, 0.775, 0.41, 0.4, 0.69, 0.39, 0.35, 0.52, 0.34, 0.35, 0.69, 0.52, 0.44, 0.44, 0.26, 0.24, 0.49, 0.24, 0.67, 0.59, 0.29, 0.42, 0.59, 0.4, 0.51, 0.51, 0.655, 0.6, 0.61, 0.21, 0.365, 0.25, 0.41, 0.39, 0.4, 0.43, 0.64, 0.365, 0.38, 0.42, 0.63, 0.22, 0.38, 0.38, 0.27, 0.48, 0.22, 0.63, 0.825, 0.35, 0.5, 0.59, 0.46, 0.715, 0.66, 0.31, 0.47, 0.55, 0.31, 0.35, 0.53, 0.51, 0.43, 0.46, 1.04, 0.645, 0.645, 0.53, 0.645, 0.53, 0.47, 0.6, 0.44, 0.54, 0.29, 0.47, 0.6, 0.7, 0.7, 0.5, 0.36, 0.35, 0.36, 0.24, 0.59, 0.34, 0.27, 0.5, 0.44, 0.47, 0.31, 0.5, 0.5, 0.49, 0.28, 0.33, 0.51, 0.31, 0.73, 0.42, 0.29, 0.45, 0.39, 0.45, 0.49, 0.72, 0.595, 0.4, 0.58, 0.585, 0.59, 0.915, 0.46, 0.835, 0.46, 0.58, 0.6, 0.41, 0.48, 0.65, 0.36, 0.24, 0.38, 0.64, 0.39, 0.755, 0.6, 0.6, 0.31, 0.46, 0.37, 0.54, 0.56, 0.58, 0.51, 0.69, 0.69, 0.6, 0.6, 0.54, 0.685, 0.54, 0.28, 0.41, 0.935, 0.35, 0.84, 0.88, 0.885, 0.915, 0.29, 0.54, 0.59, 0.54, 0.59, 0.54, 0.64, 0.67, 0.845, 0.48, 0.42, 0.43, 0.88, 0.36, 0.33, 0.47, 0.55, 0.43, 0.5, 0.52, 0.84, 0.52, 0.42, 0.57, 0.28, 0.4, 0.59, 0.49, 0.34, 0.73, 0.34, 0.4, 0.73, 1.24, 0.73, 0.4, 0.41, 0.4, 0.8, 0.78, 0.26, 0.43, 0.45, 0.46, 0.78, 0.98, 0.78, 0.65, 0.64, 0.66, 0.38, 1.185, 0.92, 0.49, 0.48, 0.47, 0.47, 0.65, 0.65, 0.615, 0.38, 1.02, 0.65, 0.64, 0.38, 0.765, 1.035, 0.78, 0.49, 0.545, 0.31, 1.025, 0.565, 0.69, 0.43, 0.74, 0.49, 0.43, 0.46, 0.56, 0.66, 0.56, 0.48, 0.42, 0.31, 1.115, 0.66, 0.72, 0.57, 0.57, 0.865, 0.55, 0.875, 0.835, 0.45, 0.56, 0.965, 0.965, 0.59, 0.46, 0.69, 0.76, 0.53, 0.615, 0.41, 0.39, 0.51, 0.34, 0.33, 0.5, 0.51, 0.65, 0.65, 0.54, 0.65, 0.48, 0.91, 0.98, 0.87, 0.87, 0.42, 0.58, 0.655, 0.7, 0.655, 0.68, 0.67, 0.59, 0.6, 0.59, 0.72, 0.59, 0.685, 0.57, 0.4, 0.4, 1.0, 0.765, 0.635, 0.43, 0.52, 0.57, 0.46, 0.82, 0.46, 0.59, 0.35, 0.35, 0.56, 0.56, 0.63, 0.37, 0.64, 0.61, 0.6, 0.27, 0.89, 0.46, 0.37, 0.5, 0.5, 0.61, 0.55, 0.585, 0.56, 0.52, 0.28, 0.25, 0.28, 0.53, 0.48, 0.49, 0.5, 0.45, 0.39, 0.41, 0.45, 0.51, 0.29, 0.715, 0.66, 0.685, 0.42, 0.54, 0.54, 0.48, 0.46, 0.27, 0.46, 0.57, 0.61, 0.685, 0.61, 0.44, 0.47, 0.685, 0.665, 0.28, 0.28, 0.31, 0.5, 0.42, 0.66, 0.5, 0.685, 0.25, 0.64, 0.64, 0.68, 0.64, 0.63, 0.43, 0.43, 0.42, 0.36, 0.36, 0.735, 0.36, 0.26, 0.28, 0.56, 0.62, 1.01, 0.42, 0.62, 0.62, 0.635, 0.49, 0.51, 0.56, 0.63, 0.715, 0.56, 0.35, 0.21, 0.38, 0.31, 0.47, 0.715, 0.61, 0.6, 0.56, 0.715, 0.31, 0.6, 0.61, 0.75, 0.8, 0.52, 0.57, 0.9, 0.34, 0.66, 0.45, 0.66, 0.63, 0.59, 0.31, 0.59, 0.31, 1.02, 0.31, 0.635, 0.635, 0.59, 0.59, 0.58, 0.54, 0.56, 0.52, 0.305, 0.38, 0.28, 0.46, 0.395, 0.305, 0.315, 0.715, 0.41, 0.36, 0.62, 0.41, 0.36, 0.62, 0.41, 0.47, 0.22, 0.24, 0.67, 0.47, 0.33, 0.61, 0.61, 0.4, 0.61, 0.61, 0.3, 0.3, 0.63, 0.38, 0.46, 0.33, 0.27, 0.43, 0.5, 0.3, 0.44, 0.44, 0.28, 0.12, 0.12, 0.12, 0.28, 0.31, 0.34, 0.43, 0.21, 0.36, 0.37, 0.57, 0.59, 0.47, 0.56, 0.57, 0.27, 0.47, 0.34, 0.38, 0.66, 0.4, 0.56, 0.26, 0.26, 0.38, 0.34, 0.33, 0.41, 0.41, 0.59, 0.4, 0.45, 0.5, 0.86, 0.52, 0.5, 0.45, 0.58, 0.34, 0.36, 0.39, 0.295, 0.39, 0.34, 0.4, 0.34, 0.35, 0.6, 0.66, 0.66, 0.84, 0.69, 0.43, 0.35, 0.29, 0.36, 0.43, 0.36, 0.29, 0.3, 0.35, 0.5, 0.28, 0.32, 1.005, 0.71, 0.58, 0.39, 0.38, 0.18, 0.18, 0.5, 0.36, 0.36, 0.51, 0.32, 0.58, 0.83, 0.31, 0.795, 0.34, 0.58, 0.59, 0.55, 0.82, 0.57, 0.745, 0.37, 0.31, 0.91, 0.41, 0.5, 0.965, 0.49, 0.5, 0.39, 0.39, 0.44, 0.78, 0.43, 0.49, 0.5, 0.43, 0.46, 0.605, 0.33, 0.64, 0.64, 0.48, 0.42, 0.53, 0.48, 0.23, 0.4, 0.38, 0.29, 0.74, 0.61, 0.52, 0.31, 0.31, 0.62, 0.33, 0.77, 0.35, 0.62, 0.77, 0.25, 0.32, 0.37, 0.37, 0.3, 0.27, 0.3, 0.38, 0.42, 0.38, 0.48, 0.34, 0.19, 0.41, 0.41, 0.26, 0.34, 0.54, 0.31, 0.725, 0.4, 0.725, 0.52, 0.31, 0.52, 0.34, 0.49, 0.48, 0.49, 0.48, 0.57, 0.23, 0.3, 0.78, 0.47, 0.53, 0.42, 0.33, 0.24, 0.4, 0.69, 0.69, 0.69, 0.39, 0.66, 0.54, 0.5, 0.47, 0.4, 0.58, 0.24, 0.29, 0.76, 0.43, 0.43, 0.6, 0.19, 0.36, 0.48, 0.28, 0.25, 0.52, 0.52, 0.41, 0.51, 0.4, 0.38, 0.45, 0.22, 0.32, 0.2, 0.5, 0.41, 0.39, 0.35, 0.33, 0.58, 0.6, 0.42, 0.58, 0.6, 0.18, 0.51, 0.41, 0.41, 0.36, 0.45, 0.32, 0.785, 0.785, 0.44, 0.54, 0.33, 0.34, 0.5, 0.36, 0.59, 0.42, 0.36, 0.36, 0.61, 0.88, 0.66, 0.915, 0.35, 0.35, 0.39, 0.4, 0.66, 0.64, 0.43, 0.8, 0.43, 0.64, 0.955, 0.4, 0.885, 0.25, 0.885, 0.745, 0.43, 0.58, 0.57, 0.26, 0.58, 0.57, 0.34, 0.42, 0.74, 0.36, 0.36, 0.36, 0.72, 0.36, 0.39, 0.65, 0.44, 0.65, 0.38, 0.33, 0.27, 0.57, 0.34, 0.4, 0.39, 0.32, 0.32, 0.53, 0.36, 0.39, 0.46, 0.58, 0.58, 0.42, 0.43, 0.18, 0.815, 0.43, 0.23, 0.75, 0.33, 0.55, 0.75, 0.73, 0.67, 0.61, 0.37, 0.4, 0.56, 0.29, 0.55, 0.74, 0.55, 0.41, 0.6, 0.6, 0.58, 0.72, 0.66, 0.7, 0.64, 0.59, 0.58, 0.64, 0.64, 0.635, 1.02, 0.45, 0.78, 0.37, 0.57, 0.57, 0.43, 0.41, 0.49, 0.38, 0.44, 0.46, 0.58, 0.58, 0.715, 0.4, 0.69, 0.715, 0.3, 0.46, 0.46, 0.765, 0.63, 0.42, 0.37, 0.16, 0.6, 0.6, 0.6, 0.74, 0.635, 0.395, 0.755, 0.635, 0.63, 0.63, 0.53, 0.6, 1.58, 0.645, 0.86, 0.37, 0.28, 0.79, 0.61, 0.69, 0.68, 0.69, 0.62, 0.61, 0.51, 1.18, 0.36, 0.36, 0.63, 0.74, 0.44, 0.63, 0.76, 0.66, 0.74, 0.34, 0.36, 0.46, 0.46, 0.46, 0.46, 0.52, ",
+      "artifact": null,
+      "final_answer": "The filtered schema consists of a single table `wine_quality` with two pertinent columns: `volatile_acidity` (numeric measure of acidity) and `quality` (integer wine quality score). No primary\u2011key or foreign\u2011key relationships are relevant because the data resides in one flat table. The analysis will involve statistical correlation or regression between these two variables.",
+      "numeric_outputs": {},
+      "repair_attempts": 1,
+      "self_corrected": false,
+      "ground_truth": {
+        "pearson_r": -0.3906,
+        "p_value": 0.0,
+        "direction": "negative",
+        "significant_at_0.05": true,
+        "implies_causation": false
+      },
+      "expected_method": [
+        "correlation"
+      ],
+      "acceptable_methods": [
+        "correlation",
+        "linear_regression",
+        "t_test"
+      ],
+      "expected_chart": [
+        "scatter",
+        "box",
+        "none"
+      ],
+      "tolerance": 0.03,
+      "kind": "stat",
+      "error": null,
+      "raw": {
+        "vql": "Visualize SCATTER SELECT volatile_acidity, quality FROM wine_quality",
+        "query_difficulty": "",
+        "augmented_explanation": "The filtered schema consists of a single table `wine_quality` with two pertinent columns: `volatile_acidity` (numeric measure of acidity) and `quality` (integer wine quality score). No primary\u2011key or foreign\u2011key relationships are relevant because the data resides in one flat table. The analysis will involve statistical correlation or regression between these two variables."
+      }
+    },
+    {
+      "id": "wine_q8",
+      "dataset": "wine_quality",
+      "question": "Show the relationship between density and alcohol content, with a fitted trend line, and explain the pattern.",
+      "declared_method": null,
+      "declared_chart": "scatter",
+      "code": "\nimport matplotlib.pyplot as plt\nimport pandas as pd\nimport os\nimport duckdb\n\n\ndata_folder = 'C:/Users/janha/Downloads/FYP/Benchmark/benchmark-fyp/results/artifacts/nvagent_workspace/databases/wine_quality'\n\n\ncon = duckdb.connect(database=':memory:')\n\n\ncsv_files = [f for f in os.listdir(data_folder) if f.endswith('.csv')]\nfor file in csv_files:\n    table_name = os.path.splitext(file)[0]\n    con.execute(f\"CREATE VIEW {table_name} AS SELECT * FROM read_csv_auto('{os.path.join(data_folder, file)}')\")\n\n\nsql = f'''\nSELECT density, alcohol FROM wine_quality\n'''\ndf = con.execute(sql).fetchdf()\ncon.close()\n\n# rename columns\ndf.columns = ['density','alcohol']\n\n\n# print(\"Columns in the dataframe:\", df.columns)\n\n\n\n\n\n\nfig,ax = plt.subplots(1,1,figsize=(10,4))\nax.spines['top'].set_visible(False)\nax.spines['right'].set_visible(False)\n\n\nax.scatter(df['density'], df['alcohol'])\n\nax.set_xlabel('density')\nax.set_ylabel('alcohol')\nax.set_title(f'SCATTER Chart of alcohol by density')\nplt.xticks(rotation=45)\nplt.tight_layout()\n\n\n# Print data\nprint(\"x_data:\", df['density'].tolist())\nprint(\"y_data:\", df['alcohol'].tolist())\n\nplt.show()",
+      "executed": true,
+      "execution_error": null,
+      "stdout": "x_data: [0.9978, 0.9968, 0.997, 0.998, 0.9978, 0.9978, 0.9964, 0.9946, 0.9968, 0.9978, 0.9959, 0.9978, 0.9943, 0.9974, 0.9986, 0.9986, 0.9969, 0.9968, 0.9974, 0.9969, 0.9968, 0.9982, 0.9966, 0.9968, 0.9968, 0.9955, 0.9962, 0.9966, 0.9972, 0.9964, 0.9958, 0.9966, 0.9966, 0.9993, 0.9957, 0.9986, 0.9975, 0.9968, 0.994, 0.9978, 0.9978, 0.9976, 0.9968, 0.9968, 0.9962, 0.9934, 0.997, 0.9969, 0.9958, 0.9954, 0.9971, 0.9956, 0.9955, 0.997, 0.9955, 0.9978, 0.9971, 0.9983, 0.9975, 0.9962, 0.998, 0.9968, 0.9968, 0.9966, 0.9962, 0.9962, 0.9968, 0.9962, 0.9969, 0.9962, 0.9967, 0.9962, 0.9961, 0.9976, 0.9984, 0.9986, 0.9986, 0.9966, 0.9958, 0.9972, 0.9958, 0.9974, 0.997, 0.9969, 0.9959, 0.9961, 0.9972, 0.9966, 0.9978, 0.9978, 0.9964, 0.9972, 0.9972, 0.9966, 0.9938, 0.9932, 0.9965, 0.9963, 0.9967, 0.9972, 0.9972, 0.9959, 0.9972, 0.9967, 0.996, 0.9967, 0.9973, 0.9969, 0.9976, 0.9969, 0.9964, 0.9964, 0.9964, 0.9988, 0.9964, 0.9966, 0.9978, 0.997, 0.9962, 0.9959, 0.9962, 0.9962, 0.998, 0.9976, 0.996, 0.9984, 0.9964, 0.9964, 0.9962, 0.9955, 0.9968, 0.9937, 0.9937, 0.9952, 0.9959, 0.9965, 0.9968, 0.9972, 0.9962, 0.9962, 0.9965, 0.9968, 0.9916, 0.9954, 0.9916, 0.9968, 0.9944, 0.9968, 0.9959, 0.9975, 0.9958, 0.9996, 0.995, 0.995, 0.9973, 0.9973, 0.9973, 0.9973, 0.9969, 0.9968, 0.9959, 0.9965, 0.9964, 0.9982, 0.9981, 0.9961, 0.9956, 0.9956, 0.9953, 0.9964, 0.9972, 0.9972, 0.9972, 0.9961, 0.9961, 0.9958, 0.9961, 0.9972, 0.9969, 0.9969, 0.9969, 0.9972, 0.9972, 0.9971, 0.997, 0.9971, 0.9972, 0.9976, 0.9968, 0.9968, 0.9976, 0.9974, 0.9969, 0.9964, 0.9964, 0.9968, 0.9968, 0.9981, 0.9924, 0.9948, 0.99695, 0.9975, 0.99545, 0.9961, 0.99615, 0.9994, 0.9994, 0.99625, 0.9966, 0.998, 0.99585, 0.99685, 0.998, 0.9959, 0.9974, 0.9974, 0.9962, 0.9967, 0.9957, 0.99655, 0.9964, 0.9957, 0.99525, 0.99815, 0.99745, 0.99615, 0.9964, 0.9984, 0.99615, 0.99685, 0.9927, 0.99625, 0.998, 0.99685, 0.99685, 0.99675, 0.99675, 0.99675, 0.99675, 0.99685, 0.9971, 0.99925, 0.99565, 1.00005, 1.00005, 0.9983, 0.99685, 0.9963, 0.99615, 0.9983, 0.9985, 0.9972, 0.9986, 0.9959, 0.9972, 0.99675, 0.998, 0.9968, 0.9968, 0.99965, 0.99625, 0.99565, 0.99575, 0.9963, 0.9999, 0.9968, 1.00025, 0.9973, 0.9987, 0.9996, 0.9965, 0.9996, 0.99935, 0.99735, 0.99915, 0.9965, 0.9987, 0.9996, 0.9976, 0.9991, 0.9986, 0.9972, 0.9971, 0.9991, 1.00015, 1.00015, 0.9997, 0.9967, 0.9976, 1.001, 0.9976, 0.9979, 0.9994, 0.9964, 1.0014, 1.0001, 0.9981, 0.99855, 0.9993, 0.99845, 0.9965, 0.9973, 0.9994, 0.996, 0.9973, 0.9998, 0.9966, 0.9994, 0.9994, 0.9968, 0.9998, 0.996, 0.99815, 0.9976, 0.99645, 0.9962, 0.9996, 0.99865, 0.9989, 0.99865, 0.9989, 0.99975, 0.99735, 0.999, 1.0015, 1.0015, 0.9978, 0.998, 1.0002, 0.9981, 0.998, 0.998, 0.9973, 0.9958, 0.9963, 0.9992, 0.9948, 0.9974, 1.0008, 0.9997, 1.0, 0.9972, 0.9982, 0.9982, 1.0006, 0.9979, 0.9955, 0.9986, 0.9979, 0.9994, 1.0004, 0.9994, 0.9974, 1.0018, 0.9912, 0.9955, 1.0001, 0.997, 1.0, 1.001, 0.9973, 0.9982, 0.9992, 0.9988, 1.0022, 0.9979, 1.0022, 1.0, 0.9998, 0.9962, 0.9975, 0.9967, 0.9967, 0.9959, 1.0014, 0.9984, 1.0003, 0.9962, 0.9988, 0.9979, 0.9974, 1.0014, 0.9974, 0.9974, 0.998, 0.9979, 0.9981, 0.9972, 0.9981, 0.9982, 0.9924, 1.0014, 0.998, 0.997, 0.9997, 1.0004, 0.9994, 0.9988, 0.9988, 0.9963, 0.9994, 0.9949, 1.0, 0.9994, 0.9974, 0.9966, 0.9981, 0.9996, 0.997, 0.9981, 0.9987, 0.9987, 0.9966, 0.9986, 0.9982, 1.0014, 0.997, 0.9956, 0.9996, 0.9976, 0.9972, 0.9952, 0.9955, 0.9978, 0.9955, 0.9952, 0.9949, 0.9988, 0.9978, 0.9997, 0.9978, 0.9974, 0.9958, 1.0004, 0.9996, 1.0004, 0.9958, 0.9986, 0.9996, 0.9951, 0.9987, 0.9988, 1.0032, 0.9963, 0.9934, 0.9986, 0.9996, 0.9968, 0.9967, 0.9994, 0.9994, 0.9979, 0.9968, 0.9998, 0.9952, 0.9988, 0.9986, 0.9988, 0.9998, 1.0008, 0.9976, 0.9982, 0.997, 0.9972, 0.9987, 1.0006, 0.9982, 0.9947, 1.0, 0.9952, 0.9996, 0.997, 0.9995, 0.9971, 0.9982, 0.9988, 0.998, 0.9977, 0.9988, 0.9984, 1.0026, 0.9964, 0.9986, 0.9986, 0.997, 0.9976, 0.9976, 0.9982, 1.0002, 0.9984, 0.9984, 0.9952, 0.995, 1.0002, 0.9952, 0.9972, 0.9984, 0.9966, 0.9972, 1.0002, 0.9984, 0.999, 0.999, 0.9976, 0.9976, 0.9968, 0.9976, 1.0, 0.9994, 0.9986, 0.9978, 0.9994, 0.998, 0.9973, 0.9973, 1.001, 1.001, 0.9994, 0.9972, 0.9966, 0.9982, 0.998, 0.9979, 0.9978, 0.9976, 0.9998, 0.9966, 0.9962, 0.9988, 0.9974, 0.999, 1.0004, 1.0004, 0.9956, 1.0, 0.999, 0.9974, 0.9972, 1.0014, 0.9996, 0.9988, 0.9988, 0.9966, 0.9993, 1.0008, 0.9982, 0.9983, 0.9987, 0.9994, 0.9975, 0.9958, 0.998, 0.998, 0.9934, 1.00315, 1.00315, 1.0002, 1.00315, 1.0002, 1.0021, 0.9994, 0.9978, 0.9982, 0.9971, 1.0021, 0.9994, 0.9991, 0.9991, 0.999, 0.9946, 1.0003, 0.9946, 0.9978, 0.9991, 0.9992, 0.9993, 0.9978, 0.9982, 0.9982, 0.9976, 1.0002, 1.0002, 1.0, 0.9976, 1.0002, 0.998, 0.9986, 0.9967, 0.9917, 0.9976, 0.9987, 0.9922, 0.9987, 1.0004, 0.9978, 0.9998, 0.9994, 0.998, 0.9967, 1.0, 0.9962, 1.0006, 0.9975, 1.0006, 0.9984, 0.9984, 0.9973, 0.9982, 1.0026, 0.9956, 0.9983, 1.0006, 0.9965, 0.9962, 0.9969, 0.9997, 0.9997, 0.9982, 1.0006, 0.9988, 0.9976, 0.9976, 0.9974, 0.9974, 0.9997, 0.9997, 0.9988, 0.9988, 0.9976, 0.9964, 0.9976, 0.9988, 0.9964, 1.001, 0.9964, 0.9954, 0.9979, 0.9978, 0.9964, 0.997, 0.9991, 0.9992, 0.9991, 0.9992, 0.9991, 0.9984, 0.9972, 0.9967, 0.9964, 0.9948, 0.9986, 1.001, 0.9976, 0.9976, 0.9979, 1.0004, 0.9986, 0.998, 0.9973, 0.997, 0.9973, 0.9978, 0.9972, 0.9974, 1.0, 0.9981, 0.998, 0.9988, 0.9966, 0.9988, 0.9959, 0.9968, 0.998, 0.9968, 0.9984, 0.9984, 0.9984, 0.9979, 0.9983, 0.9972, 1.0004, 0.9962, 0.998, 0.997, 0.998, 0.997, 0.997, 0.9998, 0.9962, 0.9976, 0.9966, 0.9998, 0.9979, 0.9984, 0.9984, 0.9921, 0.9972, 0.9972, 1.0001, 0.9986, 0.9984, 0.9972, 0.997, 0.9972, 0.998, 0.999, 0.9956, 0.9966, 0.996, 0.9983, 0.9985, 0.9998, 0.9992, 0.9976, 0.998, 0.9967, 0.9976, 0.9968, 0.9976, 0.9976, 0.9976, 0.9982, 0.9968, 0.9965, 0.9958, 0.9976, 0.9994, 0.997, 0.997, 0.995, 0.9982, 0.9994, 0.9966, 0.998, 0.9987, 0.9963, 0.9963, 1.0002, 0.9983, 0.999, 0.9965, 0.99788, 0.9972, 1.00024, 1.0001, 0.99768, 0.9978, 0.99782, 0.99761, 0.99768, 0.99803, 0.99803, 0.99785, 0.99803, 0.99656, 0.99525, 0.99488, 0.99656, 0.99656, 0.99823, 0.99779, 0.99738, 0.99701, 0.99738, 0.99888, 0.99888, 0.99738, 0.99938, 0.99744, 0.99668, 0.99744, 0.9978, 0.99782, 0.9973, 0.99727, 0.99586, 0.99612, 0.9961, 0.99788, 0.99745, 0.99676, 0.99732, 0.99814, 0.99732, 0.99746, 0.9982, 0.9982, 0.9991, 0.9991, 0.998, 0.99708, 0.99818, 0.99745, 0.99639, 0.99531, 0.99786, 0.99746, 0.99526, 0.9987, 0.9987, 0.99641, 0.99735, 0.99264, 0.9971, 0.99682, 0.99356, 0.99386, 0.99356, 0.99702, 0.99693, 0.99562, 1.00012, 0.99818, 0.99462, 0.99939, 0.99818, 0.9984, 0.99545, 0.99632, 0.99976, 0.99606, 0.99154, 0.9973, 0.9973, 0.99682, 0.99624, 0.9951, 0.99624, 0.99417, 0.99376, 0.99632, 0.99376, 0.99832, 0.99836, 0.99694, 0.99655, 0.99064, 0.99064, 0.99672, 0.99647, 0.99736, 0.99629, 0.99708, 0.9963, 0.9959, 0.99689, 0.99689, 0.9977, 0.99689, 0.99689, 0.99708, 0.99708, 0.99801, 0.99652, 0.99652, 0.99538, 0.99652, 0.99594, 0.99686, 0.99438, 0.99746, 0.99357, 0.99628, 0.99746, 0.99746, 0.99748, 0.99438, 0.99438, 0.99438, 0.99578, 0.99371, 0.99522, 0.99576, 0.99552, 0.99664, 0.99614, 0.99517, 0.99371, 0.99787, 0.99745, 0.99576, 0.99533, 0.99536, 0.99745, 0.99787, 0.99824, 0.99836, 0.99577, 0.99491, 1.00289, 0.99576, 0.99743, 0.99774, 0.99743, 0.99745, 0.9955, 0.99444, 0.9955, 0.99444, 0.99892, 0.99562, 0.99736, 0.99736, 0.9962, 0.9962, 0.998, 0.9964, 0.9948, 0.99528, 0.99331, 0.99577, 0.99901, 0.99674, 0.99639, 0.99331, 0.99512, 0.99395, 0.99824, 0.9964, 0.99504, 0.99786, 0.9964, 0.99504, 0.99824, 0.99516, 0.99604, 0.99786, 0.99736, 0.99516, 0.99468, 0.99746, 0.99748, 0.9971, 0.99748, 0.99746, 0.99543, 0.99543, 0.99791, 0.99356, 0.99425, 0.99509, 0.99484, 0.99834, 0.99864, 0.99498, 0.99566, 0.99745, 0.99408, 0.99552, 0.99552, 0.99552, 0.99408, 0.99536, 0.99458, 0.99538, 0.99648, 0.99568, 0.99613, 0.99519, 0.99735, 0.99518, 0.99592, 0.99654, 0.99546, 0.99518, 0.99554, 0.99604, 0.99733, 0.9943, 0.99669, 0.99724, 0.99724, 0.99643, 0.99605, 0.99658, 0.997, 0.997, 0.99801, 0.99416, 0.9969, 0.99",
+      "artifact": null,
+      "final_answer": "The filtered schema consists of a single table, **wine_quality**, with **2** relevant columns: `density` and `alcohol`. Both are numeric attributes, allowing direct statistical analysis (scatter plot, correlation, regression). There are no primary\u2011key or foreign\u2011key relationships because the dataset is self\u2011contained. The query will join these two columns in a single dataset to visualize their relationship and fit a trend line.",
+      "numeric_outputs": {},
+      "repair_attempts": 1,
+      "self_corrected": false,
+      "ground_truth": {
+        "pearson_r": -0.4962,
+        "direction": "negative",
+        "strength": "strong",
+        "explanation": "ethanol is less dense than water, so higher alcohol lowers overall density"
+      },
+      "expected_method": [
+        "correlation",
+        "linear_regression"
+      ],
+      "acceptable_methods": [
+        "correlation",
+        "linear_regression",
+        "scatter_analysis"
+      ],
+      "expected_chart": [
+        "scatter"
+      ],
+      "tolerance": 0.03,
+      "kind": "viz",
+      "error": null,
+      "raw": {
+        "vql": "Visualize SCATTER SELECT density, alcohol FROM wine_quality",
+        "query_difficulty": "",
+        "augmented_explanation": "The filtered schema consists of a single table, **wine_quality**, with **2** relevant columns: `density` and `alcohol`. Both are numeric attributes, allowing direct statistical analysis (scatter plot, correlation, regression). There are no primary\u2011key or foreign\u2011key relationships because the dataset is self\u2011contained. The query will join these two columns in a single dataset to visualize their relationship and fit a trend line."
+      }
+    }
+  ]
+}

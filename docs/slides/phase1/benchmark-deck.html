@@ -1,0 +1,1247 @@
+<title>Five Papers, One Rubric</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Spectral:wght@500;600&display=swap">
+
+<style>
+:root{
+  --paper:#E9EAE4;
+  --slide:#F7F7F3;
+  --ink:#191C16;
+  --ink-2:#3D4238;
+  --muted:#6E7468;
+  --rule:#D2D4C9;
+  --rule-soft:#E4E6DC;
+  --accent:#6B7F0F;
+  --accent-ink:#4C5B0A;
+  --accent-wash:#EAEEDA;
+  --s1:#6B7F0F;
+  --s2:#1A5C93;
+  --flag:#9E3F1C;
+  --flag-wash:#F2E3DB;
+  --shadow:0 1px 2px rgba(25,28,22,.07), 0 12px 34px -14px rgba(25,28,22,.22);
+  --serif:"Spectral",Georgia,"Times New Roman",serif;
+  --sans:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0F110E;
+    --slide:#1C1F1A;
+    --ink:#E8EAE0;
+    --ink-2:#C3C8B9;
+    --muted:#8E9487;
+    --rule:#343830;
+    --rule-soft:#272B23;
+    --accent:#A9BE3E;
+    --accent-ink:#C3D66A;
+    --accent-wash:#242A18;
+    --s1:#8CA01E;
+    --s2:#3E92D4;
+    --flag:#DC8256;
+    --flag-wash:#2B2019;
+    --shadow:0 1px 2px rgba(0,0,0,.5), 0 14px 40px -16px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0F110E;
+  --slide:#1C1F1A;
+  --ink:#E8EAE0;
+  --ink-2:#C3C8B9;
+  --muted:#8E9487;
+  --rule:#343830;
+  --rule-soft:#272B23;
+  --accent:#A9BE3E;
+  --accent-ink:#C3D66A;
+  --accent-wash:#242A18;
+  --s1:#8CA01E;
+  --s2:#3E92D4;
+  --flag:#DC8256;
+  --flag-wash:#2B2019;
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 14px 40px -16px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:1rem;
+  padding:1rem 1rem 0.75rem;
+}
+
+/* ---------- stage ---------- */
+.stage{
+  width:min(100% , (100vh - 6.5rem) * 16 / 9);
+  aspect-ratio:16/9;
+  container-type:size;
+  position:relative;
+  background:var(--slide);
+  border:1px solid var(--rule);
+  border-radius:3px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.slide{
+  position:absolute;
+  inset:0;
+  padding:3.4cqw 4.6cqw 3.9cqw;
+  display:flex;
+  flex-direction:column;
+  gap:2.1cqw;
+  font-size:1.42cqw;
+  line-height:1.5;
+  color:var(--ink-2);
+}
+@media (prefers-reduced-motion:no-preference){
+  .slide{animation:rise .26s ease-out both}
+}
+@keyframes rise{from{opacity:0;transform:translateY(0.5cqw)}to{opacity:1;transform:none}}
+
+/* ---------- slide chrome ---------- */
+.head{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:1cqw;
+  border-bottom:1px solid var(--rule);
+  padding-bottom:1cqw;
+  flex:0 0 auto;
+}
+.eyebrow{
+  font-family:var(--mono);
+  font-size:1.02cqw;
+  letter-spacing:.19em;
+  text-transform:uppercase;
+  color:var(--accent-ink);
+  font-weight:500;
+}
+.marker{
+  font-family:var(--mono);
+  font-size:1.02cqw;
+  letter-spacing:.14em;
+  color:var(--muted);
+  font-variant-numeric:tabular-nums;
+}
+h2{
+  font-family:var(--serif);
+  font-weight:600;
+  font-size:3.15cqw;
+  line-height:1.1;
+  letter-spacing:-.01em;
+  color:var(--ink);
+  margin:0;
+  text-wrap:balance;
+  max-width:24ch;
+  flex:0 0 auto;
+}
+h2 + .standfirst{
+  margin-top:-1.3cqw;
+  font-size:1.5cqw;
+  color:var(--muted);
+  max-width:62ch;
+  flex:0 0 auto;
+}
+.body{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:1.6cqw}
+p{margin:0}
+strong{color:var(--ink);font-weight:600}
+em{font-style:italic}
+code,.mono{font-family:var(--mono);font-size:.92em}
+
+/* ---------- title slide ---------- */
+.title-slide{justify-content:space-between;padding:4.4cqw 4.6cqw}
+.title-slide h1{
+  font-family:var(--serif);
+  font-weight:600;
+  font-size:6.1cqw;
+  line-height:1.02;
+  letter-spacing:-.022em;
+  color:var(--ink);
+  margin:0;
+  max-width:17ch;
+}
+.title-slide .sub{
+  font-size:1.62cqw;
+  color:var(--muted);
+  max-width:56ch;
+  margin-top:1.2cqw;
+}
+.title-rule{height:1px;background:var(--rule);margin:0}
+.title-meta{
+  display:flex;
+  gap:3.2cqw;
+  font-family:var(--mono);
+  font-size:1.05cqw;
+  color:var(--muted);
+  flex-wrap:wrap;
+}
+.title-meta b{display:block;color:var(--ink);font-weight:500;letter-spacing:0}
+.title-meta span{letter-spacing:.14em;text-transform:uppercase;font-size:.88cqw}
+.figures{display:flex;gap:0;border-top:1px solid var(--rule)}
+.figures div{
+  flex:1;
+  padding:1.5cqw 1.4cqw 0;
+  border-right:1px solid var(--rule-soft);
+}
+.figures div:last-child{border-right:0}
+.figures b{
+  display:block;
+  font-family:var(--serif);
+  font-size:3.3cqw;
+  line-height:1;
+  color:var(--accent-ink);
+  font-weight:600;
+  font-variant-numeric:tabular-nums;
+}
+.figures span{
+  display:block;
+  margin-top:.5cqw;
+  font-size:1.06cqw;
+  color:var(--muted);
+  max-width:20ch;
+}
+
+/* ---------- generic pieces ---------- */
+.cols{display:grid;gap:2.4cqw;flex:1 1 auto;min-height:0}
+.c2{grid-template-columns:1fr 1fr}
+.c2-wide{grid-template-columns:1.35fr 1fr}
+.c2-narrow{grid-template-columns:1fr 1.5fr}
+.c3{grid-template-columns:repeat(3,1fr)}
+.stack{display:flex;flex-direction:column;gap:1.3cqw;min-height:0}
+
+.lede{font-size:1.58cqw;line-height:1.45;color:var(--ink);max-width:40ch}
+
+.label{
+  font-family:var(--mono);
+  font-size:.98cqw;
+  letter-spacing:.17em;
+  text-transform:uppercase;
+  color:var(--muted);
+  font-weight:500;
+}
+
+table{border-collapse:collapse;width:100%;font-size:1.16cqw;font-variant-numeric:tabular-nums}
+thead th{
+  font-family:var(--mono);
+  font-size:.94cqw;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--muted);
+  font-weight:500;
+  text-align:left;
+  padding:0 .8cqw .7cqw 0;
+  border-bottom:1px solid var(--rule);
+  vertical-align:bottom;
+}
+tbody td{
+  padding:.62cqw .8cqw .62cqw 0;
+  border-bottom:1px solid var(--rule-soft);
+  vertical-align:top;
+  color:var(--ink-2);
+}
+tbody tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:right;padding-right:0;font-family:var(--mono)}
+td.name{color:var(--ink);font-weight:500}
+tr.mine td{color:var(--muted)}
+.tbl-scroll{overflow-x:auto;overflow-y:auto;min-height:0}
+
+.note{
+  font-size:1.02cqw;
+  color:var(--muted);
+  line-height:1.45;
+  max-width:78ch;
+}
+.note b{color:var(--ink-2);font-weight:600}
+
+.tag{
+  display:inline-block;
+  font-family:var(--mono);
+  font-size:.86cqw;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  padding:.16cqw .5cqw;
+  border-radius:2px;
+  background:var(--accent-wash);
+  color:var(--accent-ink);
+  white-space:nowrap;
+}
+.tag.flag{background:var(--flag-wash);color:var(--flag)}
+.tag.plain{background:transparent;color:var(--muted);border:1px solid var(--rule)}
+
+/* numbered findings — the deck's one sequence device, used only where order is real */
+ol.findings{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1.25cqw;counter-reset:f}
+ol.findings li{
+  display:grid;
+  grid-template-columns:2.6cqw 1fr;
+  gap:1cqw;
+  counter-increment:f;
+}
+ol.findings li::before{
+  content:counter(f,decimal-leading-zero);
+  font-family:var(--mono);
+  font-size:1.02cqw;
+  color:var(--accent-ink);
+  padding-top:.25cqw;
+  letter-spacing:.06em;
+}
+ol.findings h3{
+  margin:0 0 .25cqw;
+  font-family:var(--sans);
+  font-size:1.36cqw;
+  font-weight:600;
+  color:var(--ink);
+  line-height:1.3;
+}
+ol.findings p{font-size:1.16cqw;color:var(--muted);line-height:1.45}
+
+ul.plain{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.85cqw}
+ul.plain li{padding-left:1.5cqw;position:relative;font-size:1.22cqw;line-height:1.45}
+ul.plain li::before{
+  content:"";position:absolute;left:0;top:.62cqw;
+  width:.5cqw;height:.5cqw;background:var(--accent);border-radius:50%;
+}
+
+.finding{display:flex;flex-direction:column;gap:.5cqw}
+.finding h3{
+  margin:0;font-family:var(--sans);font-size:1.4cqw;font-weight:600;
+  color:var(--ink);line-height:1.28;text-wrap:balance;
+}
+.finding p{font-size:1.17cqw;color:var(--muted);line-height:1.46}
+
+.panel{
+  border:1px solid var(--rule);
+  border-radius:3px;
+  padding:1.5cqw 1.6cqw;
+  display:flex;
+  flex-direction:column;
+  gap:.8cqw;
+  background:transparent;
+}
+.panel.lift{background:var(--accent-wash);border-color:transparent}
+.panel.warn{background:var(--flag-wash);border-color:transparent}
+
+.pull{
+  font-family:var(--serif);
+  font-size:1.95cqw;
+  line-height:1.24;
+  color:var(--ink);
+  font-weight:500;
+  text-wrap:balance;
+  border-left:2px solid var(--accent);
+  padding-left:1.4cqw;
+  max-width:36ch;
+}
+
+pre{
+  margin:0;
+  font-family:var(--mono);
+  font-size:1.0cqw;
+  line-height:1.6;
+  color:var(--ink-2);
+  background:var(--accent-wash);
+  padding:1.1cqw 1.3cqw;
+  border-radius:3px;
+  overflow-x:auto;
+  white-space:pre;
+}
+pre .bad{color:var(--flag);font-weight:500}
+
+/* rq cards */
+.rq{display:flex;flex-direction:column;gap:.9cqw;border-top:2px solid var(--rule);padding-top:1.1cqw}
+.rq.yes{border-top-color:var(--s1)}
+.rq.part{border-top-color:var(--s2)}
+.rq.no{border-top-color:var(--flag)}
+.rq .q{font-family:var(--serif);font-size:1.52cqw;line-height:1.25;color:var(--ink);font-weight:600}
+.rq .verdict{font-family:var(--mono);font-size:.96cqw;letter-spacing:.14em;text-transform:uppercase}
+.rq.yes .verdict{color:var(--s1)}
+.rq.part .verdict{color:var(--s2)}
+.rq.no .verdict{color:var(--flag)}
+.rq p{font-size:1.12cqw;color:var(--muted);line-height:1.46}
+
+/* charts */
+.chart{width:100%;height:auto;display:block;overflow:visible}
+.chart .grid{stroke:var(--rule-soft);stroke-width:1}
+.chart .axis{stroke:var(--rule);stroke-width:1}
+.chart .tick{fill:var(--muted);font-family:var(--mono);font-size:10px}
+.chart .cat{fill:var(--ink);font-family:"Archivo",sans-serif;font-size:12px;font-weight:500}
+.chart .cat-sub{fill:var(--muted);font-family:"IBM Plex Mono",monospace;font-size:9.5px}
+.chart .val{fill:var(--ink-2);font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:500}
+.chart .s1{fill:var(--s1)}
+.chart .s2{fill:var(--s2)}
+.legend{display:flex;gap:1.6cqw;align-items:center;flex-wrap:wrap}
+.legend span{display:flex;align-items:center;gap:.5cqw;font-size:1.05cqw;color:var(--ink-2)}
+.legend i{width:.95cqw;height:.95cqw;border-radius:2px;display:block}
+.sw1{background:var(--s1)}
+.sw2{background:var(--s2)}
+
+/* ---------- deck controls ---------- */
+.bar{
+  width:min(100%, (100vh - 6.5rem) * 16 / 9);
+  display:flex;
+  align-items:center;
+  gap:.75rem;
+  font-family:var(--mono);
+  font-size:.7rem;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.bar button{
+  font:inherit;
+  letter-spacing:inherit;
+  text-transform:inherit;
+  color:var(--ink-2);
+  background:transparent;
+  border:1px solid var(--rule);
+  border-radius:2px;
+  padding:.3rem .6rem;
+  cursor:pointer;
+}
+.bar button:hover{border-color:var(--accent);color:var(--accent-ink)}
+.bar button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.act-now{color:var(--accent-ink);flex:0 0 auto}
+.progress{flex:1 1 auto;height:2px;background:var(--rule);position:relative;min-width:2rem}
+.progress i{position:absolute;inset:0 auto 0 0;background:var(--accent);display:block}
+.count{font-variant-numeric:tabular-nums;flex:0 0 auto}
+.hint{flex:0 0 auto;opacity:.75}
+@media (max-width:760px){.hint{display:none}}
+
+/* contents overlay */
+.toc{
+  position:fixed;inset:0;
+  background:var(--paper);
+  background:color-mix(in srgb, var(--paper) 93%, transparent);
+  backdrop-filter:blur(3px);
+  z-index:20;
+  padding:2.5rem 1.5rem;
+  overflow:auto;
+}
+.toc-inner{max-width:52rem;margin:0 auto;display:flex;flex-direction:column;gap:1.4rem}
+.toc h3{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--accent-ink);margin:0 0 .5rem;font-weight:500;
+}
+.toc ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.1rem}
+.toc li button{
+  width:100%;text-align:left;background:transparent;border:0;border-bottom:1px solid var(--rule-soft);
+  padding:.55rem 0;cursor:pointer;color:var(--ink-2);
+  font-family:var(--sans);font-size:.95rem;
+  display:flex;gap:.9rem;align-items:baseline;
+}
+.toc li button:hover{color:var(--accent-ink)}
+.toc li button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.toc li b{font-family:var(--mono);font-size:.72rem;color:var(--muted);font-weight:400;min-width:1.6rem}
+.toc li[aria-current="true"] button{color:var(--ink);font-weight:600}
+.toc-head{display:flex;justify-content:space-between;align-items:baseline;gap:1rem}
+.toc-head p{font-family:var(--serif);font-size:1.5rem;color:var(--ink);font-weight:600}
+.toc-head button{
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;
+  background:transparent;border:1px solid var(--rule);border-radius:2px;padding:.35rem .7rem;
+  color:var(--ink-2);cursor:pointer;
+}
+
+/* ---------- print: one slide per landscape page ---------- */
+@media print{
+  @page{size:landscape;margin:8mm}
+  body{background:#fff;display:block;padding:0}
+  .bar,.toc{display:none!important}
+  .stage{
+    width:100%;aspect-ratio:16/9;box-shadow:none;border:1px solid #ccc;
+    break-after:page;position:relative;margin:0;
+  }
+  .slide[hidden]{display:flex!important}
+  .slide{position:relative;inset:auto;animation:none;break-after:page;height:100%}
+}
+</style>
+
+<main class="stage" id="stage">
+
+<!-- 01 ───────────────────────────────────────────── -->
+<section class="slide title-slide" data-act="Frame" data-title="Title">
+  <div>
+    <p class="eyebrow">Final Year Project &middot; Benchmark report</p>
+    <h1>Five papers,<br>one rubric</h1>
+    <p class="sub">What the published LLM data-analysis agents actually do when you clone them, install them, and run them on the same sixteen questions.</p>
+  </div>
+
+  <div class="title-meta">
+    <div><span>Project</span><b>Reliable Data Analysis with LLM Agents</b></div>
+    <div><span>Run date</span><b>3 September 2026</b></div>
+    <div><span>Model held constant</span><b>openai/gpt-oss-120b &middot; temp 0</b></div>
+  </div>
+
+  <div class="figures">
+    <div><b>5</b><span>reference papers cloned and run</span></div>
+    <div><b>7</b><span>conditions scored, including two controls</span></div>
+    <div><b>16</b><span>shared questions over two public datasets</span></div>
+    <div><b>10</b><span>bugs found in my own harness</span></div>
+  </div>
+</section>
+
+<!-- 02 ───────────────────────────────────────────── -->
+<section class="slide" data-act="Setup" data-title="Why run the code" hidden>
+  <div class="head"><span class="eyebrow">Setup</span><span class="marker">02 / 17</span></div>
+  <h2>Why run the code instead of reading the claims</h2>
+  <div class="body cols c2-wide">
+    <div class="stack">
+      <p class="lede">I wanted to know what the existing work <em>does</em>, not what the abstracts say it does. In two of the five cases the shipped code does not implement what the paper implies.</p>
+      <p>The five papers also cannot be compared as published. Two are benchmarks with their own data and metrics. Of the three systems, LIDA self-evaluates with an LLM, Data Formulator 2 has no quantitative evaluation at all — only a ten-person user study — and nvAgent uses VisEval with an MLLM judging rendered images.</p>
+      <p><strong>Placing their published numbers side by side would mean nothing.</strong> So I built a shared test set and a shared rubric, and ran the two native benchmarks separately on their own terms.</p>
+    </div>
+    <div class="stack">
+      <div class="panel">
+        <p class="label">Three research questions</p>
+        <ul class="plain">
+          <li><strong>RQ1</strong> — do structured skills improve correctness over a plain LLM baseline?</li>
+          <li><strong>RQ2</strong> — can an agent reliably select <em>and compose</em> skills for unseen data?</li>
+          <li><strong>RQ3</strong> — does validation or self-correction improve reliability?</li>
+        </ul>
+      </div>
+      <p class="note">None of the three can be answered from the five papers alone, because the systems differ in model, scaffolding and output format all at once. That is what the two controls are for.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 03 ───────────────────────────────────────────── -->
+<section class="slide" data-act="Setup" data-title="The five papers" hidden>
+  <div class="head"><span class="eyebrow">Setup</span><span class="marker">03 / 17</span></div>
+  <h2>The five papers</h2>
+  <p class="standfirst">Two benchmarks, run natively on their own data and metrics. Three systems, with no common evaluation between them, run against a shared test set I defined.</p>
+  <div class="body">
+    <table>
+      <thead>
+        <tr><th style="width:21%">Paper</th><th style="width:11%">Type</th><th style="width:22%">Repository</th><th>What it is</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="name">StatABench<br><span class="note">Zhu et al., 2026</span></td>
+          <td><span class="tag plain">Benchmark</span></td>
+          <td class="mono">youxin01/StatABench</td>
+          <td>404 closed statistical questions over 18 topics, plus 30 open modelling tasks. Ships an MCP server exposing 36 hand-written statistical tools.</td>
+        </tr>
+        <tr>
+          <td class="name">DataSciBench<br><span class="note">Zhang et al., 2025</span></td>
+          <td><span class="tag plain">Benchmark</span></td>
+          <td class="mono">THUDM/DataSciBench</td>
+          <td>222 task folders scored by a Task–Function–Code framework and a Completion Rate metric, run against a MetaGPT Data Interpreter.</td>
+        </tr>
+        <tr>
+          <td class="name">LIDA<br><span class="note">Dibia, 2023</span></td>
+          <td><span class="tag">System</span></td>
+          <td class="mono">microsoft/lida</td>
+          <td>Visualisation generator: summarize → goal → visualize → execute → explain, with an optional <code>repair()</code>.</td>
+        </tr>
+        <tr>
+          <td class="name">Data Formulator 2<br><span class="note">Wang et al., 2024</span></td>
+          <td><span class="tag">System</span></td>
+          <td class="mono">microsoft/data-formulator<br>at tag 0.2</td>
+          <td>UI-driven multi-agent tool. The analyst drags fields onto a chart shelf and agents write the transformation code that produces them.</td>
+        </tr>
+        <tr>
+          <td class="name">nvAgent<br><span class="note">Ge et al., ACL 2025</span></td>
+          <td><span class="tag">System</span></td>
+          <td class="mono">geliang0114/nvAgent</td>
+          <td>Three-agent NL2VIS workflow: Processor → Composer → Validator. The only one of the five with a dedicated validation agent.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="note"><b>Two provenance checks.</b> The StatABench identifier <span class="mono">2606.22977</span> looks like a future date but is not — 2606 is June 2026, three months before this run; title, authors and repository all match. And <span class="mono">data-formulator</span>'s <span class="mono">main</span> is now 0.8.0b1, several architectural generations past the paper, so every result here comes from a second checkout pinned at tag <span class="mono">0.2</span>.</p>
+  </div>
+</section>
+
+<!-- 04 ───────────────────────────────────────────── -->
+<section class="slide" data-act="Setup" data-title="Architecture, from the source" hidden>
+  <div class="head"><span class="eyebrow">Setup</span><span class="marker">04 / 17</span></div>
+  <h2>What they are architecturally, read from the source</h2>
+  <div class="body cols c2-wide">
+    <div class="stack" style="min-height:0">
+      <table>
+        <thead>
+          <tr><th>System</th><th>Agents</th><th>Validator</th><th>Skill registry</th><th>Self-correction</th></tr>
+        </thead>
+        <tbody>
+          <tr class="mine"><td class="name" style="color:var(--muted)">baseline <span class="mono">plain</span></td><td>1</td><td>no</td><td>no</td><td>no</td></tr>
+          <tr class="mine"><td class="name" style="color:var(--muted)">baseline <span class="mono">selfcheck</span></td><td>1</td><td>no</td><td>no</td><td>one repair pass</td></tr>
+          <tr><td class="name">StatABench</td><td>1</td><td>no</td><td><strong>yes — 36 MCP tools</strong></td><td>ReAct retries only</td></tr>
+          <tr><td class="name">DataSciBench</td><td>planner + executor</td><td>no</td><td>no</td><td>optional</td></tr>
+          <tr><td class="name">LIDA</td><td>1</td><td>partial, not automatic</td><td>no</td><td>on demand</td></tr>
+          <tr><td class="name">Data Formulator 2</td><td>3+</td><td>no</td><td>no</td><td>none</td></tr>
+          <tr><td class="name">nvAgent</td><td>3</td><td><strong>yes — dedicated</strong></td><td>no</td><td>refine loop, 3 rounds</td></tr>
+        </tbody>
+      </table>
+      <p class="note">Classified by reading the cloned source, not the abstracts. Evidence: nvAgent's <span class="mono">Validator.talk</span> sets <span class="mono">message['fixed']</span> and loops on <span class="mono">_is_need_refine</span>; grepping Data Formulator 2's agents directory for repair, retry or self-correct returns nothing.</p>
+    </div>
+    <div class="stack" style="justify-content:center">
+      <p class="pull">StatABench's 36-tool MCP server is the only thing among the five that resembles a skill registry — and it belongs to a benchmark, not to an agent.</p>
+      <div class="panel lift">
+        <p class="label">The gap</p>
+        <p style="font-size:1.3cqw;color:var(--ink)">None of the three published <em>systems</em> composes from a skill library at all. That is the opening this project can occupy.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 ───────────────────────────────────────────── -->
+<section class="slide" data-act="Method" data-title="Test set and controls" hidden>
+  <div class="head"><span class="eyebrow">Method</span><span class="marker">05 / 17</span></div>
+  <h2>The shared test set, and two controls</h2>
+  <div class="body cols c2">
+    <div class="stack">
+      <p class="label">Sixteen questions, two public datasets</p>
+      <table>
+        <thead><tr><th>Dataset</th><th class="num">Rows</th><th class="num">Cols</th><th>Why this one</th></tr></thead>
+        <tbody>
+          <tr><td class="name">Titanic</td><td class="num">891</td><td class="num">15</td><td>mixed categorical and numeric, with real missingness — <span class="mono">deck</span> 77% missing, <span class="mono">age</span> 20%</td></tr>
+          <tr><td class="name">Wine Quality (red)</td><td class="num">1,599</td><td class="num">12</td><td>eleven continuous predictors against an ordinal target, 82% of wines at quality 5 or 6</td></tr>
+        </tbody>
+      </table>
+      <p>Eight questions each, tagged <code>stat</code>, <code>viz</code> or <code>mixed</code>: descriptive statistics, hypothesis testing, correlation, distributions, outliers, regression and classification, missing data, and pure visualisation.</p>
+      <div class="panel">
+        <p class="label">Ground truth is computed, not typed</p>
+        <p class="note" style="font-size:1.12cqw"><span class="mono">datasets/build_questions.py</span> derives every <span class="mono">reference_answer</span> from the actual CSV with scipy and scikit-learn. Spot-checked against values I already knew: Titanic survival 0.3838 overall, 0.742 female, 0.1889 male; wine alcohol–quality <em>r</em> = 0.476. Re-running regenerates everything.</p>
+      </div>
+    </div>
+    <div class="stack">
+      <p class="label">Two controls, one variable each</p>
+      <div class="panel">
+        <p><span class="tag">RQ1 control</span></p>
+        <p><strong><span class="mono">baseline_plain</span></strong> — one prompt, one shot, no execution feedback, no retry.</p>
+      </div>
+      <div class="panel">
+        <p><span class="tag">RQ3 control</span></p>
+        <p><strong><span class="mono">baseline_selfcheck</span></strong> — same prompt, same model; when the generated code raises, the traceback is fed back for <em>exactly one</em> repair attempt.</p>
+      </div>
+      <p class="note">Comparing <span class="mono">plain</span> against <span class="mono">selfcheck</span> isolates self-correction inside a fixed architecture — same model, same prompt, same questions, one variable changed. Without that pair, nothing in the five papers separates architecture from scaffolding from model.</p>
+      <p class="note">Each question also carries <span class="mono">expected_method</span>, <span class="mono">acceptable_methods</span>, <span class="mono">expected_chart</span> and a numeric <span class="mono">tolerance</span> — which is what lets method selection and output correctness be scored programmatically rather than by eye.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 06 ───────────────────────────────────────────── -->
+<section class="slide" data-act="Method" data-title="The rubric" hidden>
+  <div class="head"><span class="eyebrow">Method</span><span class="marker">06 / 17</span></div>
+  <h2>The rubric: four dimensions, borrowed criteria</h2>
+  <p class="standfirst">Criteria language taken deliberately from the two benchmark papers, so my scores stay commensurable with their published work.</p>
+  <div class="body">
+    <table>
+      <thead><tr><th style="width:17%">Dimension</th><th class="num" style="width:8%">Weight</th><th style="width:27%">Criteria taken from</th><th>How it is scored</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="name">Method selection</td><td class="num">0.30</td>
+          <td class="mono" style="font-size:1.02cqw">StatABench<br>judger-open/modeling_groundedness.py</td>
+          <td>1.0 canonical method · 0.7 defensible alternative · 0.3 real but inappropriate · 0.0 none identifiable. Charts scored the same way. <code>stat</code> items use method only, <code>viz</code> items chart only, <code>mixed</code> averages both.</td>
+        </tr>
+        <tr>
+          <td class="name">Code executability</td><td class="num">0.20</td>
+          <td class="mono" style="font-size:1.02cqw">DataSciBench<br>Completion Rate + TFC framework</td>
+          <td>1.0 ran and produced output · 0.75 ran silently · 0.25 code raised · 0.0 no code.</td>
+        </tr>
+        <tr>
+          <td class="name">Output correctness</td><td class="num">0.30</td>
+          <td class="mono" style="font-size:1.02cqw">StatABench eval_utils.compare_numeric<br>+ DataSciBench value-vs-ground-truth</td>
+          <td>The fraction of ground-truth facts recoverable from the output, within each question's declared tolerance.</td>
+        </tr>
+        <tr>
+          <td class="name">Interpretation quality</td><td class="num">0.20</td>
+          <td class="mono" style="font-size:1.02cqw">StatABench analysis_groundedness.py<br>+ result_bias.py</td>
+          <td>An LLM judge on their 0 / 0.25 / 0.5 / 0.75 / 1.0 anchors, scoring "Interpretation of Results and Context" and "Critical Evaluation of Findings".</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="note">The weighting is deliberately <b>correctness-heavy</b>, because this project is about reliability rather than fluency. Implemented in <span class="mono">harness/rubric.py</span>.</p>
+  </div>
+</section>
+
+<!-- 07 ───────────────────────────────────────────── -->
+<section class="slide" data-act="Method" data-title="Two safeguards" hidden>
+  <div class="head"><span class="eyebrow">Method</span><span class="marker">07 / 17</span></div>
+  <h2>Two safeguards against my own benchmark</h2>
+  <div class="body cols c3">
+    <div class="panel">
+      <p class="label">Safeguard 1</p>
+      <h3 style="margin:0;font-family:var(--serif);font-size:1.5cqw;color:var(--ink);font-weight:600;line-height:1.2;text-wrap:balance">Coverage flags, never a zero</h3>
+      <p>When a system structurally <em>cannot</em> exhibit a dimension, that dimension scores <code>null</code> with <code>coverage=False</code> — never 0.0 — and the comparison prints how many items each score actually rests on.</p>
+      <p class="note">This turned out to matter far more than expected. Two of the seven conditions are unscorable on half the rubric.</p>
+    </div>
+    <div class="panel">
+      <p class="label">Safeguard 2</p>
+      <h3 style="margin:0;font-family:var(--serif);font-size:1.5cqw;color:var(--ink);font-weight:600;line-height:1.2;text-wrap:balance">The judge declares itself</h3>
+      <p>Without an API key the interpretation dimension falls back to a transparent keyword heuristic and stamps <code>judge="heuristic"</code> on the output.</p>
+      <p class="note">A keyless run can never be mistaken for a judged one. Every figure in this deck carries <code>judge="llm"</code>.</p>
+    </div>
+    <div class="panel lift">
+      <p class="label">And a test suite</p>
+      <h3 style="margin:0;font-family:var(--serif);font-size:1.5cqw;color:var(--ink);font-weight:600;line-height:1.2;text-wrap:balance">23 checks that the rubric discriminates</h3>
+      <p><span class="mono">harness/test_rubric.py</span> asserts that chi-square outscores a t-test on a chi-square question, that a pie chart loses to a bar chart, that executability is strictly ordered, and that wrong numbers score below right ones.</p>
+      <p class="note">Runs without an API key.</p>
+    </div>
+  </div>
+  <p class="note" style="flex:0 0 auto">I built both of these after deciding that <b>a benchmark which overstates its own precision is worse than no benchmark at all</b>.</p>
+</section>
+
+<!-- 08 ───────────────────────────────────────────── -->
+<section class="slide" data-act="Results" data-title="Headline comparison" hidden>
+  <div class="head"><span class="eyebrow">Results</span><span class="marker">08 / 17</span></div>
+  <h2>Headline: overall rubric score</h2>
+  <p class="standfirst">All seven conditions on <span class="mono">openai/gpt-oss-120b</span> at temperature 0, LLM judge active. Weighted 0.30 method · 0.20 executability · 0.30 correctness · 0.20 interpretation.</p>
+  <div class="body cols c2-wide">
+    <div>
+      <svg class="chart" viewBox="0 0 660 272" role="img" aria-label="Overall rubric score by condition, 0 to 1">
+        <g class="grid">
+          <line x1="172" y1="8" x2="172" y2="232"/><line x1="288" y1="8" x2="288" y2="232"/>
+          <line x1="404" y1="8" x2="404" y2="232"/><line x1="520" y1="8" x2="520" y2="232"/>
+          <line x1="636" y1="8" x2="636" y2="232"/>
+        </g>
+
+        <!-- selfcheck .804 -->
+        <text class="cat" x="160" y="27" text-anchor="end">plain LLM<tspan class="cat-sub" dx="5">selfcheck</tspan></text>
+        <path class="s1" d="M172,15 H541.1 A4,4 0 0 1 545.1,19 V28 A4,4 0 0 1 541.1,32 H172 Z"><title>selfcheck control — overall 0.804</title></path>
+        <text class="val" x="551" y="27">0.804</text>
+
+        <!-- datascibench .778 -->
+        <text class="cat" x="160" y="60" text-anchor="end">DataSciBench<tspan class="cat-sub" dx="5">n=1</tspan></text>
+        <path class="s1" d="M172,48 H528.8 A4,4 0 0 1 532.8,52 V61 A4,4 0 0 1 528.8,65 H172 Z"><title>DataSciBench — overall 0.778, one task only</title></path>
+        <text class="val" x="539" y="60">0.778</text>
+
+        <!-- plain .735 -->
+        <text class="cat" x="160" y="93" text-anchor="end">plain LLM<tspan class="cat-sub" dx="5">plain</tspan></text>
+        <path class="s1" d="M172,81 H508.4 A4,4 0 0 1 512.4,85 V94 A4,4 0 0 1 508.4,98 H172 Z"><title>plain control — overall 0.735</title></path>
+        <text class="val" x="519" y="93">0.735</text>
+
+        <!-- lida .625 -->
+        <text class="cat" x="160" y="126" text-anchor="end">LIDA</text>
+        <path class="s1" d="M172,114 H458 A4,4 0 0 1 462,118 V127 A4,4 0 0 1 458,131 H172 Z"><title>LIDA — overall 0.625</title></path>
+        <text class="val" x="468" y="126">0.625</text>
+
+        <!-- df2 .541 -->
+        <text class="cat" x="160" y="159" text-anchor="end">Data Formulator 2</text>
+        <path class="s1" d="M172,147 H419 A4,4 0 0 1 423,151 V160 A4,4 0 0 1 419,164 H172 Z"><title>Data Formulator 2 — overall 0.541</title></path>
+        <text class="val" x="429" y="159">0.541</text>
+
+        <!-- statabench .467 -->
+        <text class="cat" x="160" y="192" text-anchor="end">StatABench<tspan class="cat-sub" dx="5">n=20</tspan></text>
+        <path class="s1" d="M172,180 H384.7 A4,4 0 0 1 388.7,184 V193 A4,4 0 0 1 384.7,197 H172 Z"><title>StatABench — overall 0.467</title></path>
+        <text class="val" x="395" y="192">0.467</text>
+
+        <!-- nvagent .400 -->
+        <text class="cat" x="160" y="225" text-anchor="end">nvAgent</text>
+        <path class="s1" d="M172,213 H353.6 A4,4 0 0 1 357.6,217 V226 A4,4 0 0 1 353.6,230 H172 Z"><title>nvAgent — overall 0.400</title></path>
+        <text class="val" x="364" y="225">0.400</text>
+
+        <line class="axis" x1="172" y1="232" x2="636" y2="232"/>
+        <text class="tick" x="172" y="247" text-anchor="middle">0</text>
+        <text class="tick" x="288" y="247" text-anchor="middle">0.25</text>
+        <text class="tick" x="404" y="247" text-anchor="middle">0.50</text>
+        <text class="tick" x="520" y="247" text-anchor="middle">0.75</text>
+        <text class="tick" x="636" y="247" text-anchor="middle">1.00</text>
+        <text class="tick" x="404" y="266" text-anchor="middle">weighted rubric score</text>
+      </svg>
+    </div>
+    <div class="stack">
+      <p class="label">Per dimension</p>
+      <table style="font-size:1.08cqw">
+        <thead><tr><th>Condition</th><th class="num">meth</th><th class="num">exec</th><th class="num">corr</th><th class="num">interp</th></tr></thead>
+        <tbody>
+          <tr><td class="name">selfcheck</td><td class="num">0.981</td><td class="num">0.859</td><td class="num">0.771</td><td class="num">0.531</td></tr>
+          <tr><td class="name">DataSciBench</td><td class="num">—</td><td class="num">—</td><td class="num">0.778</td><td class="num">—</td></tr>
+          <tr><td class="name">plain</td><td class="num">0.981</td><td class="num">0.719</td><td class="num">0.637</td><td class="num">0.527</td></tr>
+          <tr><td class="name">LIDA</td><td class="num">0.869</td><td class="num">0.812</td><td class="num">—</td><td class="num">0.070</td></tr>
+          <tr><td class="name">Data Formulator 2</td><td class="num">0.803</td><td class="num">0.875</td><td class="num">0.418</td><td class="num">0.000</td></tr>
+          <tr><td class="name">StatABench</td><td class="num">—</td><td class="num">—</td><td class="num">0.750</td><td class="num">0.044</td></tr>
+          <tr><td class="name">nvAgent</td><td class="num">0.487</td><td class="num">0.766</td><td class="num">0.337</td><td class="num">0.000</td></tr>
+        </tbody>
+      </table>
+      <div class="panel warn">
+        <p class="note" style="font-size:1.08cqw"><b>Do not read this table alone.</b> DataSciBench rests on a single task and StatABench on 20 native items; both are unscorable on half the rubric. The next two slides are what make this one honest.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 09 ───────────────────────────────────────────── -->
+<section class="slide" data-act="Results" data-title="Coverage" hidden>
+  <div class="head"><span class="eyebrow">Results</span><span class="marker">09 / 17</span></div>
+  <h2>Coverage: an <span class="mono" style="font-size:.8em">n/a</span> is not a zero</h2>
+  <div class="body cols c2-narrow">
+    <div class="stack">
+      <p class="label">Items each score actually rests on</p>
+      <table>
+        <thead><tr><th>Condition</th><th class="num">method</th><th class="num">exec</th><th class="num">correct</th><th class="num">interp</th></tr></thead>
+        <tbody>
+          <tr><td class="name">plain</td><td class="num">16/16</td><td class="num">16/16</td><td class="num">16/16</td><td class="num">16/16</td></tr>
+          <tr><td class="name">selfcheck</td><td class="num">16/16</td><td class="num">16/16</td><td class="num">16/16</td><td class="num">16/16</td></tr>
+          <tr><td class="name">StatABench</td><td class="num" style="color:var(--flag)">0/20</td><td class="num" style="color:var(--flag)">0/20</td><td class="num">20/20</td><td class="num">20/20</td></tr>
+          <tr><td class="name">DataSciBench</td><td class="num" style="color:var(--flag)">0/1</td><td class="num" style="color:var(--flag)">0/1</td><td class="num">1/1</td><td class="num" style="color:var(--flag)">0/1</td></tr>
+          <tr><td class="name">LIDA</td><td class="num">16/16</td><td class="num">16/16</td><td class="num" style="color:var(--flag)">0/16</td><td class="num">16/16</td></tr>
+          <tr><td class="name">Data Formulator 2</td><td class="num">16/16</td><td class="num">16/16</td><td class="num">16/16</td><td class="num">16/16</td></tr>
+          <tr><td class="name">nvAgent</td><td class="num">16/16</td><td class="num">16/16</td><td class="num">16/16</td><td class="num">16/16</td></tr>
+        </tbody>
+      </table>
+      <p class="note">Output channels differ too, which is the underlying reason. LIDA emitted stdout on <b>0 of 16</b> questions — its answer is a rendered image. Data Formulator 2 returns numeric outputs and a 140-character note. nvAgent returns 109 characters of schema reasoning and no chart artifact my harness can read.</p>
+    </div>
+    <div class="stack" style="justify-content:center">
+      <div class="panel">
+        <p class="label">Why LIDA's correctness is blank</p>
+        <p>Recovering its numbers would mean reading them off a chart — which is what VisEval's MLLM judge does and mine does not. Scoring it 0.0 would measure my harness, not LIDA.</p>
+      </div>
+      <div class="panel">
+        <p class="label">Why StatABench's is blank in two columns</p>
+        <p>Its agent answers by calling MCP tools, so its records carry no generated code. Scoring that 0.0 for "no code emitted" measures <em>interaction style</em>, not capability. Its answers are closed-form by design — "The answer is (63.43 kg, 72.57 kg)" — so judging them as interpretation measures the question format.</p>
+      </div>
+      <p class="note"><b>Before coverage was applied properly</b>, StatABench appeared with an overall of <span class="mono">0.042</span> against a native accuracy of <span class="mono">75%</span>. Its benchmark's own adjudication is now carried through as the correctness score instead.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10 ───────────────────────────────────────────── -->
+<section class="slide" data-act="Results" data-title="Stat vs viz" hidden>
+  <div class="head"><span class="eyebrow">Results</span><span class="marker">10 / 17</span></div>
+  <h2>Statistical questions versus visualisation questions</h2>
+  <p class="standfirst">The table that does most of the explanatory work — it separates a genuine capability gap from a category mismatch.</p>
+  <div class="body cols c2-wide">
+    <div class="stack">
+      <div class="legend">
+        <span><i class="sw1"></i> statistical questions</span>
+        <span><i class="sw2"></i> visualisation questions</span>
+      </div>
+      <svg class="chart" viewBox="0 0 660 262" role="img" aria-label="Rubric score on statistical versus visualisation questions, by system">
+        <g class="grid">
+          <line x1="48" y1="16" x2="648" y2="16"/><line x1="48" y1="62" x2="648" y2="62"/>
+          <line x1="48" y1="108" x2="648" y2="108"/><line x1="48" y1="154" x2="648" y2="154"/>
+        </g>
+        <text class="tick" x="40" y="20" text-anchor="end">1.00</text>
+        <text class="tick" x="40" y="66" text-anchor="end">0.75</text>
+        <text class="tick" x="40" y="112" text-anchor="end">0.50</text>
+        <text class="tick" x="40" y="158" text-anchor="end">0.25</text>
+        <text class="tick" x="40" y="204" text-anchor="end">0</text>
+
+        <!-- plain: .764 / .639 -->
+        <path class="s1" d="M73,59.4 h26 a4,4 0 0 1 4,4 V200 H69 V63.4 a4,4 0 0 1 4,-4 Z"><title>plain — stat 0.764</title></path>
+        <text class="val" x="86" y="54" text-anchor="middle">.764</text>
+        <path class="s2" d="M113,82.4 h26 a4,4 0 0 1 4,4 V200 H109 V86.4 a4,4 0 0 1 4,-4 Z"><title>plain — viz 0.639</title></path>
+        <text class="val" x="126" y="77" text-anchor="middle">.639</text>
+        <text class="cat" x="106" y="218" text-anchor="middle">plain</text>
+
+        <!-- selfcheck: .793 / .833 -->
+        <path class="s1" d="M193,54.1 h26 a4,4 0 0 1 4,4 V200 H189 V58.1 a4,4 0 0 1 4,-4 Z"><title>selfcheck — stat 0.793</title></path>
+        <text class="val" x="206" y="49" text-anchor="middle">.793</text>
+        <path class="s2" d="M233,46.7 h26 a4,4 0 0 1 4,4 V200 H229 V50.7 a4,4 0 0 1 4,-4 Z"><title>selfcheck — viz 0.833</title></path>
+        <text class="val" x="246" y="42" text-anchor="middle">.833</text>
+        <text class="cat" x="226" y="218" text-anchor="middle">selfcheck</text>
+
+        <!-- lida: .473 / .750 -->
+        <path class="s1" d="M313,113 h26 a4,4 0 0 1 4,4 V200 H309 V117 a4,4 0 0 1 4,-4 Z"><title>LIDA — stat 0.473</title></path>
+        <text class="val" x="326" y="108" text-anchor="middle">.473</text>
+        <path class="s2" d="M353,62 h26 a4,4 0 0 1 4,4 V200 H349 V66 a4,4 0 0 1 4,-4 Z"><title>LIDA — viz 0.750</title></path>
+        <text class="val" x="366" y="57" text-anchor="middle">.750</text>
+        <text class="cat" x="346" y="218" text-anchor="middle">LIDA</text>
+
+        <!-- df2: .466 / .625 -->
+        <path class="s1" d="M433,114.3 h26 a4,4 0 0 1 4,4 V200 H429 V118.3 a4,4 0 0 1 4,-4 Z"><title>Data Formulator 2 — stat 0.466</title></path>
+        <text class="val" x="446" y="109" text-anchor="middle">.466</text>
+        <path class="s2" d="M473,85 h26 a4,4 0 0 1 4,4 V200 H469 V89 a4,4 0 0 1 4,-4 Z"><title>Data Formulator 2 — viz 0.625</title></path>
+        <text class="val" x="486" y="80" text-anchor="middle">.625</text>
+        <text class="cat" x="466" y="218" text-anchor="middle">Data<tspan x="466" dy="13">Formulator 2</tspan></text>
+
+        <!-- nvagent: .329 / .591 -->
+        <path class="s1" d="M553,139.5 h26 a4,4 0 0 1 4,4 V200 H549 V143.5 a4,4 0 0 1 4,-4 Z"><title>nvAgent — stat 0.329</title></path>
+        <text class="val" x="566" y="134" text-anchor="middle">.329</text>
+        <path class="s2" d="M593,91.3 h26 a4,4 0 0 1 4,4 V200 H589 V95.3 a4,4 0 0 1 4,-4 Z"><title>nvAgent — viz 0.591</title></path>
+        <text class="val" x="606" y="86" text-anchor="middle">.591</text>
+        <text class="cat" x="586" y="218" text-anchor="middle">nvAgent</text>
+
+        <line class="axis" x1="48" y1="200" x2="648" y2="200"/>
+        <text class="tick" x="348" y="252" text-anchor="middle">StatABench and DataSciBench are excluded — neither ran visualisation items</text>
+      </svg>
+    </div>
+    <div class="stack" style="justify-content:center">
+      <p class="pull">Quoting only the overall figure would misrepresent all three systems.</p>
+      <div class="panel">
+        <p><strong>nvAgent is the clearest case.</strong> Its VQL grammar is <span class="mono">Visualize &lt;TYPE&gt; SELECT …</span> — a chart-over-SQL language with no way to express fitting a logistic regression. It emitted no VQL at all for three of the sixteen questions.</p>
+        <p class="note">That is an expressiveness ceiling, not a defect. On its own VisEval benchmark it outperforms its baselines.</p>
+      </div>
+      <p class="note"><b>The transferable finding:</b> scaffolding designed for visualisation does not transfer to analysis. All three systems lose heavily on <code>stat</code> items specifically.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 11 ───────────────────────────────────────────── -->
+<section class="slide" data-act="Results" data-title="Validation works" hidden>
+  <div class="head"><span class="eyebrow">Results</span><span class="marker">11 / 17</span></div>
+  <h2>One repair pass, one variable changed</h2>
+  <p class="standfirst">The best-supported result in the study: same model, same prompt, same sixteen questions — the only difference is whether a traceback gets fed back once.</p>
+  <div class="body cols c2-wide">
+    <div class="stack">
+      <div class="legend">
+        <span><i class="sw2"></i> <span class="mono">plain</span> — no repair</span>
+        <span><i class="sw1"></i> <span class="mono">selfcheck</span> — one repair pass</span>
+      </div>
+      <svg class="chart" viewBox="0 0 660 200" role="img" aria-label="Effect of one repair pass on three metrics">
+        <g class="grid">
+          <line x1="158" y1="8" x2="158" y2="170"/><line x1="268.5" y1="8" x2="268.5" y2="170"/>
+          <line x1="379" y1="8" x2="379" y2="170"/><line x1="489.5" y1="8" x2="489.5" y2="170"/>
+          <line x1="600" y1="8" x2="600" y2="170"/>
+        </g>
+
+        <text class="cat" x="148" y="32" text-anchor="end">Clean execution</text>
+        <path class="s2" d="M158,14 H430.3 A4,4 0 0 1 434.3,18 V28 A4,4 0 0 1 430.3,32 H158 Z"><title>plain — clean execution 0.625</title></path>
+        <text class="val" x="440" y="26">0.625</text>
+        <path class="s1" d="M158,36 H512.9 A4,4 0 0 1 516.9,40 V50 A4,4 0 0 1 512.9,54 H158 Z"><title>selfcheck — clean execution 0.812</title></path>
+        <text class="val" x="523" y="48">0.812</text>
+
+        <text class="cat" x="148" y="88" text-anchor="end">Output correctness</text>
+        <path class="s2" d="M158,70 H435.6 A4,4 0 0 1 439.6,74 V84 A4,4 0 0 1 435.6,88 H158 Z"><title>plain — output correctness 0.637</title></path>
+        <text class="val" x="446" y="82">0.637</text>
+        <path class="s1" d="M158,92 H494.8 A4,4 0 0 1 498.8,96 V106 A4,4 0 0 1 494.8,110 H158 Z"><title>selfcheck — output correctness 0.771</title></path>
+        <text class="val" x="505" y="104">0.771</text>
+
+        <text class="cat" x="148" y="144" text-anchor="end">Overall score</text>
+        <path class="s2" d="M158,126 H478.9 A4,4 0 0 1 482.9,130 V140 A4,4 0 0 1 478.9,144 H158 Z"><title>plain — overall 0.735</title></path>
+        <text class="val" x="489" y="138">0.735</text>
+        <path class="s1" d="M158,148 H509.4 A4,4 0 0 1 513.4,152 V162 A4,4 0 0 1 509.4,166 H158 Z"><title>selfcheck — overall 0.804</title></path>
+        <text class="val" x="520" y="160">0.804</text>
+
+        <line class="axis" x1="158" y1="170" x2="600" y2="170"/>
+        <text class="tick" x="158" y="185" text-anchor="middle">0</text>
+        <text class="tick" x="268.5" y="185" text-anchor="middle">0.25</text>
+        <text class="tick" x="379" y="185" text-anchor="middle">0.50</text>
+        <text class="tick" x="489.5" y="185" text-anchor="middle">0.75</text>
+        <text class="tick" x="600" y="185" text-anchor="middle">1.00</text>
+      </svg>
+      <p class="note">The published systems corroborate it: nvAgent's validator fixed <b>8 of 22</b> attempts, LIDA's <span class="mono">repair()</span> fixed <b>3 of 7</b>.</p>
+    </div>
+    <div class="stack">
+      <p class="label">Self-correction across all five</p>
+      <table style="font-size:1.08cqw">
+        <thead><tr><th>System</th><th>Mechanism</th><th class="num">tries</th><th class="num">fixed</th><th class="num">clean</th></tr></thead>
+        <tbody>
+          <tr><td class="name">plain</td><td>none</td><td class="num">0</td><td class="num">0</td><td class="num">0.625</td></tr>
+          <tr><td class="name">selfcheck</td><td>one execution-feedback pass</td><td class="num">4</td><td class="num">1</td><td class="num">0.812</td></tr>
+          <tr><td class="name">LIDA</td><td><span class="mono">repair()</span> on demand</td><td class="num">7</td><td class="num">3</td><td class="num">0.750</td></tr>
+          <tr><td class="name">Data Formulator 2</td><td>none</td><td class="num">0</td><td class="num">0</td><td class="num">0.875</td></tr>
+          <tr><td class="name">nvAgent</td><td>validator loop, 3 rounds</td><td class="num">22</td><td class="num">8</td><td class="num">0.750</td></tr>
+        </tbody>
+      </table>
+      <div class="panel warn">
+        <p class="label">One confound, stated plainly</p>
+        <p style="font-size:1.12cqw">Data Formulator 2 has the highest execution rate in the study, <b>0.875</b>, with no repair mechanism at all. It wins that column because it generates short data-transformation snippets rather than whole analyses. <strong>Execution reliability tracks task complexity at least as much as it tracks architecture</strong> — so that column is not a clean ranking of validators.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 ───────────────────────────────────────────── -->
+<section class="slide" data-act="Reading" data-title="What the numbers mean, I" hidden>
+  <div class="head"><span class="eyebrow">Reading the results</span><span class="marker">12 / 17</span></div>
+  <h2>What the numbers mean</h2>
+  <div class="body cols c3">
+    <div class="finding">
+      <p class="label">On the baseline</p>
+      <h3>The plain baseline wins — but only narrowly, and only here</h3>
+      <p><span class="mono">selfcheck</span> at 0.804 beats every published system. The result is real and much narrower than it looks: on standard questions over well-known datasets, an unscaffolded model already picks the right method <strong>98% of the time</strong> — chi-square for the association question, Welch's t-test for the group comparison, logistic regression for the binary outcome, essentially every time.</p>
+      <p><b style="color:var(--ink)">This is not evidence that scaffolding is useless. It is evidence that my test set is not hard enough to require it.</b></p>
+    </div>
+    <div class="finding">
+      <p class="label">On interpretation</p>
+      <h3>None of the three systems interprets its own results</h3>
+      <p>All three produce narrative — LIDA averages over <strong>1,700 characters</strong> of it — but the judge, applying StatABench's anchors, found almost none of it interprets the <em>result</em>.</p>
+      <ul class="plain" style="font-size:1.1cqw">
+        <li>LIDA describes the chart's design: the colour palette, the dashed reference line, the axis labels.</li>
+        <li>Data Formulator 2 returns a single-line encoding recommendation.</li>
+        <li>nvAgent returns reasoning about the schema.</li>
+      </ul>
+      <p><b style="color:var(--ink)">Every one of these tools hands back an artefact and leaves interpretation entirely to the human.</b></p>
+    </div>
+    <div class="finding">
+      <p class="label">On category</p>
+      <h3>The visualisation systems really are much stronger at visualisation</h3>
+      <p>LIDA scores <strong>0.473</strong> on statistical questions and <strong>0.750</strong> on visualisation ones. The overall column flattens that distinction away.</p>
+      <p class="note">This is also the main threat to the headline table's validity, and I have to own it: my questions ask for the test statistic and the p-value, which rewards systems whose output channel is text and penalises systems whose output channel is an image.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 13 ───────────────────────────────────────────── -->
+<section class="slide" data-act="Reading" data-title="What the numbers mean, II" hidden>
+  <div class="head"><span class="eyebrow">Reading the results</span><span class="marker">13 / 17</span></div>
+  <h2>Where reliability actually fails</h2>
+  <div class="body cols c2">
+    <div class="stack">
+      <div class="finding">
+        <p class="label">A validator only repairs what it may touch</p>
+        <h3>nvAgent's Validator reported <code>fixed=True</code> fourteen times and fixed nothing</h3>
+        <p>In its first run it burned all three rounds on fourteen of sixteen questions, reporting success each time, and never resolved the error — because the fault lay in its own scaffolding template rather than in the LLM-generated code the refiner is scoped to rewrite.</p>
+        <p><b style="color:var(--ink)">An execution-feedback validator detects that something failed but can only fix the region it is allowed to edit.</b> A validator that checked schema conformance or method appropriateness would catch a different — and more important — class of error.</p>
+      </div>
+    </div>
+    <div class="stack">
+      <div class="finding">
+        <p class="label">Grounding fails silently — the RQ2 problem</p>
+        <h3>nvAgent, on the wine correlation question</h3>
+      </div>
+      <pre>SELECT property, corr FROM (
+  SELECT 'fixed_acidity' AS property,
+    CORR(fixed_acidity, quality) AS corr
+  FROM <span class="bad">wine</span> UNION ALL ...
+) AS t ORDER BY corr DESC</pre>
+      <p>The chart choice is right. The statistical intent is right. It queries a table called <span class="mono" style="color:var(--flag)">wine</span>, which does not exist — the Processor had given it <span class="mono">wine_quality</span>. The system invented a plausible-looking table name and failed on that alone.</p>
+      <div class="panel lift">
+        <p style="font-size:1.28cqw;color:var(--ink)"><strong>Selection is largely solved. Composition and grounding are not.</strong> The agent chose correctly and still produced nothing, because it did not bind to the data it had been given.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 ───────────────────────────────────────────── -->
+<section class="slide" data-act="Limits" data-title="Ten bugs in my own harness" hidden>
+  <div class="head"><span class="eyebrow">Limits</span><span class="marker">14 / 17</span></div>
+  <h2>Ten bugs I found in my own harness</h2>
+  <p class="standfirst">Recorded in full because they turned out to be one of the more useful findings of the exercise. Every one would have produced a confident, wrong result.</p>
+  <div class="body cols c2-wide">
+    <div class="tbl-scroll">
+      <table style="font-size:1.04cqw">
+        <thead><tr><th class="num" style="width:5%">#</th><th style="width:40%">What broke</th><th>Would have been reported as</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td>Windows console cp1252 vs. the model's U+2011 / U+2192</td><td>every system penalised on code executability</td></tr>
+          <tr><td class="num">2</td><td>percentage versus proportion</td><td>correctness understated across the board — the model printed 38.38% against a stored 0.3838 and scored 0.0</td></tr>
+          <tr><td class="num">3</td><td>Vega <span class="mono">point</span> treated as an unknown mark</td><td>Data Formulator penalised for vocabulary rather than for wrong charts</td></tr>
+          <tr><td class="num">4</td><td>Windows <span class="mono">\U</span> path escape in injected raw strings</td><td><b style="color:var(--flag)">nvAgent scoring 0/16 — the opposite of the truth</b></td></tr>
+          <tr><td class="num">5</td><td>hyphen in a SQL table name (<span class="mono">winequality-red</span>)</td><td>nvAgent 7/16, with all Titanic passing and all Wine failing</td></tr>
+          <tr><td class="num">6</td><td>cp1252 again, in a separately spawned subprocess</td><td><b style="color:var(--flag)">StatABench scoring 0%</b> — 25 responses of <span class="mono">'charmap' codec can't encode '⏳'</span></td></tr>
+          <tr><td class="num">7</td><td>missing <span class="mono">test_config.yaml</span></td><td>DataSciBench unable to start at all</td></tr>
+          <tr><td class="num">8</td><td><span class="mono">httpx ≥ 0.28</span> against a pinned <span class="mono">openai 1.39</span></td><td>DataSciBench generating nothing</td></tr>
+          <tr><td class="num">9</td><td>wrong ground-truth tree copied</td><td>DataSciBench scoring 0.0 on everything — cleanly and plausibly</td></tr>
+          <tr><td class="num">10</td><td>mixed scales in the results CSV</td><td>a "completion rate" of <span class="mono">1.36</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="stack" style="justify-content:center">
+      <p class="pull">All ten made a system look <em>worse</em> than it is. None flattered one.</p>
+      <p>Most were invisible in the aggregate scores and only surfaced when I read individual records — because a plausible-looking number (0/16, 7/16, 0%, 1.36) is indistinguishable from a real result until you inspect the output underneath it.</p>
+      <p class="note">Bug 6 also shows that fixing a class of error once is not enough: the same cp1252 root cause reappeared at two further process boundaries hours later. Fixes 2 and 3, and the coverage rule, are now locked in by regression tests.</p>
+      <div class="panel lift">
+        <p style="font-size:1.24cqw;color:var(--ink)"><strong>For a project about reliable analysis this is direct evidence.</strong> An agent that reports a confident aggregate without exposing per-item provenance will mislead its user — and the failure mode looks systematically pessimistic while actually being arbitrary.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 15 ───────────────────────────────────────────── -->
+<section class="slide" data-act="Limits" data-title="What I don't trust" hidden>
+  <div class="head"><span class="eyebrow">Limits</span><span class="marker">15 / 17</span></div>
+  <h2>Which of my own numbers I do not trust</h2>
+  <div class="body cols c2">
+    <div class="stack">
+      <div class="panel warn">
+        <p class="label">nvAgent was measured three times</p>
+        <table style="font-size:1.1cqw">
+          <thead><tr><th>Run</th><th class="num">Result</th><th>Cause</th></tr></thead>
+          <tbody>
+            <tr><td>first</td><td class="num">0/16</td><td>bug 4 — mine</td></tr>
+            <tr><td>second</td><td class="num">7/16</td><td>bug 5 — mine</td></tr>
+            <tr><td class="name">third</td><td class="num"><strong>12/16</strong></td><td>honest</td></tr>
+          </tbody>
+        </table>
+        <p class="note" style="font-size:1.06cqw">Only the third is reported. Had I published the first, my report would have claimed that <b>the one paper whose entire contribution is a validator agent cannot execute anything</b> — when in fact it was producing correct VQL every time.</p>
+      </div>
+      <p class="note"><b>And it is not deterministic.</b> Even at temperature 0, <span class="mono">titanic_q8</span> produced valid VQL in one run and nothing in another. Its single-run figures carry more uncertainty than the others'.</p>
+    </div>
+    <div class="stack">
+      <ul class="plain" style="font-size:1.18cqw">
+        <li><strong>Both native runs are subsets.</strong> StatABench ran on 20 tool-requiring items, DataSciBench on a single task across three runs. These demonstrate the pipelines work end to end; they are not publishable benchmark numbers. StatABench's own pipeline also skips every item flagged <span class="mono">code == 0</span>, so even a full run attempts 198 of 404.</li>
+        <li><strong>My test set favours systems that print numbers.</strong> Asking for the test statistic and the p-value penalises systems whose output channel is an image. This is the main threat to the headline table.</li>
+        <li><strong>The model differs from the papers'.</strong> An open-weights model through OpenRouter, not the models they used — StatABench reports GPT-5.1 at 68.6% on Stat-Closed. <em>This study compares architectures on a fixed model; it does not reproduce published scores.</em></li>
+        <li><strong>Three of the five repositories do not run as shipped.</strong> nvAgent cannot even be imported as distributed. Six isolated virtual environments were needed, because the repositories pin mutually incompatible dependencies.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 16 ───────────────────────────────────────────── -->
+<section class="slide" data-act="Conclusions" data-title="The research questions" hidden>
+  <div class="head"><span class="eyebrow">Conclusions</span><span class="marker">16 / 17</span></div>
+  <h2>Answers, at the confidence the evidence supports</h2>
+  <div class="body cols c3">
+    <div class="rq no">
+      <p class="verdict">RQ1 — not demonstrated</p>
+      <p class="q">Do structured skills improve correctness over a plain LLM baseline?</p>
+      <p><strong>And the test set is the reason.</strong> The plain baseline reaches 0.981 on method selection, which leaves essentially no headroom. Structured skills cannot be shown to help where an unscaffolded model already chooses correctly 98% of the time.</p>
+      <p>The useful finding is negative: <b style="color:var(--ink)">none of the three published systems beats the plain baseline overall</b>, and all three lose heavily on statistical questions. Scaffolding built for visualisation does not transfer to analysis.</p>
+      <p class="note">To answer this properly I need harder tasks — unusual data shapes, methods that must be named rather than inferred, multi-step compositions a single prompt cannot hold.</p>
+    </div>
+    <div class="rq part">
+      <p class="verdict">RQ2 — half answered</p>
+      <p class="q">Can an agent reliably select <em>and compose</em> skills for unseen data?</p>
+      <p><strong>Selection is largely solved on familiar data; composition and grounding are not.</strong> The failures were not wrong tests:</p>
+      <ul class="plain" style="font-size:1.06cqw">
+        <li>right chart, table that does not exist (nvAgent)</li>
+        <li>no plan at all, question outside the grammar (nvAgent, ×3)</li>
+        <li>prose returned instead of code (Data Formulator 2, ×2)</li>
+      </ul>
+      <p class="note">StatABench's 36-tool registry is the only skill-registry-shaped artefact among the five, and it belongs to a benchmark. No published system here composes from a skill library.</p>
+    </div>
+    <div class="rq yes">
+      <p class="verdict">RQ3 — yes, best supported</p>
+      <p class="q">Does validation or self-correction improve reliability?</p>
+      <p>A single repair pass on an otherwise identical baseline raised clean execution <strong>0.625 → 0.812</strong> and correctness <strong>0.637 → 0.771</strong>. nvAgent's validator fixed 8 of 22; LIDA's repair fixed 3 of 7.</p>
+      <p><b style="color:var(--ink)">Two qualifications.</b> Execution rate confounds with task complexity — Data Formulator leads that column with no validator at all. And a validator only repairs what it is scoped to edit, so execution-feedback validation catches crashes but not analyses that are wrong yet runnable.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 17 ───────────────────────────────────────────── -->
+<section class="slide" data-act="Conclusions" data-title="What I intend to build" hidden>
+  <div class="head"><span class="eyebrow">Conclusions</span><span class="marker">17 / 17</span></div>
+  <h2>What I intend to build</h2>
+  <p class="standfirst">Five design commitments, each traceable to a result above rather than to a preference.</p>
+  <div class="body cols c2">
+    <ol class="findings">
+      <li>
+        <div>
+          <h3>Include a validator — and give it more to check than execution</h3>
+          <p>The best-evidenced result I have. But execution-only validation misses the errors that matter most, so mine should also check schema conformance and method appropriateness.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <h3>Treat interpretation as a first-class output</h3>
+          <p>All three published systems score near zero here. Producing a chart or a number without saying what it means is the clearest unmet need in this literature.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <h3>Use an explicit skill registry — but justify it on composition, not selection</h3>
+          <p>Selection is close to saturated for a strong model on familiar data. The defensible argument for a registry is reliable composition and grounding.</p>
+        </div>
+      </li>
+    </ol>
+    <div class="stack">
+      <ol class="findings" start="4" style="counter-reset:f 3">
+        <li>
+          <div>
+            <h3>Avoid a rigid intermediate grammar</h3>
+            <p>nvAgent's VQL is the cautionary case. It guarantees a valid chart but cannot express a hypothesis test or a model fit — and it fails silently, by emitting nothing.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Design the evaluation before the agent</h3>
+            <p>Ten measurement bugs in this study all favoured a wrong conclusion, and most were invisible without per-record inspection.</p>
+          </div>
+        </li>
+      </ol>
+      <div class="panel lift">
+        <p class="label">Reproducibility</p>
+        <p class="note" style="font-size:1.08cqw">Harness, rubric, computed ground truth, per-system JSON and the seven-row comparison all live in <span class="mono">benchmark-fyp/</span>. Every adaptation to a shipped repository is recorded in <span class="mono">README.md</span>, and the two-line nvAgent import fix is visible in <span class="mono">git -C repos/nvAgent diff</span>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<nav class="bar">
+  <button type="button" id="prev" aria-label="Previous slide">&larr;&nbsp;Prev</button>
+  <button type="button" id="next" aria-label="Next slide">Next&nbsp;&rarr;</button>
+  <span class="act-now" id="actNow">Frame</span>
+  <span class="progress"><i id="prog" style="width:5.9%"></i></span>
+  <span class="count" id="count">01 / 17</span>
+  <button type="button" id="tocBtn">Contents</button>
+  <span class="hint">&larr; &rarr; to move &middot; C for contents</span>
+</nav>
+
+<div class="toc" id="toc" hidden>
+  <div class="toc-inner">
+    <div class="toc-head">
+      <p>Contents</p>
+      <button type="button" id="tocClose">Close &middot; Esc</button>
+    </div>
+    <div id="tocBody"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var total = slides.length;
+  var i = 0;
+  var prog = document.getElementById('prog');
+  var count = document.getElementById('count');
+  var actNow = document.getElementById('actNow');
+  var toc = document.getElementById('toc');
+  var tocBody = document.getElementById('tocBody');
+
+  function pad(n){ return (n < 10 ? '0' : '') + n; }
+
+  function show(n){
+    i = Math.max(0, Math.min(total - 1, n));
+    slides.forEach(function(s, k){ s.hidden = (k !== i); });
+    prog.style.width = ((i + 1) / total * 100).toFixed(1) + '%';
+    count.textContent = pad(i + 1) + ' / ' + total;
+    actNow.textContent = slides[i].dataset.act;
+    Array.prototype.forEach.call(tocBody.querySelectorAll('li'), function(li, k){
+      li.setAttribute('aria-current', k === i ? 'true' : 'false');
+    });
+  }
+
+  // build contents, grouped by act
+  var groups = [];
+  slides.forEach(function(s, k){
+    var act = s.dataset.act;
+    if(!groups.length || groups[groups.length - 1].act !== act){ groups.push({act: act, items: []}); }
+    groups[groups.length - 1].items.push({n: k, title: s.dataset.title});
+  });
+  var frag = document.createDocumentFragment();
+  groups.forEach(function(g){
+    var wrap = document.createElement('div');
+    var h = document.createElement('h3');
+    h.textContent = g.act;
+    var ol = document.createElement('ol');
+    g.items.forEach(function(it){
+      var li = document.createElement('li');
+      var b = document.createElement('button');
+      b.type = 'button';
+      var num = document.createElement('b');
+      num.textContent = pad(it.n + 1);
+      b.appendChild(num);
+      b.appendChild(document.createTextNode(it.title));
+      b.addEventListener('click', function(){ closeToc(); show(it.n); });
+      li.appendChild(b);
+      ol.appendChild(li);
+    });
+    wrap.appendChild(h);
+    wrap.appendChild(ol);
+    frag.appendChild(wrap);
+  });
+  tocBody.appendChild(frag);
+
+  function openToc(){ toc.hidden = false; }
+  function closeToc(){ toc.hidden = true; }
+
+  document.getElementById('prev').addEventListener('click', function(){ show(i - 1); });
+  document.getElementById('next').addEventListener('click', function(){ show(i + 1); });
+  document.getElementById('tocBtn').addEventListener('click', openToc);
+  document.getElementById('tocClose').addEventListener('click', closeToc);
+  toc.addEventListener('click', function(e){ if(e.target === toc){ closeToc(); } });
+
+  document.addEventListener('keydown', function(e){
+    if(e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key;
+    if(k === 'Escape'){ closeToc(); return; }
+    if(!toc.hidden) return;
+    if(k === 'ArrowRight' || k === 'PageDown' || k === ' '){ e.preventDefault(); show(i + 1); }
+    else if(k === 'ArrowLeft' || k === 'PageUp'){ e.preventDefault(); show(i - 1); }
+    else if(k === 'Home'){ e.preventDefault(); show(0); }
+    else if(k === 'End'){ e.preventDefault(); show(total - 1); }
+    else if(k === 'c' || k === 'C'){ e.preventDefault(); openToc(); }
+  });
+
+  show(0);
+})();
+</script>

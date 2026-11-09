@@ -1,0 +1,122 @@
+{
+ "beijing_pm25": {
+  "beijing_pm25.csv": 2.0
+ },
+ "bike_sharing": {
+  "hour.csv": 1.2
+ },
+ "citibike": {
+  "citibike_202401.parquet": 97.6
+ },
+ "clinic": {
+  "admissions.csv": 0.2,
+  "labs.csv": 0.3,
+  "patients.csv": 0.1
+ },
+ "diabetes": {
+  "diabetic_data.csv": 19.2,
+  "IDS_mapping.csv": 0.0
+ },
+ "f1db": {
+  "chassis.csv": 0.1,
+  "circuits.csv": 0.0,
+  "circuits_layouts.csv": 0.0,
+  "constructors.csv": 0.0,
+  "constructors_chronology.csv": 0.0,
+  "continents.csv": 0.0,
+  "countries.csv": 0.0,
+  "drivers.csv": 0.2,
+  "drivers_family_relationships.csv": 0.0,
+  "engine_manufacturers.csv": 0.0,
+  "engines.csv": 0.0,
+  "entrants.csv": 0.0,
+  "grands_prix.csv": 0.0,
+  "races.csv": 0.2,
+  "races_constructor_standings.csv": 0.5,
+  "races_driver_of_the_day_results.csv": 0.1,
+  "races_driver_standings.csv": 1.1,
+  "races_fastest_laps.csv": 2.1,
+  "races_free_practice_1_results.csv": 1.9,
+  "races_free_practice_2_results.csv": 1.9,
+  "races_free_practice_3_results.csv": 1.1,
+  "races_free_practice_4_results.csv": 0.1,
+  "races_pit_stops.csv": 2.2,
+  "races_pre_qualifying_results.csv": 0.1,
+  "races_qualifying_1_results.csv": 0.9,
+  "races_qualifying_2_results.csv": 0.9,
+  "races_qualifying_results.csv": 3.4,
+  "races_race_results.csv": 4.1,
+  "races_sprint_qualifying_results.csv": 0.1,
+  "races_sprint_race_results.csv": 0.1,
+  "races_sprint_starting_grid_positions.csv": 0.1,
+  "races_starting_grid_positions.csv": 2.6,
+  "races_warming_up_results.csv": 0.9,
+  "seasons.csv": 0.0,
+  "seasons_constructor_standings.csv": 0.0,
+  "seasons_constructors.csv": 0.1,
+  "seasons_driver_standings.csv": 0.1,
+  "seasons_drivers.csv": 0.2,
+  "seasons_engine_manufacturers.csv": 0.0,
+  "seasons_entrants.csv": 0.1,
+  "seasons_entrants_chassis.csv": 0.1,
+  "seasons_entrants_constructors.csv": 0.1,
+  "seasons_entrants_drivers.csv": 0.4,
+  "seasons_entrants_engines.csv": 0.1,
+  "seasons_entrants_tyre_manufacturers.csv": 0.1,
+  "seasons_tyre_manufacturers.csv": 0.0,
+  "tyre_manufacturers.csv": 0.0
+ },
+ "flights": {
+  "airports.csv": 0.3,
+  "carriers.csv": 0.1,
+  "flights_2024q1.parquet": 30.9
+ },
+ "imdb": {
+  "crew.parquet": 15.7,
+  "directors.parquet": 6.3,
+  "movies.parquet": 19.3,
+  "ratings.parquet": 3.0
+ },
+ "movielens": {
+  "movies.csv": 0.2,
+  "ratings.csv": 22.6,
+  "users.csv": 0.1
+ },
+ "nyc_taxi": {
+  "taxi_zone_lookup.csv": 0.0,
+  "yellow_tripdata_2024-01.parquet": 50.0
+ },
+ "olist": {
+  "olist_customers_dataset.csv": 8.6,
+  "olist_geolocation_dataset.csv": 61.3,
+  "olist_order_items_dataset.csv": 15.0,
+  "olist_order_payments_dataset.csv": 5.6,
+  "olist_order_reviews_dataset.csv": 14.5,
+  "olist_orders_dataset.csv": 17.7,
+  "olist_products_dataset.csv": 2.4,
+  "olist_sellers_dataset.csv": 0.2,
+  "product_category_name_translation.csv": 0.0
+ },
+ "online_retail": {
+  "online_retail_ii.csv": 95.9
+ },
+ "saas": {
+  "accounts.csv": 0.0,
+  "cancellations.csv": 0.0,
+  "events.csv": 2.4,
+  "fx_rates.csv": 0.0,
+  "invoices.csv": 0.8
+ },
+ "school": {
+  "courses.csv": 0.0,
+  "enrolments.csv": 0.8,
+  "students.csv": 0.1
+ },
+ "shop": {
+  "customers.csv": 0.0,
+  "order_items.csv": 0.1,
+  "orders.csv": 0.0,
+  "products.csv": 0.0,
+  "reviews.csv": 0.0
+ }
+}

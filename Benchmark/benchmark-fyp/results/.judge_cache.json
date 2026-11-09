@@ -1,0 +1,447 @@
+{
+"5b800947979e6ec272fb30747db1378db4dc7b0dce94a552ae977fa4f1da410f": [
+0.625,
+true,
+"llm-judge: The answer clearly contextualizes the survival rates and notes key limitations (no adjustment for class/age), but does not deeply explore causality or robustness, giving a solid ye"
+],
+"18011d18d4aec73a67e4618af52331a1f4aa84def1190ae9e5ee7e2623d47b32": [
+0.25,
+true,
+"llm-judge: The answer gives only a generic description of what a chi\u2011square test and p\u2011value imply, without linking to the actual observed result, and offers only a basic note on sample\u2011size "
+],
+"d538ab94f871ff6435ba3dc0571406c2a395cbd31baea8bdf70c805f88d7e461": [
+0.5,
+true,
+"llm-judge: Provides a basic contextual interpretation and notes normality and missing\u2011data assumptions, but lacks concrete direction, effect size discussion, and deeper robustness analysis."
+],
+"c52f1a935319eb0532303a0f802d19681b4d72c3ec9422072c11e9e58c7b8a75": [
+0.625,
+true,
+"llm-judge: The answer clearly contextualizes the survival differences and notes key assumptions and confounders, but lacks deeper uncertainty discussion and robustness checks."
+],
+"0a32c7dd01ca4c568c5b00cec958c7f7c79faebdbc90851187c72fa09b9e4830": [
+0.5,
+true,
+"llm-judge: The answer gives a clear contextual interpretation of skewness and its impact on summary statistics and notes some limitations, but its critique is limited to a superficial mention"
+],
+"a5aa03684440c6ed1200820c45f86647f26579c43e6203e1c8a36b048a202170": [
+0.625,
+true,
+"llm-judge: The answer gives a clear, contextual interpretation with some limitations noted, but it stops short of full nuance; it identifies key constraints but lacks deeper robustness checks"
+],
+"3509a190078c2a9c823616a9acc8fd2f02d25855caf612e1702c230b1338cfcd": [
+0.625,
+true,
+"llm-judge: The answer contextualizes the coefficients and their direction and notes some limitations, but stops short of full uncertainty quantification or deeper robustness checks."
+],
+"b9710b535d249cab02b31ab490b3993f1b27c4aafeca928dd6708b2fa7e5678b": [
+0.3,
+true,
+"llm-judge: The answer clearly identifies missing columns and proposes actions, but omits discussion of missingness mechanisms or broader limitations, and provides no critical assessment of th"
+],
+"7d46754f23354936bc1cc587be5d94c8247f14554563edbd39c4748f00b4e850": [
+0.25,
+true,
+"llm-judge: The answer merely describes what the script would output and defines a balance ratio without presenting the actual distribution or concluding whether the dataset is balanced, offer"
+],
+"2a32b3b0032cf064582719af4e4a2227d72ae22b50050682886ebf974f2eae3e": [
+0.5,
+true,
+"llm-judge: The answer gives a clear contextual meaning of the correlations and notes causation limits, but only offers basic criticism without deeper analysis of assumptions or robustness."
+],
+"d959a4f1acc878daeff7b50866e7f718464fbea71301e2b9842ff7e5febd244d": [
+0.5,
+true,
+"llm-judge: The answer translates the statistical result into a domain statement and notes basic assumptions, but lacks deeper discussion of effect size, practical relevance, or causal interpr"
+],
+"67f24a6f834c82dd3b4fd8038387f50b8512d4d70d3668f361343dc20f5846cb": [
+0.625,
+true,
+"llm-judge: Provides clear contextual interpretation and notes key limitations (causality, ordinal scale), but lacks deeper robustness checks or discussion of additional confounders."
+],
+"af5df99b35f7e0f6b052e120dba2491ac3254010b691898c7e0a8c4ac62519bd": [
+0.625,
+true,
+"llm-judge: The answer gives a clear contextual interpretation of the outliers and discusses domain\u2011specific removal considerations, but its critique is limited to basic limitations without de"
+],
+"8cb0c3d9c7a3d1b08889a854fe2d5427f9da7475726b5fce8955f7e8f02a4636": [
+0.625,
+true,
+"llm-judge: The answer gives a clear contextual interpretation and notes key limitations, but its critique stops at surface\u2011level issues without deeper analysis of assumptions, robustness, or "
+],
+"ef31b11694dae1c00aa69e120aba53d7d4f2e2f835550260f0cc801796565022": [
+0.625,
+true,
+"llm-judge: The answer gives a clear, contextual interpretation with uncertainty and acknowledges confounding, but its critique stops at noting observational limits without deeper robustness c"
+],
+"029bc9f75dc4bb282fd8392a9a9a5ece288827180b82314fefb682435b5f5d68": [
+0.625,
+true,
+"llm-judge: The answer gives a clear contextual explanation with domain reasoning and cautions about causality, but its critique is limited to noting low variance explained without deeper robu"
+],
+"35ba060f211089204f3e7e97828e699e7aef7772713372da25a06c4a253b781c": [
+0.625,
+true,
+"llm-judge: The answer gives a clear contextual interpretation, noting the gender gap and its historical reason, and mentions a key limitation (ignoring other factors), but stops short of deep"
+],
+"48acd381a81f77e21534bfbce538b687c9ba65afd9f62f1591e721be2cbd6792": [
+0.625,
+true,
+"llm-judge: The answer gives a clear contextual interpretation and notes basic test assumptions, but stops short of a nuanced discussion of scope or robustness."
+],
+"d0f8e961ed3e114ff827d4673162b260ba1e1ebb52ec8f5fdd55b09778478df5": [
+0.5,
+true,
+"llm-judge: The answer gives a clear contextual interpretation and mentions assumptions and missing-data handling, but misstates the statistical significance and lacks deeper robustness analys"
+],
+"9de09b94493ce348e3b5acd0161050e0a3ff0b5928fc23bf0370eafe812e3952": [
+0.625,
+true,
+"llm-judge: Provides a clear contextual explanation and notes key limitations (no adjustment, no causality), but stops short of deeper robustness checks or discussion of uncertainty."
+],
+"599134aff7cda1ad9d4a2eae3404367f8f5037d3a02df58551cf8aeb8e870906": [
+0.5,
+true,
+"llm-judge: The answer clearly explains the skewed shape and its implication for using the median, adding some modest limitations, but it lacks deeper discussion of uncertainty, robustness, an"
+],
+"25154d6b8b8d3eb9c95a2eca5cdc65ec6931da929acb209691de5287f38dd783": [
+0.625,
+true,
+"llm-judge: The answer gives a clear contextual explanation with limitations, but does not deeply assess assumptions or robustness."
+],
+"4fb9eaf1a82d40487b5d2819db677f594abb963a0dc2b4b4ec1025c6b766e9e5": [
+0.5,
+true,
+"llm-judge: Provides a clear contextual explanation of predictor effects and direction, and notes basic model assumptions and their impact, but lacks deeper discussion of uncertainty, causalit"
+],
+"db317af0db8a22332fa42793a19405ea1fea804b1c1b979e4873467bd153d6cd": [
+0.5,
+true,
+"llm-judge: The answer clearly names the missing columns, quantifies them and suggests concrete imputation strategies, but only gives a brief mention of limitations and does not critically ass"
+],
+"ea559231602a4b674f30d539b9731194ed551f722b501ad6b5acfc40c0f1279e": [
+0.375,
+true,
+"llm-judge: The answer offers only a generic rule\u2011of\u2011thumb interpretation without using the actual data, but it does note assumptions and the lack of statistical tests, providing a modest crit"
+],
+"916c4044ae6ee045b2c31cf298ebf6bdc25c9e94f44dc7b4613b4fdeaec9c808": [
+0.25,
+true,
+"llm-judge: The answer gives a generic description of what correlation values mean and notes Pearson\u2019s limits, but it does not present the actual strongest properties or quantify their relatio"
+],
+"81916e3a8121513afd84a8a2a7a3c3a5dc3c50fce8fd0be6cfaef7d9c83077ed": [
+0.625,
+true,
+"llm-judge: The answer gives a clear contextual interpretation with statistical significance and effect size, and notes key assumptions and lack of control for other variables, but stops short"
+],
+"659e30bb1b949e2353e3bbcd6b6bf3096aacc4c7e3b8a3a068478bd2eefa6204": [
+0.625,
+true,
+"llm-judge: The answer explains what the boxplot reveals and notes causation limits and small\u2011sample issues, but stops short of deeper domain integration or robustness checks."
+],
+"2e3e3913b4dfb56e50d5406515091a1dc2c0443ff9fabe4c7ada6d5822f0fcb1": [
+0.5,
+true,
+"llm-judge: The answer gives a contextual, nuanced explanation of the outliers and removal considerations, but only offers a basic limitation without deeper analysis of assumptions or robustne"
+],
+"ce87dbcf3d7a8e9a2d28579d42211cfb6cabcd897d9801cf545da0e8e82f118c": [
+0.625,
+true,
+"llm-judge: The answer gives a clear contextual interpretation with limitations and scope, but lacks deeper robustness checks or discussion of assumptions for a higher score; it identifies key"
+],
+"3662b3a8ea105bed818e3bb981e0213ecb606f7ad724dd66018d4e8c59ed3906": [
+0.625,
+true,
+"llm-judge: Provides a thorough contextual interpretation and notes observational limits, but the critique stops at basic limitations without deeper robustness checks."
+],
+"69ec5ce2af94590927aad00f20b242c363e34ad5278d40a775aa4f9904bf3e8d": [
+0.375,
+true,
+"llm-judge: The answer gives a clear contextual interpretation of the negative correlation and R\u00b2 but stops short of discussing causation, uncertainty, or broader scope, and it only offers a b"
+],
+"cefcdee366c6dbe632179dd5a3a35fb8951445ab1016ad50950d3ea770d7464e": [
+0.25,
+true,
+"llm-judge: The answer gives a basic contextual interpretation that females survived more than males and mentions the overall rate line, but provides no quantitative values or discussion of un"
+],
+"c9708b1128af0cb347004f60becb4abb22ce84f00febcd7a46c41fc7f13753d9": [
+0.0,
+true,
+"llm-judge: The response merely describes the plotting code and test procedure without interpreting the chi\u2011square result or assessing its limitations."
+],
+"dfd57f72d02da21937bce479dab6faea83feb32a906464b7ce03eb23cf5609fd": [
+0.0,
+true,
+"llm-judge: The answer only describes the plot construction and imputation method, providing no interpretation of the age differences or statistical significance, nor any critique of assumptio"
+],
+"81d78a19bff6c2cecb7cf93b7f5b46c8e54edab685cc5116fb6d7f8c9c13dfd7": [
+0.125,
+true,
+"llm-judge: The response only details how the chart is built and its visual design, without interpreting the survival\u2011rate differences across classes, and offers only a minimal note about assu"
+],
+"753c90637e0d7d5f08da4852bbe589c73b33327aa3997578c1ca09e55ad865fe": [
+0.0,
+true,
+"llm-judge: The response only describes the visualization code and elements, without interpreting the fare distribution, its skewness, or implications for summary statistics, and provides no c"
+],
+"726d180d82cad3e65d73f1122edced049d90962be181c4c3b36d0432b389c6e0": [
+0.0,
+true,
+"llm-judge: The response only outlines plot construction and mentions a correlation coefficient annotation, without interpreting its magnitude, significance, or discussing limitations."
+],
+"7174617da119651eab71a6d3317bd8aaa7e612719980a56b2cbc384e709bdcf9": [
+0.0,
+true,
+"llm-judge: The answer only describes plotting and preprocessing steps without actually interpreting which attributes predict survival, their direction, or any limitations of the analysis."
+],
+"60730d2ab282964fd3a875a1687e3c56d8846b68e3209a0c6306c93ee7be3221": [
+0.125,
+true,
+"llm-judge: The answer only describes the intended plot and its purpose without reporting the actual missing columns or percentages, and it offers no critique of the analysis or its assumption"
+],
+"d36c8e8825fa6a01ac1658d0ddfd20c540cf3ceaaf321584cffa174d373fb879": [
+0.0,
+true,
+"llm-judge: The response only describes visualization code and styling, providing no explanation of the actual quality distribution, its balance, or any assessment of limitations."
+],
+"e0aa6406bbbb77e2c1eadd5a1c8cbed83a2f6afdbb6f250268d4fde450cc385d": [
+0.0,
+true,
+"llm-judge: The response only describes the plotting process and chart appearance without interpreting which properties correlate with quality or discussing any limitations."
+],
+"978048c384c3dc64a480a825f4af6b6bc4ff75e86cb424c6a5708b342e1272ee": [
+0.125,
+true,
+"llm-judge: The answer only describes the boxplot visual and suggests looking for differences, without stating a quantitative conclusion or discussing significance, and provides no critique of"
+],
+"2b9efc63b2cbaf7ef61481e0ab717fb6d173c7630be30d505dcc5a4bc1500716": [
+0.25,
+true,
+"llm-judge: The answer explains what the violin plot shows and gives a domain interpretation, but it does not discuss limitations, causality, or data assumptions, and offers no critical assess"
+],
+"823631b26b279dd51b29b4b47b91ad67d2c721a2f9f48883cb96e74c609e8e3b": [
+0.125,
+true,
+"llm-judge: The response merely describes the boxplot and mentions the possibility of points beyond whiskers, but does not identify specific outliers, interpret them for the domain, or discuss"
+],
+"8c66a636846c4e6ab15cdda90380055c65c2b0a6514444e277154d492ec46da6": [
+0.0,
+true,
+"llm-judge: The answer only describes code and visual elements without interpreting the model results or evaluating any methodological limitations."
+],
+"7ffe3a24b3df32623e68d16af69ddfe281ea1d55e8e1f1a736e4b2f177f4c2ac": [
+0.125,
+true,
+"llm-judge: The answer only describes the plot and notes a negative/positive direction without contextual meaning, magnitude, significance, or causation discussion, and offers no critique of t"
+],
+"06bc3f144fc7b711c4181baf4e5cff1fb36f0ca42b856b0c33ac59d6c061d8cf": [
+0.0,
+true,
+"llm-judge: The response merely describes the plot and its components without explaining what the observed relationship means, and it offers no critique of assumptions or limitations."
+],
+"b7f92105793e8af8fb97d544e14493e52c8c05c5915694d1c3b7b1bac321f96c": [
+0.0,
+true,
+"llm-judge: The response offers no statistical interpretation or critical assessment, merely restating the task without explaining the survival rates or their implications."
+],
+"489b473fafacc3c12a4e55e617bfb8b7ded8a5ddb42cb11765fb9ca885324aad": [
+0.0,
+true,
+"llm-judge: The response only repeats the analysis step and never interprets the statistical result or critiques its validity."
+],
+"cc73e2c4044a79d14867dbf85acc2e6cf8ff6bcf88009ddf917b395b71c38960": [
+0.0,
+true,
+"llm-judge: The response only repeats the task (compute survival rates) and provides no interpretation of the results nor any assessment of limitations or robustness."
+],
+"c1700366dc8cca606fb22650e40ec79ae74b12125283b7c9c59ff2d12f2e66b1": [
+0.0,
+true,
+"llm-judge: The response only suggests binning fares to visualize the data and does not interpret any actual results, nor does it critique any findings or limitations."
+],
+"4391efdd1d289df8439a31fc874da63ceb0602150ebf90bbb229fd0eccc32451": [
+0.0,
+true,
+"llm-judge: The response provides only a procedural suggestion and no interpretation of results or critical assessment of findings."
+],
+"f330f056e8e7a89940a7704cab8495935b68a7a207d15f897ebba52d499fcb6c": [
+0.0,
+true,
+"llm-judge: The response only suggests computing correlations and visualizing them without interpreting any results or discussing methodological limitations."
+],
+"ce6afd5a48f911b86b5e50d0f27f0e9e1be50a592a5ca70995e5ef66e3f2ae01": [
+0.0,
+true,
+"llm-judge: The response contains no interpretation of the missing\u2011value results nor any critical assessment of the findings."
+],
+"c1303790a8a459908b71d870661b4b3f546d0c124b2c8437538b298cb938a53d": [
+0.0,
+true,
+"llm-judge: The response merely repeats the instruction to aggregate counts and does not present any distribution, interpret the balance, or critique the findings."
+],
+"682b255c3f4d2be17e0da37aa494930828ed40178dcec6a3641d4ce4c693f3e3": [
+0.0,
+true,
+"llm-judge: The response only suggests data preparation and gives no interpretation of the statistical results nor any critical assessment of the findings."
+],
+"15b36e62120f4040fcccc2e1c671102e18059f46e751e04c48339e99fa005900": [
+0.0,
+true,
+"llm-judge: The answer only mentions using a boxplot and required columns, offering no interpretation of the alcohol\u2011quality relationship or any critical assessment of the findings."
+],
+"2216197b32e3b6755a443624a362acbd863f5e05cd270be90ab50f5a89ea7a41": [
+0.0,
+true,
+"llm-judge: The response provides no interpretation of the outlier findings nor any critical assessment; it merely repeats the prompt without answering the question."
+],
+"7141d54ad52dcf306d42058a444fba20059b821005b3b010342f5765747aec64": [
+0.0,
+true,
+"llm-judge: The response merely restates that all predictors are needed and gives no interpretation of model performance or feature effects, nor any critical assessment of limitations."
+],
+"8b562f696ec759b9e464ac12da043279e5961bd4f649be73f6cd02a7ecd80368": [
+0.0,
+true,
+"llm-judge: The system only repeats the analysis plan and provides no interpretation of the correlation, its magnitude, significance, or causal implications, nor any critique of the findings."
+],
+"2b5a6df4bd995ce3c175042e88afbfb3192ebd2f47b69b71a469b361679fe847": [
+0.0,
+true,
+"llm-judge: The response merely instructs to plot the variables and add a trend line, offering no interpretation of the pattern, its meaning, or any critical assessment of the findings."
+],
+"12bf12837aedc4038f65e444327c9a50c037ea36e8bd6b8391e7b2898f58441f": [
+0.0,
+true,
+"llm-judge: The answer only describes the data schema and intended query, without providing any interpretation of survival rates or any critical assessment of limitations."
+],
+"286b0c1beea32ac89af8c395f9d9e4a962077619e1ed659f8f16d52b154d50d3": [
+0.0,
+true,
+"llm-judge: The answer only describes the table schema and does not report the test, statistic, p\u2011value, nor interpret or critique the association."
+],
+"9765dd2766cf8f3e8576b26c70374dd87c95c468a5a39efea364ffbfce5bed47": [
+0.0,
+true,
+"llm-judge: The response merely restates the table schema and does not identify any outliers, interpret their meaning, or discuss whether they should be removed, offering no critical evaluatio"
+],
+"793f00ba4e955cab4b7f4ca739f6cdd104b4c99ca002a001e61a3914ee3d444b": [
+0.0,
+true,
+"llm-judge: The answer only describes the data schema and mentions possible analysis methods, but provides no interpretation of results, no quantification, and no critical assessment of limita"
+],
+"97309a5c4974f91afcb9cf62279d727550e12e6486651a37866522982474596f": [
+0.0,
+true,
+"llm-judge: The answer only describes the data schema and analysis plan, providing no interpretation of the density\u2011alcohol relationship or any critical assessment of findings."
+],
+"520285ede74009a22075718c1b5e00957acffaa929472168a6969a47acee1bc1": [
+0.0,
+true,
+"llm-judge: The response provides no statistical interpretation or critical assessment, merely restating a procedural instruction without answering the question."
+],
+"637d3ee98c68a678702f1aa2424346f8cee8024777d07eeaa45b0d1978a33f20": [
+0.0,
+true,
+"llm-judge: The response contains only a procedural instruction and no interpretation or critical assessment of the correlation results."
+],
+"eb0bbfb3596a7c3bcbdaf7ef05e22896ef6bb1bc99cd94a7da3922b8f055d9a5": [
+0.0,
+true,
+"llm-judge: The response only states the interval without any explanation, context, or discussion of assumptions or limitations."
+],
+"c5b457677c8b65796c312be8a7bab1456b25812a8f2a17079303349648332e23": [
+0.0,
+true,
+"llm-judge: The response only restates the numeric confidence interval without any explanation, context, or discussion of assumptions or limitations."
+],
+"9c440952e52f7a31c11de0f527f006f110cce6ae5b192e23fb14f6e38b2a07e1": [
+0.0,
+true,
+"llm-judge: The response only states a numeric confidence interval with no explanation of its meaning, relevance, or any discussion of assumptions or limitations."
+],
+"ba34346d6361cc1e8af0137b9c52b7103fb038d83c117a66d7713a8339806958": [
+0.125,
+true,
+"llm-judge: The system only restates the confidence interval without explaining its meaning, scope, or any limitations, and offers no critical assessment of the result."
+],
+"4954eab44f4ca065d50478b58efdbee32015cd63c2da1e33f05732fb054dfd83": [
+0.0,
+true,
+"llm-judge: The response merely states the numeric upper limit without any explanation, context, or discussion of assumptions or limitations."
+],
+"84bdd3c1df34a3675bf4199e7c4bcc9e2722021ccb1fbe42ff5230906fde4d51": [
+0.0,
+true,
+"llm-judge: The response only states the interval with no contextual interpretation or critical discussion of assumptions, limitations, or implications."
+],
+"046120bcb607d2ab439ca8b4cdfaf9f79719d9bda9733d5e0fc8be96db563241": [
+0.0,
+true,
+"llm-judge: The response only states the numeric confidence interval without any explanation, context, or discussion of limitations."
+],
+"fef9c3dcfff8f876c970aa994927ecb556aa0c316825414b8f606a59533deb25": [
+0.0,
+true,
+"llm-judge: The response merely states the confidence interval without any contextual explanation, interpretation, or discussion of assumptions and limitations."
+],
+"e34fb56b590ad0e388c7da495cf3da4cdfb58370f60afcae7c6a993c78a72df0": [
+0.125,
+true,
+"llm-judge: The response only states the CI formula in terms of F\u2011quantiles without translating it into a contextual explanation or discussing scope, and provides no critique of assumptions or"
+],
+"a8b23e7eba7c0a7dc74bfe228ec458339e70c5c0a6224fc9b22775a5e3ff8fa0": [
+0.125,
+true,
+"llm-judge: The answer merely restates the conclusion (yes, significant association) without contextual explanation, effect size, or discussion of limitations, and provides no critical assessm"
+],
+"b58674db5c5152bce620b9bcc02bdf11a99691e75d398ab27778b6ce794e8c2c": [
+0.0,
+true,
+"llm-judge: The response only states \"No\" without explaining the statistical result, its context, or any limitations, offering no interpretation or critical assessment."
+],
+"c5cc455aa55a5210eaad643f75b82e788ba95a5dc903b6bbe3463d0f6a5ed494": [
+0.0,
+true,
+"llm-judge: The answer merely says \u201cYes\u201d without any explanation, context, or discussion of evidence, limitations, or robustness."
+],
+"4b4c677425116f71bf0731f19f78dd8637d022ffefa1ba7581134bee744cee05": [
+0.0,
+true,
+"llm-judge: The response merely states \"Yes\" without any explanation, context, or discussion of limitations, offering no interpretation or critical assessment of the result."
+],
+"24c99fc6a04182a7dbf2d8b3af53ccedc40c6b3f0620eb7840fa7097a8b93f88": [
+0.125,
+true,
+"llm-judge: Only supplies a terse \u201cNo\u201d without explaining the statistical finding or its implications, and offers no critique or discussion of assumptions."
+],
+"df15fae28fb61150f5efbae49436ea088aa2792d7ed33bc5c86b888312a7043c": [
+0.125,
+true,
+"llm-judge: The answer only restates the p\u2011value without explaining its meaning for the research question or noting any limitations."
+],
+"a33958a2a6d95134cd76c34b77c153bff6787a2a03a031872fe419116d90d6e6": [
+0.0,
+true,
+"llm-judge: The response offers no interpretation or analysis of the results, providing only a non\u2011answer."
+],
+"e6e1cc895937c1304dc3b733a398eca7c63bb09516537c8fa8937732cd24fbf2": [
+0.0,
+true,
+"llm-judge: The system gives only a one\u2011word answer with no explanation, context, or critique of the results."
+],
+"9493609e5944049449d19c08471e9a8b5c0e9d8295b9875c7ae854853907d2f6": [
+0.0,
+true,
+"llm-judge: The response merely states \u2018Yes\u2019 without any explanation, context, or discussion of limitations, and provides no critical assessment of the findings."
+],
+"4252ef18ceba98cc7811b85e16a6d96d82e8f136d7dec9bfffb714c9fd92b15e": [
+0.25,
+true,
+"llm-judge: The response gives a basic contextual interpretation of the stratified relationship but lacks discussion of effect size, uncertainty or limitations, and offers no critical assessme"
+],
+"ae5031440d73140fc2c6b3c4a86673b504a57ccdc78c5f136e0bf0201c75e770": [
+0.0,
+true,
+"llm-judge: The answer merely states \u201cYes\u201d with no explanation, context, or assessment of limitations, and offers no critique of the findings."
+]
+}

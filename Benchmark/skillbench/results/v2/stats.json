@@ -1,0 +1,1622 @@
+{
+ "accuracy": [
+  {
+   "set": "Accuracy on real data (headline)",
+   "model": "gpt-oss-120b",
+   "condition": "plain",
+   "acc": 0.9060773480662984,
+   "sd": 0.0,
+   "lo": 0.861878453038674,
+   "hi": 0.9447513812154696,
+   "runs": 1,
+   "trap_fall": 0.03361344537815126
+  },
+  {
+   "set": "Accuracy on real data (headline)",
+   "model": "gpt-oss-120b",
+   "condition": "agent",
+   "acc": 0.9300184162062615,
+   "sd": 0.02835138916821482,
+   "lo": 0.9005524861878453,
+   "hi": 0.9576427255985266,
+   "runs": 3,
+   "trap_fall": 0.04481792717086835
+  },
+  {
+   "set": "Accuracy on real data (headline)",
+   "model": "gpt-oss-120b",
+   "condition": "agent_skills",
+   "acc": 0.9281767955801105,
+   "sd": 0.014617410558367929,
+   "lo": 0.8950276243093923,
+   "hi": 0.9576427255985266,
+   "runs": 3,
+   "trap_fall": 0.05042016806722689
+  },
+  {
+   "set": "Accuracy on real data (headline)",
+   "model": "gpt-oss-120b",
+   "condition": "agent_skills_oracle",
+   "acc": 0.9189686924493553,
+   "sd": 0.011500917124122252,
+   "lo": 0.885819521178637,
+   "hi": 0.9484346224677718,
+   "runs": 3,
+   "trap_fall": 0.0392156862745098
+  },
+  {
+   "set": "Accuracy on real data (headline)",
+   "model": "gpt-oss-120b",
+   "condition": "agent_skills_validated",
+   "acc": 0.9318600368324125,
+   "sd": 0.019402677261238933,
+   "lo": 0.9005524861878453,
+   "hi": 0.9594843462246777,
+   "runs": 3,
+   "trap_fall": 0.03081232492997199
+  },
+  {
+   "set": "Accuracy on real data (headline)",
+   "model": "gpt-oss-20b",
+   "condition": "plain",
+   "acc": 0.7734806629834254,
+   "sd": 0.0,
+   "lo": 0.712707182320442,
+   "hi": 0.8342541436464088,
+   "runs": 1,
+   "trap_fall": 0.04201680672268908
+  },
+  {
+   "set": "Accuracy on real data (headline)",
+   "model": "gpt-oss-20b",
+   "condition": "agent",
+   "acc": 0.7550644567219154,
+   "sd": 0.011500917124122313,
+   "lo": 0.710865561694291,
+   "hi": 0.7992633517495397,
+   "runs": 3,
+   "trap_fall": 0.036414565826330535
+  },
+  {
+   "set": "Accuracy on real data (headline)",
+   "model": "gpt-oss-20b",
+   "condition": "agent_skills",
+   "acc": 0.8047882136279926,
+   "sd": 0.04600366849648913,
+   "lo": 0.7569060773480663,
+   "hi": 0.850828729281768,
+   "runs": 3,
+   "trap_fall": 0.05042016806722689
+  },
+  {
+   "set": "Accuracy on real data (headline)",
+   "model": "gpt-oss-20b",
+   "condition": "agent_skills_oracle",
+   "acc": 0.7882136279926336,
+   "sd": 0.026109478598080705,
+   "lo": 0.7458563535911602,
+   "hi": 0.8287292817679558,
+   "runs": 3,
+   "trap_fall": 0.0392156862745098
+  },
+  {
+   "set": "Accuracy on real data (headline)",
+   "model": "gpt-oss-20b",
+   "condition": "agent_skills_validated",
+   "acc": 0.8674033149171271,
+   "sd": 0.0,
+   "lo": 0.8287292817679558,
+   "hi": 0.9042357274401472,
+   "runs": 3,
+   "trap_fall": 0.036414565826330535
+  },
+  {
+   "set": "Appendix: synthetic planted-trap databases",
+   "model": "gpt-oss-120b",
+   "condition": "plain",
+   "acc": 0.6521739130434783,
+   "sd": 0.0,
+   "lo": 0.43478260869565216,
+   "hi": 0.8260869565217391,
+   "runs": 1,
+   "trap_fall": 0.15789473684210525
+  },
+  {
+   "set": "Appendix: synthetic planted-trap databases",
+   "model": "gpt-oss-120b",
+   "condition": "agent",
+   "acc": 0.8550724637681159,
+   "sd": 0.025102185616940234,
+   "lo": 0.7246376811594202,
+   "hi": 0.9710144927536232,
+   "runs": 3,
+   "trap_fall": 0.14035087719298245
+  },
+  {
+   "set": "Appendix: synthetic planted-trap databases",
+   "model": "gpt-oss-120b",
+   "condition": "agent_skills",
+   "acc": 0.8260869565217391,
+   "sd": 0.0,
+   "lo": 0.6666666666666667,
+   "hi": 0.9565217391304348,
+   "runs": 3,
+   "trap_fall": 0.15789473684210525
+  },
+  {
+   "set": "Appendix: synthetic planted-trap databases",
+   "model": "gpt-oss-120b",
+   "condition": "agent_skills_oracle",
+   "acc": 0.8115942028985508,
+   "sd": 0.025102185616940234,
+   "lo": 0.6521739130434782,
+   "hi": 0.9565217391304348,
+   "runs": 3,
+   "trap_fall": 0.17543859649122806
+  },
+  {
+   "set": "Appendix: synthetic planted-trap databases",
+   "model": "gpt-oss-120b",
+   "condition": "agent_skills_validated",
+   "acc": 0.7971014492753623,
+   "sd": 0.025102185616940234,
+   "lo": 0.6376811594202898,
+   "hi": 0.9420289855072462,
+   "runs": 3,
+   "trap_fall": 0.17543859649122806
+  },
+  {
+   "set": "Appendix: synthetic planted-trap databases",
+   "model": "gpt-oss-20b",
+   "condition": "plain",
+   "acc": 0.7391304347826086,
+   "sd": 0.0,
+   "lo": 0.5652173913043478,
+   "hi": 0.9130434782608695,
+   "runs": 1,
+   "trap_fall": 0.10526315789473684
+  },
+  {
+   "set": "Appendix: synthetic planted-trap databases",
+   "model": "gpt-oss-20b",
+   "condition": "agent",
+   "acc": 0.7246376811594203,
+   "sd": 0.06641414050660638,
+   "lo": 0.5652173913043478,
+   "hi": 0.8695652173913043,
+   "runs": 3,
+   "trap_fall": 0.14035087719298245
+  },
+  {
+   "set": "Appendix: synthetic planted-trap databases",
+   "model": "gpt-oss-20b",
+   "condition": "agent_skills",
+   "acc": 0.7246376811594203,
+   "sd": 0.09050721736809274,
+   "lo": 0.5652173913043478,
+   "hi": 0.8695652173913043,
+   "runs": 3,
+   "trap_fall": 0.15789473684210525
+  },
+  {
+   "set": "Appendix: synthetic planted-trap databases",
+   "model": "gpt-oss-20b",
+   "condition": "agent_skills_oracle",
+   "acc": 0.782608695652174,
+   "sd": 0.0,
+   "lo": 0.6231884057971014,
+   "hi": 0.9130434782608695,
+   "runs": 3,
+   "trap_fall": 0.08771929824561403
+  },
+  {
+   "set": "Appendix: synthetic planted-trap databases",
+   "model": "gpt-oss-20b",
+   "condition": "agent_skills_validated",
+   "acc": 0.782608695652174,
+   "sd": 0.07530655685082077,
+   "lo": 0.6376811594202898,
+   "hi": 0.8985507246376813,
+   "runs": 3,
+   "trap_fall": 0.12280701754385964
+  }
+ ],
+ "paired": [
+  {
+   "model": "gpt-oss-120b",
+   "a": "plain",
+   "b": "agent",
+   "diff": 0.023941068139963162,
+   "lo": -0.012891344383057094,
+   "hi": 0.06261510128913443,
+   "p": 0.2579,
+   "n_diff": 28,
+   "n": 181
+  },
+  {
+   "model": "gpt-oss-120b",
+   "a": "agent",
+   "b": "agent_skills",
+   "diff": -0.0018416206261510132,
+   "lo": -0.023941068139963172,
+   "hi": 0.020257826887661142,
+   "p": 1.0,
+   "n_diff": 20,
+   "n": 181
+  },
+  {
+   "model": "gpt-oss-120b",
+   "a": "agent",
+   "b": "agent_skills_oracle",
+   "diff": -0.011049723756906077,
+   "lo": -0.03867403314917127,
+   "hi": 0.014732965009208105,
+   "p": 0.50945,
+   "n_diff": 27,
+   "n": 181
+  },
+  {
+   "model": "gpt-oss-120b",
+   "a": "agent_skills",
+   "b": "agent_skills_oracle",
+   "diff": -0.009208103130755065,
+   "lo": -0.03130755064456722,
+   "hi": 0.01289134438305709,
+   "p": 0.529,
+   "n_diff": 24,
+   "n": 181
+  },
+  {
+   "model": "gpt-oss-120b",
+   "a": "plain",
+   "b": "agent_skills",
+   "diff": 0.02209944751381215,
+   "lo": -0.01841620626151013,
+   "hi": 0.06445672191528545,
+   "p": 0.32715,
+   "n_diff": 28,
+   "n": 181
+  },
+  {
+   "model": "gpt-oss-120b",
+   "a": "agent_skills",
+   "b": "agent_skills_validated",
+   "diff": 0.0036832412523020264,
+   "lo": -0.01657458563535912,
+   "hi": 0.025782688766114177,
+   "p": 0.8673,
+   "n_diff": 19,
+   "n": 181
+  },
+  {
+   "model": "gpt-oss-20b",
+   "a": "plain",
+   "b": "agent",
+   "diff": -0.018416206261510148,
+   "lo": -0.07366482504604054,
+   "hi": 0.03867403314917125,
+   "p": 0.56405,
+   "n_diff": 91,
+   "n": 181
+  },
+  {
+   "model": "gpt-oss-20b",
+   "a": "agent",
+   "b": "agent_skills",
+   "diff": 0.049723756906077346,
+   "lo": 0.012891344383057095,
+   "hi": 0.08655616942909762,
+   "p": 0.01215,
+   "n_diff": 82,
+   "n": 181
+  },
+  {
+   "model": "gpt-oss-20b",
+   "a": "agent",
+   "b": "agent_skills_oracle",
+   "diff": 0.03314917127071823,
+   "lo": -0.0036832412523020324,
+   "hi": 0.06998158379373849,
+   "p": 0.1023,
+   "n_diff": 83,
+   "n": 181
+  },
+  {
+   "model": "gpt-oss-20b",
+   "a": "agent_skills",
+   "b": "agent_skills_oracle",
+   "diff": -0.016574585635359115,
+   "lo": -0.055248618784530384,
+   "hi": 0.02209944751381215,
+   "p": 0.4532,
+   "n_diff": 70,
+   "n": 181
+  },
+  {
+   "model": "gpt-oss-20b",
+   "a": "plain",
+   "b": "agent_skills",
+   "diff": 0.03130755064456721,
+   "lo": -0.023941068139963176,
+   "hi": 0.0883977900552486,
+   "p": 0.3015,
+   "n_diff": 62,
+   "n": 181
+  },
+  {
+   "model": "gpt-oss-20b",
+   "a": "agent_skills",
+   "b": "agent_skills_validated",
+   "diff": 0.06261510128913444,
+   "lo": 0.03867403314917127,
+   "hi": 0.08839779005524862,
+   "p": 0.0,
+   "n_diff": 35,
+   "n": 181
+  }
+ ],
+ "breakdown": [
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-120b",
+   "level": "easy",
+   "n": 55,
+   "condition": "plain",
+   "acc": 0.9272727272727272
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-120b",
+   "level": "easy",
+   "n": 55,
+   "condition": "agent",
+   "acc": 0.9696969696969697
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-120b",
+   "level": "easy",
+   "n": 55,
+   "condition": "agent_skills",
+   "acc": 0.9878787878787879
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-120b",
+   "level": "easy",
+   "n": 55,
+   "condition": "agent_skills_oracle",
+   "acc": 0.9818181818181818
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-120b",
+   "level": "easy",
+   "n": 55,
+   "condition": "agent_skills_validated",
+   "acc": 0.9878787878787879
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-120b",
+   "level": "medium",
+   "n": 80,
+   "condition": "plain",
+   "acc": 0.9125
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-120b",
+   "level": "medium",
+   "n": 80,
+   "condition": "agent",
+   "acc": 0.925
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-120b",
+   "level": "medium",
+   "n": 80,
+   "condition": "agent_skills",
+   "acc": 0.9416666666666667
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-120b",
+   "level": "medium",
+   "n": 80,
+   "condition": "agent_skills_oracle",
+   "acc": 0.9333333333333333
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-120b",
+   "level": "medium",
+   "n": 80,
+   "condition": "agent_skills_validated",
+   "acc": 0.9375
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-120b",
+   "level": "hard",
+   "n": 46,
+   "condition": "plain",
+   "acc": 0.8695652173913043
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-120b",
+   "level": "hard",
+   "n": 46,
+   "condition": "agent",
+   "acc": 0.8913043478260869
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-120b",
+   "level": "hard",
+   "n": 46,
+   "condition": "agent_skills",
+   "acc": 0.8333333333333334
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-120b",
+   "level": "hard",
+   "n": 46,
+   "condition": "agent_skills_oracle",
+   "acc": 0.8188405797101449
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-120b",
+   "level": "hard",
+   "n": 46,
+   "condition": "agent_skills_validated",
+   "acc": 0.855072463768116
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-20b",
+   "level": "easy",
+   "n": 55,
+   "condition": "plain",
+   "acc": 0.8727272727272727
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-20b",
+   "level": "easy",
+   "n": 55,
+   "condition": "agent",
+   "acc": 0.8363636363636363
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-20b",
+   "level": "easy",
+   "n": 55,
+   "condition": "agent_skills",
+   "acc": 0.8787878787878788
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-20b",
+   "level": "easy",
+   "n": 55,
+   "condition": "agent_skills_oracle",
+   "acc": 0.8424242424242424
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-20b",
+   "level": "easy",
+   "n": 55,
+   "condition": "agent_skills_validated",
+   "acc": 0.9151515151515152
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-20b",
+   "level": "medium",
+   "n": 80,
+   "condition": "plain",
+   "acc": 0.7875
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-20b",
+   "level": "medium",
+   "n": 80,
+   "condition": "agent",
+   "acc": 0.7791666666666667
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-20b",
+   "level": "medium",
+   "n": 80,
+   "condition": "agent_skills",
+   "acc": 0.8166666666666667
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-20b",
+   "level": "medium",
+   "n": 80,
+   "condition": "agent_skills_oracle",
+   "acc": 0.8166666666666667
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-20b",
+   "level": "medium",
+   "n": 80,
+   "condition": "agent_skills_validated",
+   "acc": 0.8875
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-20b",
+   "level": "hard",
+   "n": 46,
+   "condition": "plain",
+   "acc": 0.6304347826086957
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-20b",
+   "level": "hard",
+   "n": 46,
+   "condition": "agent",
+   "acc": 0.6159420289855072
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-20b",
+   "level": "hard",
+   "n": 46,
+   "condition": "agent_skills",
+   "acc": 0.6956521739130435
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-20b",
+   "level": "hard",
+   "n": 46,
+   "condition": "agent_skills_oracle",
+   "acc": 0.6739130434782609
+  },
+  {
+   "by": "difficulty",
+   "model": "gpt-oss-20b",
+   "level": "hard",
+   "n": 46,
+   "condition": "agent_skills_validated",
+   "acc": 0.7753623188405797
+  },
+  {
+   "by": "has_trap",
+   "model": "gpt-oss-120b",
+   "level": "False",
+   "n": 62,
+   "condition": "plain",
+   "acc": 0.9032258064516129
+  },
+  {
+   "by": "has_trap",
+   "model": "gpt-oss-120b",
+   "level": "False",
+   "n": 62,
+   "condition": "agent",
+   "acc": 0.956989247311828
+  },
+  {
+   "by": "has_trap",
+   "model": "gpt-oss-120b",
+   "level": "False",
+   "n": 62,
+   "condition": "agent_skills",
+   "acc": 0.978494623655914
+  },
+  {
+   "by": "has_trap",
+   "model": "gpt-oss-120b",
+   "level": "False",
+   "n": 62,
+   "condition": "agent_skills_oracle",
+   "acc": 0.9731182795698925
+  },
+  {
+   "by": "has_trap",
+   "model": "gpt-oss-120b",
+   "level": "False",
+   "n": 62,
+   "condition": "agent_skills_validated",
+   "acc": 0.9731182795698925
+  },
+  {
+   "by": "has_trap",
+   "model": "gpt-oss-120b",
+   "level": "True",
+   "n": 119,
+   "condition": "plain",
+   "acc": 0.907563025210084
+  },
+  {
+   "by": "has_trap",
+   "model": "gpt-oss-120b",
+   "level": "True",
+   "n": 119,
+   "condition": "agent",
+   "acc": 0.9159663865546218
+  },
+  {
+   "by": "has_trap",
+   "model": "gpt-oss-120b",
+   "level": "True",
+   "n": 119,
+   "condition": "agent_skills",
+   "acc": 0.9019607843137255
+  },
+  {
+   "by": "has_trap",
+   "model": "gpt-oss-120b",
+   "level": "True",
+   "n": 119,
+   "condition": "agent_skills_oracle",
+   "acc": 0.8907563025210085
+  },
+  {
+   "by": "has_trap",
+   "model": "gpt-oss-120b",
+   "level": "True",
+   "n": 119,
+   "condition": "agent_skills_validated",
+   "acc": 0.9103641456582633
+  },
+  {
+   "by": "has_trap",
+   "model": "gpt-oss-20b",
+   "level": "False",
+   "n": 62,
+   "condition": "plain",
+   "acc": 0.8870967741935484
+  },
+  {
+   "by": "has_trap",
+   "model": "gpt-oss-20b",
+   "level": "False",
+   "n": 62,
+   "condition": "agent",
+   "acc": 0.8010752688172043
+  },
+  {
+   "by": "has_trap",
+   "model": "gpt-oss-20b",
+   "level": "False",
+   "n": 62,
+   "condition": "agent_skills",
+   "acc": 0.8548387096774194
+  },
+  {
+   "by": "has_trap",
+   "model": "gpt-oss-20b",
+   "level": "False",
+   "n": 62,
+   "condition": "agent_skills_oracle",
+   "acc": 0.8118279569892473
+  },
+  {
+   "by": "has_trap",
+   "model": "gpt-oss-20b",
+   "level": "False",
+   "n": 62,
+   "condition": "agent_skills_validated",
+   "acc": 0.9139784946236559
+  },
+  {
+   "by": "has_trap",
+   "model": "gpt-oss-20b",
+   "level": "True",
+   "n": 119,
+   "condition": "plain",
+   "acc": 0.7142857142857143
+  },
+  {
+   "by": "has_trap",
+   "model": "gpt-oss-20b",
+   "level": "True",
+   "n": 119,
+   "condition": "agent",
+   "acc": 0.7310924369747899
+  },
+  {
+   "by": "has_trap",
+   "model": "gpt-oss-20b",
+   "level": "True",
+   "n": 119,
+   "condition": "agent_skills",
+   "acc": 0.7787114845938375
+  },
+  {
+   "by": "has_trap",
+   "model": "gpt-oss-20b",
+   "level": "True",
+   "n": 119,
+   "condition": "agent_skills_oracle",
+   "acc": 0.7759103641456583
+  },
+  {
+   "by": "has_trap",
+   "model": "gpt-oss-20b",
+   "level": "True",
+   "n": 119,
+   "condition": "agent_skills_validated",
+   "acc": 0.8431372549019608
+  },
+  {
+   "by": "multi_table",
+   "model": "gpt-oss-120b",
+   "level": "False",
+   "n": 81,
+   "condition": "plain",
+   "acc": 0.9382716049382716
+  },
+  {
+   "by": "multi_table",
+   "model": "gpt-oss-120b",
+   "level": "False",
+   "n": 81,
+   "condition": "agent",
+   "acc": 0.9629629629629629
+  },
+  {
+   "by": "multi_table",
+   "model": "gpt-oss-120b",
+   "level": "False",
+   "n": 81,
+   "condition": "agent_skills",
+   "acc": 0.9218106995884774
+  },
+  {
+   "by": "multi_table",
+   "model": "gpt-oss-120b",
+   "level": "False",
+   "n": 81,
+   "condition": "agent_skills_oracle",
+   "acc": 0.9218106995884774
+  },
+  {
+   "by": "multi_table",
+   "model": "gpt-oss-120b",
+   "level": "False",
+   "n": 81,
+   "condition": "agent_skills_validated",
+   "acc": 0.9547325102880658
+  },
+  {
+   "by": "multi_table",
+   "model": "gpt-oss-120b",
+   "level": "True",
+   "n": 100,
+   "condition": "plain",
+   "acc": 0.88
+  },
+  {
+   "by": "multi_table",
+   "model": "gpt-oss-120b",
+   "level": "True",
+   "n": 100,
+   "condition": "agent",
+   "acc": 0.9033333333333333
+  },
+  {
+   "by": "multi_table",
+   "model": "gpt-oss-120b",
+   "level": "True",
+   "n": 100,
+   "condition": "agent_skills",
+   "acc": 0.9333333333333333
+  },
+  {
+   "by": "multi_table",
+   "model": "gpt-oss-120b",
+   "level": "True",
+   "n": 100,
+   "condition": "agent_skills_oracle",
+   "acc": 0.9166666666666666
+  },
+  {
+   "by": "multi_table",
+   "model": "gpt-oss-120b",
+   "level": "True",
+   "n": 100,
+   "condition": "agent_skills_validated",
+   "acc": 0.9133333333333333
+  },
+  {
+   "by": "multi_table",
+   "model": "gpt-oss-20b",
+   "level": "False",
+   "n": 81,
+   "condition": "plain",
+   "acc": 0.7530864197530864
+  },
+  {
+   "by": "multi_table",
+   "model": "gpt-oss-20b",
+   "level": "False",
+   "n": 81,
+   "condition": "agent",
+   "acc": 0.7736625514403292
+  },
+  {
+   "by": "multi_table",
+   "model": "gpt-oss-20b",
+   "level": "False",
+   "n": 81,
+   "condition": "agent_skills",
+   "acc": 0.8353909465020576
+  },
+  {
+   "by": "multi_table",
+   "model": "gpt-oss-20b",
+   "level": "False",
+   "n": 81,
+   "condition": "agent_skills_oracle",
+   "acc": 0.7818930041152263
+  },
+  {
+   "by": "multi_table",
+   "model": "gpt-oss-20b",
+   "level": "False",
+   "n": 81,
+   "condition": "agent_skills_validated",
+   "acc": 0.8806584362139918
+  },
+  {
+   "by": "multi_table",
+   "model": "gpt-oss-20b",
+   "level": "True",
+   "n": 100,
+   "condition": "plain",
+   "acc": 0.79
+  },
+  {
+   "by": "multi_table",
+   "model": "gpt-oss-20b",
+   "level": "True",
+   "n": 100,
+   "condition": "agent",
+   "acc": 0.74
+  },
+  {
+   "by": "multi_table",
+   "model": "gpt-oss-20b",
+   "level": "True",
+   "n": 100,
+   "condition": "agent_skills",
+   "acc": 0.78
+  },
+  {
+   "by": "multi_table",
+   "model": "gpt-oss-20b",
+   "level": "True",
+   "n": 100,
+   "condition": "agent_skills_oracle",
+   "acc": 0.7933333333333333
+  },
+  {
+   "by": "multi_table",
+   "model": "gpt-oss-20b",
+   "level": "True",
+   "n": 100,
+   "condition": "agent_skills_validated",
+   "acc": 0.8566666666666667
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "correlation",
+   "n": 16,
+   "condition": "plain",
+   "acc": 0.9375
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "correlation",
+   "n": 16,
+   "condition": "agent",
+   "acc": 0.9166666666666666
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "correlation",
+   "n": 16,
+   "condition": "agent_skills",
+   "acc": 0.875
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "correlation",
+   "n": 16,
+   "condition": "agent_skills_oracle",
+   "acc": 0.8958333333333334
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "correlation",
+   "n": 16,
+   "condition": "agent_skills_validated",
+   "acc": 0.8541666666666666
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "data_quality",
+   "n": 28,
+   "condition": "plain",
+   "acc": 0.9642857142857143
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "data_quality",
+   "n": 28,
+   "condition": "agent",
+   "acc": 0.9761904761904762
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "data_quality",
+   "n": 28,
+   "condition": "agent_skills",
+   "acc": 0.9642857142857143
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "data_quality",
+   "n": 28,
+   "condition": "agent_skills_oracle",
+   "acc": 0.9761904761904762
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "data_quality",
+   "n": 28,
+   "condition": "agent_skills_validated",
+   "acc": 0.9880952380952381
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "descriptive",
+   "n": 74,
+   "condition": "plain",
+   "acc": 0.8513513513513513
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "descriptive",
+   "n": 74,
+   "condition": "agent",
+   "acc": 0.9099099099099099
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "descriptive",
+   "n": 74,
+   "condition": "agent_skills",
+   "acc": 0.9414414414414415
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "descriptive",
+   "n": 74,
+   "condition": "agent_skills_oracle",
+   "acc": 0.918918918918919
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "descriptive",
+   "n": 74,
+   "condition": "agent_skills_validated",
+   "acc": 0.9324324324324325
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "group_comparison",
+   "n": 35,
+   "condition": "plain",
+   "acc": 0.9428571428571428
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "group_comparison",
+   "n": 35,
+   "condition": "agent",
+   "acc": 0.9047619047619048
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "group_comparison",
+   "n": 35,
+   "condition": "agent_skills",
+   "acc": 0.8666666666666667
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "group_comparison",
+   "n": 35,
+   "condition": "agent_skills_oracle",
+   "acc": 0.8761904761904762
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "group_comparison",
+   "n": 35,
+   "condition": "agent_skills_validated",
+   "acc": 0.8857142857142857
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "regression",
+   "n": 8,
+   "condition": "plain",
+   "acc": 1.0
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "regression",
+   "n": 8,
+   "condition": "agent",
+   "acc": 1.0
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "regression",
+   "n": 8,
+   "condition": "agent_skills",
+   "acc": 1.0
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "regression",
+   "n": 8,
+   "condition": "agent_skills_oracle",
+   "acc": 0.9583333333333334
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "regression",
+   "n": 8,
+   "condition": "agent_skills_validated",
+   "acc": 1.0
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "time_series",
+   "n": 20,
+   "condition": "plain",
+   "acc": 0.9
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "time_series",
+   "n": 20,
+   "condition": "agent",
+   "acc": 0.9666666666666667
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "time_series",
+   "n": 20,
+   "condition": "agent_skills",
+   "acc": 0.95
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "time_series",
+   "n": 20,
+   "condition": "agent_skills_oracle",
+   "acc": 0.9166666666666666
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-120b",
+   "level": "time_series",
+   "n": 20,
+   "condition": "agent_skills_validated",
+   "acc": 0.9666666666666667
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "correlation",
+   "n": 16,
+   "condition": "plain",
+   "acc": 0.6875
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "correlation",
+   "n": 16,
+   "condition": "agent",
+   "acc": 0.8125
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "correlation",
+   "n": 16,
+   "condition": "agent_skills",
+   "acc": 0.7708333333333334
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "correlation",
+   "n": 16,
+   "condition": "agent_skills_oracle",
+   "acc": 0.8333333333333334
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "correlation",
+   "n": 16,
+   "condition": "agent_skills_validated",
+   "acc": 0.8125
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "data_quality",
+   "n": 28,
+   "condition": "plain",
+   "acc": 0.6785714285714286
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "data_quality",
+   "n": 28,
+   "condition": "agent",
+   "acc": 0.7738095238095238
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "data_quality",
+   "n": 28,
+   "condition": "agent_skills",
+   "acc": 0.7738095238095238
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "data_quality",
+   "n": 28,
+   "condition": "agent_skills_oracle",
+   "acc": 0.7976190476190477
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "data_quality",
+   "n": 28,
+   "condition": "agent_skills_validated",
+   "acc": 0.8333333333333334
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "descriptive",
+   "n": 74,
+   "condition": "plain",
+   "acc": 0.8378378378378378
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "descriptive",
+   "n": 74,
+   "condition": "agent",
+   "acc": 0.7522522522522522
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "descriptive",
+   "n": 74,
+   "condition": "agent_skills",
+   "acc": 0.8063063063063063
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "descriptive",
+   "n": 74,
+   "condition": "agent_skills_oracle",
+   "acc": 0.7792792792792793
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "descriptive",
+   "n": 74,
+   "condition": "agent_skills_validated",
+   "acc": 0.8918918918918919
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "group_comparison",
+   "n": 35,
+   "condition": "plain",
+   "acc": 0.7142857142857143
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "group_comparison",
+   "n": 35,
+   "condition": "agent",
+   "acc": 0.7428571428571429
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "group_comparison",
+   "n": 35,
+   "condition": "agent_skills",
+   "acc": 0.8571428571428571
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "group_comparison",
+   "n": 35,
+   "condition": "agent_skills_oracle",
+   "acc": 0.8095238095238095
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "group_comparison",
+   "n": 35,
+   "condition": "agent_skills_validated",
+   "acc": 0.9047619047619048
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "regression",
+   "n": 8,
+   "condition": "plain",
+   "acc": 0.75
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "regression",
+   "n": 8,
+   "condition": "agent",
+   "acc": 0.7083333333333334
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "regression",
+   "n": 8,
+   "condition": "agent_skills",
+   "acc": 0.7083333333333334
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "regression",
+   "n": 8,
+   "condition": "agent_skills_oracle",
+   "acc": 0.7916666666666666
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "regression",
+   "n": 8,
+   "condition": "agent_skills_validated",
+   "acc": 0.875
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "time_series",
+   "n": 20,
+   "condition": "plain",
+   "acc": 0.85
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "time_series",
+   "n": 20,
+   "condition": "agent",
+   "acc": 0.7333333333333333
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "time_series",
+   "n": 20,
+   "condition": "agent_skills",
+   "acc": 0.8166666666666667
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "time_series",
+   "n": 20,
+   "condition": "agent_skills_oracle",
+   "acc": 0.7333333333333333
+  },
+  {
+   "by": "category",
+   "model": "gpt-oss-20b",
+   "level": "time_series",
+   "n": 20,
+   "condition": "agent_skills_validated",
+   "acc": 0.8
+  }
+ ],
+ "selection": [
+  {
+   "model": "gpt-oss-120b",
+   "loaded": 0.3830570902394107,
+   "hit": 0.3020257826887661,
+   "acc_loaded": 0.9423076923076923,
+   "acc_not": 0.9194029850746268
+  },
+  {
+   "model": "gpt-oss-20b",
+   "loaded": 0.09392265193370165,
+   "hit": 0.07918968692449356,
+   "acc_loaded": 0.803921568627451,
+   "acc_not": 0.8048780487804879
+  }
+ ],
+ "quality": [
+  {
+   "model": "gpt-oss-120b",
+   "condition": "plain",
+   "method": 0.9558011049723757,
+   "caveats": 0.8729281767955801,
+   "no_overclaim": 0.994475138121547
+  },
+  {
+   "model": "gpt-oss-120b",
+   "condition": "agent",
+   "method": 0.948339483394834,
+   "caveats": 0.566420664206642,
+   "no_overclaim": 0.985239852398524
+  },
+  {
+   "model": "gpt-oss-120b",
+   "condition": "agent_skills",
+   "method": 0.9502762430939227,
+   "caveats": 0.3867403314917127,
+   "no_overclaim": 0.9815837937384899
+  },
+  {
+   "model": "gpt-oss-120b",
+   "condition": "agent_skills_oracle",
+   "method": 0.9428044280442804,
+   "caveats": 0.4188191881918819,
+   "no_overclaim": 0.9833948339483395
+  },
+  {
+   "model": "gpt-oss-120b",
+   "condition": "agent_skills_validated",
+   "method": 0.9484346224677717,
+   "caveats": 0.39410681399631675,
+   "no_overclaim": 0.988950276243094
+  },
+  {
+   "model": "gpt-oss-20b",
+   "condition": "plain",
+   "method": 0.861878453038674,
+   "caveats": 0.7292817679558011,
+   "no_overclaim": 0.9613259668508287
+  },
+  {
+   "model": "gpt-oss-20b",
+   "condition": "agent",
+   "method": 0.7955801104972375,
+   "caveats": 0.47697974217311234,
+   "no_overclaim": 0.9613259668508287
+  },
+  {
+   "model": "gpt-oss-20b",
+   "condition": "agent_skills",
+   "method": 0.8339483394833949,
+   "caveats": 0.3966789667896679,
+   "no_overclaim": 0.9612546125461254
+  },
+  {
+   "model": "gpt-oss-20b",
+   "condition": "agent_skills_oracle",
+   "method": 0.8321033210332104,
+   "caveats": 0.4261992619926199,
+   "no_overclaim": 0.9612546125461254
+  },
+  {
+   "model": "gpt-oss-20b",
+   "condition": "agent_skills_validated",
+   "method": 0.8911439114391144,
+   "caveats": 0.4151291512915129,
+   "no_overclaim": 0.9760147601476015
+  }
+ ],
+ "cost": [
+  {
+   "model": "gpt-oss-120b",
+   "condition": "plain",
+   "steps": 1.0,
+   "code_errors": 0.03867403314917127,
+   "prompt_tokens": 2373.8453038674033,
+   "completion_tokens": 991.0276243093923,
+   "seconds": 21.12375690607735
+  },
+  {
+   "model": "gpt-oss-120b",
+   "condition": "agent",
+   "steps": 2.458563535911602,
+   "code_errors": 0.0847145488029466,
+   "prompt_tokens": 9055.39226519337,
+   "completion_tokens": 1200.937384898711,
+   "seconds": 77.89060773480664
+  },
+  {
+   "model": "gpt-oss-120b",
+   "condition": "agent_skills",
+   "steps": 2.401473296500921,
+   "code_errors": 0.16758747697974216,
+   "prompt_tokens": 19038.69429097606,
+   "completion_tokens": 1214.4677716390424,
+   "seconds": 113.53996316758747
+  },
+  {
+   "model": "gpt-oss-120b",
+   "condition": "agent_skills_oracle",
+   "steps": 3.548802946593002,
+   "code_errors": 0.4438305709023941,
+   "prompt_tokens": 52589.45672191529,
+   "completion_tokens": 1802.1491712707182,
+   "seconds": 131.39373848987108
+  },
+  {
+   "model": "gpt-oss-120b",
+   "condition": "agent_skills_validated",
+   "steps": 2.703499079189687,
+   "code_errors": 0.16758747697974216,
+   "prompt_tokens": 24762.83241252302,
+   "completion_tokens": 2023.220994475138,
+   "seconds": 130.7125230202578
+  },
+  {
+   "model": "gpt-oss-20b",
+   "condition": "plain",
+   "steps": 1.0,
+   "code_errors": 0.0718232044198895,
+   "prompt_tokens": 2280.8342541436464,
+   "completion_tokens": 970.5524861878453,
+   "seconds": 20.637016574585637
+  },
+  {
+   "model": "gpt-oss-20b",
+   "condition": "agent",
+   "steps": 2.5009208103130756,
+   "code_errors": 0.23756906077348067,
+   "prompt_tokens": 11770.228360957643,
+   "completion_tokens": 1425.318600368324,
+   "seconds": 63.48342541436464
+  },
+  {
+   "model": "gpt-oss-20b",
+   "condition": "agent_skills",
+   "steps": 2.6678966789667897,
+   "code_errors": 0.2140221402214022,
+   "prompt_tokens": 19126.89667896679,
+   "completion_tokens": 1303.5147601476015,
+   "seconds": 174.32394106813996
+  },
+  {
+   "model": "gpt-oss-20b",
+   "condition": "agent_skills_oracle",
+   "steps": 3.3523985239852396,
+   "code_errors": 0.48523985239852396,
+   "prompt_tokens": 59729.81365313653,
+   "completion_tokens": 1532.9557195571956,
+   "seconds": 133.58802946593
+  },
+  {
+   "model": "gpt-oss-20b",
+   "condition": "agent_skills_validated",
+   "steps": 3.261992619926199,
+   "code_errors": 0.21033210332103322,
+   "prompt_tokens": 26876.30627306273,
+   "completion_tokens": 5627.79889298893,
+   "seconds": 304.7710332103321
+  }
+ ],
+ "validator": [
+  {
+   "model": "gpt-oss-120b",
+   "n": 543,
+   "flagged": 0.17679558011049723,
+   "detection": 0.5641025641025641,
+   "false_alarm": 0.14682539682539683,
+   "fixed": 15,
+   "broken": 13,
+   "net": 2
+  },
+  {
+   "model": "gpt-oss-20b",
+   "n": 543,
+   "flagged": 0.292817679558011,
+   "detection": 0.6509433962264151,
+   "false_alarm": 0.20594965675057209,
+   "fixed": 39,
+   "broken": 5,
+   "net": 34
+  }
+ ],
+ "meta": {
+  "n_real": 181,
+  "n_syn": 23,
+  "answers": 5304,
+  "models": [
+   "gpt-oss-120b",
+   "gpt-oss-20b"
+  ],
+  "real_datasets": 11,
+  "runs": [
+   "run1",
+   "run2",
+   "run3"
+  ],
+  "excluded": [
+   "CB06",
+   "R18"
+  ],
+  "rounded": 62
+ }
+}

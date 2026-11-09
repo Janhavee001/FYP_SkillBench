@@ -1,0 +1,745 @@
+{
+  "system": "lida",
+  "paper": "LIDA (Dibia, 2023)",
+  "architecture": "single-agent, multi-stage pipeline (summarizer -> goal explorer -> viz generator -> executor -> self-evaluator/repairer)",
+  "native_evaluation": "Self-evaluation: an LLM scores generated visualisation code on 6 dimensions (code accuracy, data transformation, goal compliance, visualization type, data encoding, aesthetics), plus a visualization error rate (VER) over generated charts. No external ground-truth answers.",
+  "meta": {
+    "model": "openai/gpt-oss-120b",
+    "library": "seaborn",
+    "provider": "openrouter",
+    "base_url": "https://openrouter.ai/api/v1",
+    "repair_enabled": true
+  },
+  "n_records": 16,
+  "records": [
+    {
+      "id": "titanic_q1",
+      "dataset": "titanic",
+      "question": "What is the overall survival rate on the Titanic, and how does it differ between male and female passengers?",
+      "declared_method": null,
+      "declared_chart": "bar",
+      "code": "import seaborn as sns\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport numpy as np\n\ndef plot(data: pd.DataFrame):\n    # Calculate overall survival rate\n    overall_rate = data['survived'].mean()\n\n    # Create bar plot of survival rate by sex\n    plt.figure(figsize=(8, 6))\n    ax = sns.barplot(\n        x='sex',\n        y='survived',\n        data=data,\n        ci=None,\n        palette='pastel'\n    )\n    ax.set_ylabel('Survival Rate')\n    ax.set_xlabel('Sex')\n    ax.set_ylim(0, 1)\n\n    # Add overall survival rate line\n    ax.axhline(\n        y=overall_rate,\n        color='red',\n        linestyle='--',\n        label=f'Overall Survival Rate = {overall_rate*100:.2f}%'\n    )\n\n    # Add legend\n    ax.legend(title='Legend')\n\n    # Title\n    plt.title('What is the overall survival rate on the Titanic, and how does it differ between male and female passengers?', wrap=True)\n\n    plt.tight_layout()\n    return plt\n\nchart = plot(data)",
+      "executed": true,
+      "execution_error": null,
+      "stdout": "",
+      "artifact": "C:\\Users\\janha\\Downloads\\FYP\\Benchmark\\benchmark-fyp\\results\\artifacts\\lida\\titanic_q1.png",
+      "final_answer": "accessibility: The chart is a vertical bar plot created with seaborn's `barplot`. It uses the 'pastel' colour palette for the bars, a red dashed horizontal line to indicate the overall survival rate, and a legend describing that line. Axis labels are set to \"Sex\" (x\u2011axis) and \"Survival Rate\" (y\u2011axis) with the y\u2011range fixed between 0 and 1. The title asks about the overall Titanic survival rate and the difference between male and female passengers. The goal is to compare survival rates by sex while showing the overall average as a reference. The main insight is that female passengers have a higher survival bar than male passengers, and the red line shows where the overall average sits relative to each group.\ntransformation: Computes the overall survival rate for the entire dataset by taking the mean of the binary `survived` column. This single scalar value represents the proportion of passengers who survived and is later used to draw a reference line on the plot.\nvisualization: Creates an 8\u00d76\u2011inch figure, draws a bar plot of survival rate per sex without confidence intervals, and applies a pastel colour scheme. Axis labels and limits are set, a red dashed horizontal line is added at the overall survival rate with a formatted label, a legend is added, a wrapped title is set, the layout is tightened, and the Matplotlib `plt` object is returned for further use or display.",
+      "numeric_outputs": {},
+      "repair_attempts": 0,
+      "self_corrected": false,
+      "ground_truth": {
+        "overall_survival_rate": 0.3838,
+        "female_survival_rate": 0.742,
+        "male_survival_rate": 0.1889
+      },
+      "expected_method": [
+        "descriptive_statistics",
+        "groupby_aggregation"
+      ],
+      "acceptable_methods": [
+        "descriptive_statistics",
+        "groupby_aggregation",
+        "proportion_comparison"
+      ],
+      "expected_chart": [
+        "bar",
+        "grouped_bar"
+      ],
+      "tolerance": 0.01,
+      "kind": "mixed",
+      "error": null,
+      "raw": {
+        "chart_status": true
+      }
+    },
+    {
+      "id": "titanic_q2",
+      "dataset": "titanic",
+      "question": "Is there a statistically significant association between passenger sex and survival? Report the test used, the test statistic and the p-value.",
+      "declared_method": null,
+      "declared_chart": "bar",
+      "code": "import seaborn as sns\nimport pandas as pd\nimport matplotlib.pyplot as plt\nfrom scipy.stats import chi2_contingency\n\n# solution plan\n# i.  Create a count plot of passenger sex with survival status as hue.\n# ii. Compute a chi\u2011square test of independence on the contingency table of sex vs. survived.\n# iii. Annotate the plot with the test name, chi\u2011square statistic and p\u2011value.\n# iv. Ensure the legend shows the colors for survival outcomes.\n\ndef plot(data: pd.DataFrame):\n    # Create figure and axis\n    plt.figure(figsize=(8, 6))\n    ax = plt.gca()\n\n    # Count plot: sex on x\u2011axis, hue = survived\n    sns.countplot(data=data, x='sex', hue='survived', palette='Set2', ax=ax)\n\n    # Compute chi\u2011square test\n    contingency = pd.crosstab(data['sex'], data['survived'])\n    chi2, p, dof, expected = chi2_contingency(contingency)\n\n    # Annotate with test results\n    annotation = f'Chi\u2011square test: \u03c7\u00b2 = {chi2:.2f}, p = {p:.4f}'\n    ax.text(0.5, 0.95, annotation,\n            transform=ax.transAxes,\n            ha='center', va='top',\n            fontsize=10,\n            bbox=dict(facecolor='white', alpha=0.6, edgecolor='none'))\n\n    # Axis labels and legend\n    ax.set_xlabel('Sex')\n    ax.set_ylabel('Count')\n    ax.legend(title='Survived', labels=['No', 'Yes'])\n\n    plt.title('Is there a statistically significant association between passenger sex and survival? Report the test used, the test statistic and the p-value.', wrap=True)\n    return plt\n\nchart = plot(data)",
+      "executed": true,
+      "execution_error": null,
+      "stdout": "",
+      "artifact": "C:\\Users\\janha\\Downloads\\FYP\\Benchmark\\benchmark-fyp\\results\\artifacts\\lida\\titanic_q2.png",
+      "final_answer": "accessibility: This section defines the visual appearance of the chart. A **count plot** (stacked bar chart) is drawn with the categorical variable **sex** on the x\u2011axis and the **survived** status encoded as a hue. The `palette='Set2'` supplies a set of pastel, colour\u2011blind\u2011friendly hues for the two survival categories. Axis labels (`Sex` and `Count`) make the chart self\u2011explanatory, while the legend (titled *Survived* with labels *No* and *Yes*) clarifies which colour corresponds to each outcome. The title poses the analytical question and informs the viewer that a statistical test will be reported. Together these elements aim to let the audience quickly see whether the distribution of survivors differs between male and female passengers and to convey the result of the chi\u2011square test.\ntransformation: Here the raw DataFrame is transformed into a **contingency table** that counts passengers for each combination of `sex` and `survived`. This table is the input for a **chi\u2011square test of independence** (`chi2_contingency`). The function returns the chi\u2011square statistic (`chi2`), the p\u2011value (`p`), degrees of freedom (`dof`), and the expected frequencies under the null hypothesis. These values are later displayed on the plot to quantify the statistical significance of any observed association.\nvisualization: This block creates the canvas (`plt.figure`) with a comfortable size, obtains the current Axes (`ax`), and adds a textual annotation that reports the chi\u2011square statistic and p\u2011value. The annotation is positioned near the top centre of the axes (`0.5, 0.95` in Axes coordinates) and placed inside a semi\u2011transparent white box so it remains readable regardless of the underlying bars. By separating figure creation, annotation generation, and placement, the code cleanly layers the statistical summary on top of the visual count plot.",
+      "numeric_outputs": {},
+      "repair_attempts": 0,
+      "self_corrected": false,
+      "ground_truth": {
+        "test": "chi-square test of independence",
+        "chi2_statistic": 260.717,
+        "p_value": 0.0,
+        "degrees_of_freedom": 1,
+        "significant_at_0.05": true
+      },
+      "expected_method": [
+        "chi_square_test"
+      ],
+      "acceptable_methods": [
+        "chi_square_test",
+        "fisher_exact_test",
+        "proportion_z_test"
+      ],
+      "expected_chart": [
+        "bar",
+        "grouped_bar",
+        "none"
+      ],
+      "tolerance": 0.05,
+      "kind": "stat",
+      "error": null,
+      "raw": {
+        "chart_status": true
+      }
+    },
+    {
+      "id": "titanic_q3",
+      "dataset": "titanic",
+      "question": "Does the mean age of passengers who survived differ significantly from those who did not? Handle the missing age values and state how you handled them.",
+      "declared_method": null,
+      "declared_chart": "bar",
+      "code": "import seaborn as sns\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport matplotlib.patches as mpatches\n\n# solution plan\n# i.   Copy the data to avoid modifying the original DataFrame.\n# ii.  Handle missing age values by imputing them with the median age of the dataset.\n# iii. Create a bar plot showing the mean (filled) age for each survival group (Survived = 0 or 1) with standard deviation error bars.\n# iv.  Replace the x\u2011axis tick labels with readable text.\n# v.   Add a legend indicating the two survival categories.\n# vi.  Annotate the plot with a note describing how missing ages were handled.\ndef plot(data: pd.DataFrame):\n    # ---- start of stub ----\n    df = data.copy()\n\n    # Handle missing age values by filling with the median age\n    median_age = df['age'].median()\n    df['age_filled'] = df['age'].fillna(median_age)\n\n    # Create the bar plot of mean filled age by survival status\n    plt.figure(figsize=(8, 6))\n    ax = sns.barplot(\n        x='survived',\n        y='age_filled',\n        data=df,\n        ci='sd',               # show standard deviation as error bars\n        palette='Set2',\n        errcolor='gray',\n        errwidth=1.5,\n        capsize=0.1\n    )\n\n    # Make x\u2011axis labels more descriptive\n    ax.set_xticklabels(['Did Not Survive', 'Survived'])\n\n    # Add a legend with the two categories\n    not_survived_patch = mpatches.Patch(color=sns.color_palette('Set2')[0], label='Did Not Survive')\n    survived_patch = mpatches.Patch(color=sns.color_palette('Set2')[1], label='Survived')\n    plt.legend(handles=[not_survived_patch, survived_patch], title='Survival')\n\n    # Annotate how missing ages were handled\n    plt.text(\n        0.5,\n        df['age_filled'].max() * 0.95,\n        f'Missing age values filled with median = {median_age:.1f}',\n        ha='center',\n        fontsize=9,\n        color='black',\n        bbox=dict(facecolor='white', edgecolor='none', pad=3.0)\n    )\n    # ---- end of stub ----\n    plt.title('Does the mean age of passengers who survived differ significantly from those who did not? Handle the missing age values and state how you handled them.', wrap=True)\n    return plt\n\nchart = plot(data)",
+      "executed": true,
+      "execution_error": null,
+      "stdout": "",
+      "artifact": "C:\\Users\\janha\\Downloads\\FYP\\Benchmark\\benchmark-fyp\\results\\artifacts\\lida\\titanic_q3.png",
+      "final_answer": "accessibility: The chart produced by the function is a **vertical bar plot** that compares the average (mean) age of passengers who survived versus those who did not. Two distinct colors from the Seaborn \"Set2\" palette are used \u2013 one for the \"Did Not Survive\" group and another for the \"Survived\" group. Each bar shows the mean of the `age_filled` column and includes error bars that represent the **standard deviation** of ages within each group, giving a sense of variability. The x\u2011axis labels are replaced with readable text (\"Did Not Survive\" and \"Survived\"), a legend clarifies the colour mapping, and a text annotation at the top of the plot explains that missing ages were imputed with the median value. The overall goal is to let the viewer quickly assess whether the average age differs between the two survival outcomes and to understand the spread of ages in each group.\ntransformation: This block prepares the data for plotting. First, a shallow copy of the original DataFrame is created (`df = data.copy()`) to avoid mutating the input. The median of the original `age` column is calculated (`median_age = df['age'].median()`). Missing values in `age` are then replaced with this median, and the result is stored in a new column `age_filled`. Using a separate column preserves the original data while providing a clean numeric field for aggregation.\nvisualization: This section builds the visual output step\u2011by\u2011step. A figure of size 8\u00d76 inches is created. `sns.barplot` draws the bars for each `survived` category, computes the mean of `age_filled`, and adds standard\u2011deviation error bars (`ci='sd'`). The `Set2` palette supplies two contrasting colours. Axis tick labels are replaced with human\u2011readable strings. Custom legend patches are built to match the bar colours and added with a title. An annotation (`plt.text`) is placed near the top of the plot to disclose the median\u2011imputation method for missing ages. Finally, a descriptive title is added, wrapping long text automatically. The resulting plot is ready to be returned as a Matplotlib figure.",
+      "numeric_outputs": {},
+      "repair_attempts": 1,
+      "self_corrected": true,
+      "ground_truth": {
+        "test": "Welch two-sample t-test",
+        "mean_age_survived": 28.3437,
+        "mean_age_died": 30.6262,
+        "t_statistic": -2.046,
+        "p_value": 0.04119,
+        "significant_at_0.05": true,
+        "n_missing_age": 177,
+        "mann_whitney_p": 0.160493
+      },
+      "expected_method": [
+        "t_test"
+      ],
+      "acceptable_methods": [
+        "t_test",
+        "welch_t_test",
+        "mann_whitney_u"
+      ],
+      "expected_chart": [
+        "box",
+        "hist",
+        "violin",
+        "none"
+      ],
+      "tolerance": 0.05,
+      "kind": "stat",
+      "error": null,
+      "raw": {
+        "chart_status": true
+      }
+    },
+    {
+      "id": "titanic_q4",
+      "dataset": "titanic",
+      "question": "How does survival rate vary across passenger classes? Produce a chart that makes the comparison clear.",
+      "declared_method": null,
+      "declared_chart": "bar",
+      "code": "import seaborn as sns\nimport pandas as pd\nimport matplotlib.pyplot as plt\nfrom matplotlib.patches import Patch\n\n# solution plan\n# i.  Compute survival rate per passenger class (pclass) by taking the mean of the 'survived' column.\n# ii. Create a bar plot using seaborn to visualize the survival rate for each class.\n# iii. Add a legend indicating the passenger classes with corresponding colors.\n# iv. Set appropriate axis labels and title, ensure the y\u2011axis ranges from 0 to 1.\n\ndef plot(data: pd.DataFrame):\n    # Compute survival rate per class\n    df_rate = data.groupby('pclass', as_index=False)['survived'].mean()\n    df_rate.rename(columns={'survived': 'survival_rate'}, inplace=True)\n\n    # Create bar plot\n    plt.figure(figsize=(8, 6))\n    ax = sns.barplot(\n        x='pclass',\n        y='survival_rate',\n        data=df_rate,\n        palette='viridis',\n        edgecolor='black'\n    )\n\n    # Axis labels and limits\n    ax.set_xlabel('Passenger Class')\n    ax.set_ylabel('Survival Rate')\n    ax.set_ylim(0, 1)\n\n    # Create custom legend for classes\n    class_colors = {row['pclass']: ax.patches[i].get_facecolor()\n                    for i, row in df_rate.iterrows()}\n    legend_handles = [Patch(facecolor=col, edgecolor='black',\n                            label=f'Class {int(cls)}')\n                      for cls, col in class_colors.items()]\n    ax.legend(handles=legend_handles, title='Passenger Class')\n\n    plt.title('How does survival rate vary across passenger classes? Produce a chart that makes the comparison clear.', wrap=True)\n    return plt\n\nchart = plot(data)",
+      "executed": true,
+      "execution_error": null,
+      "stdout": "",
+      "artifact": "C:\\Users\\janha\\Downloads\\FYP\\Benchmark\\benchmark-fyp\\results\\artifacts\\lida\\titanic_q4.png",
+      "final_answer": "accessibility: The chart is a vertical bar plot that uses the **viridis** colormap, giving each passenger class a distinct hue that progresses from dark to light. Black edges outline each bar, improving contrast and making the bars stand out against the background. Axis labels (`Passenger Class` and `Survival Rate`) clearly describe what is being compared, and the y\u2011axis is fixed from 0 to 1 because the values represent proportions. A custom legend maps each colour to its class number, and the title explicitly states the analytical question. These visual choices ensure the comparison of survival rates across classes is immediately understandable and accessible.\ntransformation: The raw DataFrame is aggregated by passenger class (`pclass`). `groupby('pclass')` collects all rows belonging to the same class, and `.mean()` computes the average of the binary `survived` column, which is equivalent to the survival rate for that class. The resulting column is renamed to `survival_rate` for readability. No additional filtering or missing\u2011value handling is performed, assuming the input data is clean.\nvisualization: A new Matplotlib figure of size 8\u202f\u00d7\u202f6 inches is created to host the plot. The seaborn `barplot` function draws the bars on the Axes object `ax`, using the pre\u2011computed `df_rate` DataFrame. After the figure and Axes are instantiated, the function returns the `plt` object so the caller can display (`plt.show()`) or further modify the figure. This step orchestrates the canvas, the plotting call, and the final output object.",
+      "numeric_outputs": {},
+      "repair_attempts": 0,
+      "self_corrected": false,
+      "ground_truth": {
+        "survival_rate_by_pclass": {
+          "1": 0.6296,
+          "2": 0.4728,
+          "3": 0.2424
+        },
+        "monotonic_decreasing_with_class": true
+      },
+      "expected_method": [
+        "groupby_aggregation"
+      ],
+      "acceptable_methods": [
+        "groupby_aggregation",
+        "descriptive_statistics"
+      ],
+      "expected_chart": [
+        "bar",
+        "grouped_bar",
+        "point"
+      ],
+      "tolerance": 0.01,
+      "kind": "viz",
+      "error": null,
+      "raw": {
+        "chart_status": true
+      }
+    },
+    {
+      "id": "titanic_q5",
+      "dataset": "titanic",
+      "question": "Describe the distribution of ticket fares. Is it skewed, and what does that imply for choosing summary statistics?",
+      "declared_method": null,
+      "declared_chart": "hist, kde",
+      "code": "import seaborn as sns\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\n# solution plan\n# i.  Plot the distribution of the 'fare' column using a histogram with KDE.\n# ii. Use 'class' as hue to show fare distribution across passenger classes and provide a legend.\n# iii. Compute the median fare and add a vertical line (axvline) with a label showing the median value.\n# iv. Ensure axis labels are set and layout is tight.\n\ndef plot(data: pd.DataFrame):\n    plt.figure(figsize=(10, 6))\n    # Histogram with KDE, colored by passenger class\n    ax = sns.histplot(\n        data=data,\n        x='fare',\n        hue='class',\n        bins=30,\n        kde=True,\n        palette='Set2',\n        edgecolor='black',\n        alpha=0.7\n    )\n    # Median fare line\n    median_fare = data['fare'].median()\n    ax.axvline(median_fare, color='red', linestyle='--', linewidth=2,\n               label=f'Median = {median_fare:.2f}')\n    # Axis labels\n    ax.set_xlabel('Fare')\n    ax.set_ylabel('Count')\n    # Legend (includes class hues and median line)\n    ax.legend(title='Class')\n    plt.tight_layout()\n    plt.title('Describe the distribution of ticket fares. Is it skewed, and what does that imply for choosing summary statistics?', wrap=True)\n    return plt\n\nchart = plot(data)",
+      "executed": true,
+      "execution_error": null,
+      "stdout": "",
+      "artifact": "C:\\Users\\janha\\Downloads\\FYP\\Benchmark\\benchmark-fyp\\results\\artifacts\\lida\\titanic_q5.png",
+      "final_answer": "accessibility: The chart is a 10\u2011by\u20116\u2011inch figure that displays a histogram of the `fare` column with an overlaid Kernel Density Estimate (KDE).  Bars are colored by passenger `class` using the Seaborn `Set2` palette, giving each class a distinct, pastel hue.  Black edges outline each bar and an alpha of 0.7 makes the bars slightly transparent, helping overlapping bars stay visible.  The title explicitly asks whether the fare distribution is skewed, guiding the viewer to interpret the shape of the histogram and KDE.  The overall goal is to visualise how ticket fares are distributed overall and across classes, allowing quick visual assessment of skewness, modality, and class\u2011level differences.\ntransformation: This line performs a simple statistical transformation on the raw data: it computes the median of the `fare` column.  No filtering, grouping, or imputation is applied; the median is calculated directly from the original DataFrame and stored for later use in the visualization.\nvisualization: After the histogram is drawn, a vertical dashed red line is added at the median fare value to highlight the central tendency.  The line is labeled with the exact median amount.  Axis labels (`Fare` for the x\u2011axis and `Count` for the y\u2011axis) are set to clarify what each dimension represents.  A legend is added (title\u202f=\u202f\"Class\") that combines the hue colors for passenger classes and the median\u2011line label.  `plt.tight_layout()` ensures that all elements fit neatly within the figure boundaries, and the function returns the Matplotlib `plt` object so the caller can display or further modify the plot.",
+      "numeric_outputs": {},
+      "repair_attempts": 0,
+      "self_corrected": false,
+      "ground_truth": {
+        "mean": 32.2042,
+        "median": 14.4542,
+        "std": 49.6934,
+        "skewness": 4.7793,
+        "right_skewed": true,
+        "shapiro_p": 0.0
+      },
+      "expected_method": [
+        "descriptive_statistics",
+        "distribution_analysis"
+      ],
+      "acceptable_methods": [
+        "descriptive_statistics",
+        "distribution_analysis",
+        "normality_test"
+      ],
+      "expected_chart": [
+        "hist",
+        "kde",
+        "box"
+      ],
+      "tolerance": 0.05,
+      "kind": "mixed",
+      "error": null,
+      "raw": {
+        "chart_status": true
+      }
+    },
+    {
+      "id": "titanic_q6",
+      "dataset": "titanic",
+      "question": "Is there a relationship between a passenger's age and the fare they paid? Quantify it and say whether it is strong.",
+      "declared_method": null,
+      "declared_chart": "scatter",
+      "code": "import seaborn as sns\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\ndef plot(data: pd.DataFrame):\n    # Verify required columns exist\n    required_cols = ['Age', 'Fare']\n    missing_cols = [col for col in required_cols if col not in data.columns]\n    if missing_cols:\n        raise KeyError(f\"Missing required column(s): {missing_cols}\")\n\n    # Clean data: remove rows where Age or Fare is missing\n    df = data.dropna(subset=required_cols)\n\n    # Compute Pearson correlation coefficient\n    corr = df['Age'].corr(df['Fare'])\n\n    # Set up the figure\n    plt.figure(figsize=(8, 6))\n\n    # Scatter plot with hue by passenger class if the column exists\n    if 'Pclass' in df.columns:\n        sns.scatterplot(data=df, x='Age', y='Fare', hue='Pclass', palette='viridis')\n        plt.legend(title='Passenger Class')\n    else:\n        sns.scatterplot(data=df, x='Age', y='Fare')\n\n    # Add regression line\n    sns.regplot(data=df, x='Age', y='Fare', scatter=False, color='red', line_kws={'linewidth': 2})\n\n    # Annotate correlation coefficient\n    plt.text(\n        0.05,\n        0.95,\n        f'Pearson r = {corr:.2f}',\n        transform=plt.gca().transAxes,\n        fontsize=12,\n        verticalalignment='top',\n        bbox=dict(facecolor='white', alpha=0.6)\n    )\n\n    plt.title(\n        \"Is there a relationship between a passenger's age and the fare they paid? \"\n        \"Quantify it and say whether it is strong.\",\n        wrap=True\n    )\n    plt.xlabel('Age')\n    plt.ylabel('Fare')\n    return plt\n\n# Example usage (replace `data` with your actual DataFrame)\n# chart = plot(data)",
+      "executed": false,
+      "execution_error": "{'message': \"'chart'\", 'traceback': 'Traceback (most recent call last):\\n  File \"C:\\\\Users\\\\janha\\\\Downloads\\\\FYP\\\\Benchmark\\\\benchmark-fyp\\\\venvs\\\\lida\\\\Lib\\\\site-packages\\\\lida\\\\components\\\\executor.py\", line 157, in execute\\n    chart = ex_locals[\"chart\"]\\n            ~~~~~~~~~^^^^^^^^^\\nKeyError: \\'chart\\'\\n'}",
+      "stdout": "",
+      "artifact": null,
+      "final_answer": "accessibility: This block defines the visual look of the chart. A medium\u2011sized (8\u00d76 inches) figure is created, then a scatter plot of **Age vs. Fare** is drawn. If the dataset contains a `Pclass` column, points are coloured by passenger class using the perceptually\u2011uniform **viridis** palette, and a legend titled \"Passenger Class\" is added; otherwise a simple monochrome scatter is shown. A red regression line (thicker for emphasis) is overlaid to illustrate the trend. In the top\u2011left corner a semi\u2011transparent white textbox displays the Pearson correlation coefficient, giving a quick quantitative cue. The chart title asks the analytical question, and axis labels clearly identify the variables. Overall, the chart is a coloured scatter with a regression line, legend, and correlation annotation, designed to let viewers assess the strength and direction of the age\u2011fare relationship at a glance.\ntransformation: These statements prepare the data before any visual elements are drawn. First, the function checks that the mandatory columns `Age` and `Fare` exist; if not, it raises a clear error. Then it drops any rows that have missing values in either of those columns, ensuring the subsequent calculations and plot are based on complete cases only. Finally, it calculates the Pearson correlation coefficient between `Age` and `Fare`, storing the result in `corr` for later annotation. This transformation guarantees that the visualisation reflects accurate, clean data and provides the numeric metric that will be displayed on the chart.\nvisualization: The `plot` function orchestrates the end\u2011to\u2011end visualisation pipeline. After performing validation and cleaning (shown in the transformation section), it creates a Matplotlib figure, executes the visual\u2011appearance commands (scatter, regression line, annotations, titles, labels), and finally returns the `plt` object so the caller can display or further modify the chart. This wrapper makes the whole process reusable: a single call `plot(df)` yields a ready\u2011to\u2011show figure that encapsulates data preparation, visual styling, and output handling.",
+      "numeric_outputs": {},
+      "repair_attempts": 1,
+      "self_corrected": false,
+      "ground_truth": {
+        "pearson_r": 0.0961,
+        "pearson_p": 0.010216,
+        "spearman_rho": 0.1351,
+        "spearman_p": 0.000296,
+        "strength": "weak positive"
+      },
+      "expected_method": [
+        "correlation"
+      ],
+      "acceptable_methods": [
+        "correlation",
+        "linear_regression"
+      ],
+      "expected_chart": [
+        "scatter",
+        "none"
+      ],
+      "tolerance": 0.05,
+      "kind": "stat",
+      "error": null,
+      "raw": {
+        "chart_status": false
+      }
+    },
+    {
+      "id": "titanic_q7",
+      "dataset": "titanic",
+      "question": "Which passenger attributes best predict survival? Fit an appropriate model and report which predictors matter most and in which direction.",
+      "declared_method": null,
+      "declared_chart": "bar",
+      "code": "import pandas as pd\nimport numpy as np\nimport matplotlib.pyplot as plt\nimport seaborn as sns\nimport matplotlib.patches as mpatches\n\ndef plot(data: pd.DataFrame):\n    # Define target and feature columns\n    target = 'survived'\n    numeric_features = ['age', 'sibsp', 'parch', 'fare', 'pclass']\n    categorical_features = ['sex', 'embarked', 'class', 'who', 'deck',\n                            'embark_town', 'alone', 'adult_male']\n\n    # Separate X and y\n    X_raw = data.drop(columns=[target])\n    y = data[target].astype(float).values  # ensure numeric\n\n    # Impute numeric features with median\n    X_num = X_raw[numeric_features].copy()\n    for col in numeric_features:\n        median = X_num[col].median()\n        X_num[col].fillna(median, inplace=True)\n\n    # Impute categorical features with most frequent\n    X_cat = X_raw[categorical_features].copy()\n    for col in categorical_features:\n        mode = X_cat[col].mode().iloc[0] if not X_cat[col].mode().empty else np.nan\n        X_cat[col].fillna(mode, inplace=True)\n\n    # One\u2011hot encode categorical variables, drop first level to avoid collinearity\n    X_cat_ohe = pd.get_dummies(X_cat, drop_first=True)\n\n    # Combine numeric and encoded categorical features\n    X = pd.concat([X_num, X_cat_ohe], axis=1)\n\n    # Add intercept term\n    X_matrix = np.column_stack([np.ones(X.shape[0]), X.values])\n\n    # Solve linear regression (least squares) as a proxy for logistic regression\n    # coeffs shape: (n_features + 1,)\n    coeffs, _, _, _ = np.linalg.lstsq(X_matrix, y, rcond=None)\n\n    # Discard intercept for plotting\n    feature_names = X.columns\n    feature_coeffs = coeffs[1:]  # skip intercept\n\n    # Build DataFrame for coefficients\n    coef_df = pd.DataFrame({\n        'feature': feature_names,\n        'coef': feature_coeffs\n    })\n\n    # Sort by absolute magnitude and keep top 15\n    coef_df['abs_coef'] = coef_df['coef'].abs()\n    coef_df = coef_df.sort_values('abs_coef', ascending=False).head(15)\n\n    # Assign colors based on sign\n    coef_df['color'] = np.where(coef_df['coef'] >= 0, 'steelblue', 'salmon')\n\n    # Plot\n    plt.figure(figsize=(10, 6))\n    sns.barplot(\n        x='coef',\n        y='feature',\n        data=coef_df,\n        palette=coef_df['color']\n    )\n    plt.axvline(0, color='gray', linewidth=0.8)\n\n    # Legend for direction\n    pos_patch = mpatches.Patch(color='steelblue',\n                               label='Positive effect (increases survival odds)')\n    neg_patch = mpatches.Patch(color='salmon',\n                               label='Negative effect (decreases survival odds)')\n    plt.legend(handles=[pos_patch, neg_patch], title='Coefficient direction')\n\n    plt.xlabel('Linear Regression Coefficient (proxy)')\n    plt.ylabel('Passenger Attribute')\n    plt.title('Which passenger attributes best predict survival? '\n              'Fit an appropriate model and report which predictors matter most and in which direction.',\n              wrap=True)\n    plt.tight_layout()\n    return plt\n\n# Example usage (commented out; replace `df` with your DataFrame):\n# chart = plot(df)\n# chart.show()\n\nchart = plot(data)",
+      "executed": false,
+      "execution_error": "{'message': \"Cannot cast ufunc 'lstsq' input 0 from dtype('O') to dtype('float64') with casting rule 'same_kind'\", 'traceback': 'Traceback (most recent call last):\\n  File \"C:\\\\Users\\\\janha\\\\Downloads\\\\FYP\\\\Benchmark\\\\benchmark-fyp\\\\venvs\\\\lida\\\\Lib\\\\site-packages\\\\lida\\\\components\\\\executor.py\", line 156, in execute\\n    exec(code, ex_locals)\\n  File \"<string>\", line 89, in <module>\\n  File \"<string>\", line 41, in plot\\n  File \"C:\\\\Users\\\\janha\\\\Downloads\\\\FYP\\\\Benchmark\\\\benchmark-fyp\\\\venvs\\\\lida\\\\Lib\\\\site-packages\\\\numpy\\\\linalg\\\\_linalg.py\", line 2540, in lstsq\\n    x, resids, rank, s = _umath_linalg.lstsq(a, b, rcond,\\n                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\nnumpy._core._exceptions._UFuncInputCastingError: Cannot cast ufunc \\'lstsq\\' input 0 from dtype(\\'O\\') to dtype(\\'float64\\') with casting rule \\'same_kind\\'\\n'}",
+      "stdout": "",
+      "artifact": null,
+      "final_answer": "accessibility: The chart is a horizontal bar plot that visualises the magnitude and direction of each passenger attribute\u2019s coefficient from a linear\u2011regression proxy. Positive coefficients are shown in **steelblue** and extend to the right, while negative coefficients appear in **salmon** and extend to the left. A thin gray line at x\u202f=\u202f0 separates the two directions, making it easy to see which features increase or decrease the predicted survival odds. The figure size (10\u202f\u00d7\u202f6 inches) provides enough room for the feature names on the y\u2011axis. The overall goal is to let the viewer quickly identify the most influential predictors of survival and whether their effect is positive or negative.\ntransformation: This block prepares the data for modelling. It first isolates the target column (`survived`) and lists numeric and categorical predictors. Missing numeric values are filled with the median of each column, while missing categorical values are filled with the most frequent category (mode). Categorical variables are then one\u2011hot encoded (dropping the first level to avoid perfect multicollinearity). Numeric and encoded categorical matrices are concatenated, an intercept column is added, and a least\u2011squares linear regression is fitted to obtain coefficient estimates. The coefficients are placed in a DataFrame, sorted by absolute size, and the top 15 are kept for visualisation. Finally, a colour column is added to flag positive (steelblue) versus negative (salmon) effects.\nvisualization: After the bars are drawn, this section adds the finishing touches that make the plot interpretable. Custom legend patches explain the colour coding (positive vs. negative influence). Axis labels clarify that the x\u2011axis shows the magnitude of the regression coefficient and the y\u2011axis lists the passenger attributes. A descriptive, wrapped title provides context and the analytical question being answered. `plt.tight_layout()` ensures that labels and the legend are not clipped, and the function returns the Matplotlib figure object for further use or display.",
+      "numeric_outputs": {},
+      "repair_attempts": 1,
+      "self_corrected": false,
+      "ground_truth": {
+        "model": "logistic regression (standardised predictors)",
+        "train_accuracy": 0.8053,
+        "standardised_coefficients": {
+          "pclass": -1.0141,
+          "sex": -1.2506,
+          "age": -0.6195,
+          "fare": 0.1211,
+          "sibsp": -0.3396,
+          "parch": -0.0517
+        },
+        "strongest_predictor": "sex",
+        "sex_effect_direction": "male -> lower survival",
+        "n_used": 714
+      },
+      "expected_method": [
+        "logistic_regression"
+      ],
+      "acceptable_methods": [
+        "logistic_regression",
+        "random_forest",
+        "decision_tree",
+        "gradient_boosting"
+      ],
+      "expected_chart": [
+        "bar",
+        "none"
+      ],
+      "tolerance": 0.1,
+      "kind": "stat",
+      "error": null,
+      "raw": {
+        "chart_status": false
+      }
+    },
+    {
+      "id": "titanic_q8",
+      "dataset": "titanic",
+      "question": "Which columns have missing values, how much is missing in each, and what would you do about each one before modelling?",
+      "declared_method": null,
+      "declared_chart": "bar",
+      "code": "import seaborn as sns\nimport pandas as pd\nimport matplotlib.pyplot as plt\nfrom matplotlib.patches import Patch\n\ndef plot(data: pd.DataFrame):\n    # Calculate missing percentage per column\n    missing_counts = data.isnull().sum()\n    total_rows = len(data)\n    missing_pct = (missing_counts / total_rows * 100).reset_index()\n    missing_pct.columns = ['column', 'missing_pct']\n    # Keep only columns with any missing values\n    missing_pct = missing_pct[missing_pct['missing_pct'] > 0].sort_values('missing_pct', ascending=False)\n\n    # Create bar plot\n    plt.figure(figsize=(10, 6))\n    ax = sns.barplot(\n        x='missing_pct',\n        y='column',\n        data=missing_pct,\n        palette='viridis'\n    )\n    ax.set_xlabel('Missing Percentage (%)')\n    ax.set_ylabel('Column')\n    ax.set_xlim(0, missing_pct['missing_pct'].max() * 1.1)\n\n    # Add a legend explaining the bar color\n    legend_patch = Patch(color=sns.color_palette('viridis', 1)[0], label='Missing %')\n    ax.legend(handles=[legend_patch], title='Legend', loc='lower right')\n\n    plt.title('Which columns have missing values, how much is missing in each, and what would you do about each one before modelling?', wrap=True)\n    return plt\n\nchart = plot(data)",
+      "executed": true,
+      "execution_error": null,
+      "stdout": "",
+      "artifact": "C:\\Users\\janha\\Downloads\\FYP\\Benchmark\\benchmark-fyp\\results\\artifacts\\lida\\titanic_q8.png",
+      "final_answer": "accessibility: The chart is a horizontal bar plot that uses the **viridis** colormap, giving the bars a sequential blue\u2011green\u2011yellow gradient that is perceptually uniform and color\u2011blind friendly. The x\u2011axis shows the missing percentage, while the y\u2011axis lists column names, making it easy to compare columns at a glance. A custom legend (a single colored patch) clarifies that the bar colour represents the proportion of missing values. The overall goal is to surface which features contain missing data and how severe the missingness is, enabling quick decisions about imputation or column removal before modeling.\ntransformation: This block computes the percentage of missing values for every column. `data.isnull().sum()` counts nulls per column, `len(data)` gives the total row count, and the division converts counts to percentages. The result is reshaped with `reset_index()` and column names are set to *column* and *missing_pct*. Rows with a missing percentage of zero are dropped, and the remaining rows are sorted in descending order so the columns with the most missing data appear at the top of the plot.\nvisualization: After the bar plot is created, a figure of size 10\u00d76 inches is instantiated to give the chart enough space. Axis labels are added for clarity, and the x\u2011limit is extended to 110\u202f% of the maximum missing percentage so the longest bar does not touch the plot edge. A descriptive title (wrapped to fit) explains the purpose of the visualization. Finally, the Matplotlib `plt` object is returned so the caller can display or further modify the figure.",
+      "numeric_outputs": {},
+      "repair_attempts": 0,
+      "self_corrected": false,
+      "ground_truth": {
+        "missing_counts": {
+          "age": 177,
+          "embarked": 2,
+          "deck": 688,
+          "embark_town": 2
+        },
+        "missing_pct": {
+          "age": 19.87,
+          "embarked": 0.22,
+          "deck": 77.22,
+          "embark_town": 0.22
+        },
+        "n_rows": 891
+      },
+      "expected_method": [
+        "missing_data_analysis"
+      ],
+      "acceptable_methods": [
+        "missing_data_analysis",
+        "descriptive_statistics"
+      ],
+      "expected_chart": [
+        "bar",
+        "heatmap",
+        "none"
+      ],
+      "tolerance": 0.0,
+      "kind": "mixed",
+      "error": null,
+      "raw": {
+        "chart_status": true
+      }
+    },
+    {
+      "id": "wine_q1",
+      "dataset": "wine_quality",
+      "question": "What is the distribution of wine quality scores in this dataset? Is it balanced?",
+      "declared_method": null,
+      "declared_chart": "bar",
+      "code": "import seaborn as sns\nimport pandas as pd\nimport matplotlib.pyplot as plt\n# solution plan\n# i. Verify that the 'quality' column exists.\n# ii. Convert 'quality' to string for categorical handling.\n# iii. Use a seaborn countplot to display the distribution of quality scores.\n# iv. Apply a distinct color palette and create a legend mapping each quality score to its bar color.\n# v. Ensure x\u2011axis labels are legible.\n\ndef plot(data: pd.DataFrame):\n    # Verify the required column exists\n    if 'quality' not in data.columns:\n        raise KeyError(\"Column 'quality' not found in the dataset.\")\n    \n    # Treat quality as a categorical variable\n    data['quality'] = data['quality'].astype(str)\n    \n    # Determine ordered unique quality scores\n    unique_qualities = sorted(data['quality'].unique(), key=lambda x: int(x))\n    \n    # Define a color palette with one color per quality score\n    palette = sns.color_palette(\"viridis\", n_colors=len(unique_qualities))\n    \n    # Create the count plot\n    ax = sns.countplot(x='quality', data=data, order=unique_qualities, palette=palette)\n    \n    # Build legend entries for each quality score\n    from matplotlib.patches import Patch\n    legend_handles = [Patch(color=palette[i], label=unique_qualities[i]) \n                      for i in range(len(unique_qualities))]\n    ax.legend(handles=legend_handles, title='Quality Score', loc='upper right')\n    \n    # Make x\u2011axis labels legible\n    plt.xticks(rotation=0)\n    \n    plt.title('What is the distribution of wine quality scores in this dataset? Is it balanced?', wrap=True)\n    return plt\n\nchart = plot(data)",
+      "executed": true,
+      "execution_error": null,
+      "stdout": "",
+      "artifact": "C:\\Users\\janha\\Downloads\\FYP\\Benchmark\\benchmark-fyp\\results\\artifacts\\lida\\wine_q1.png",
+      "final_answer": "accessibility: This section defines the visual appearance of the chart. A **count plot** (vertical bar chart) is used to show how many records fall into each wine quality category. The `viridis` palette supplies a distinct hue for every quality score, making the bars easily distinguishable. A custom legend is built from the palette so users can map each colour back to its numeric quality label. The x\u2011axis labels are kept horizontal (`rotation=0`) for readability, and a descriptive title asks whether the quality distribution is balanced. The overall goal is to give a quick visual impression of the frequency of each quality score in the dataset.\ntransformation: Before any visualisation, the code validates that the required `quality` column exists; otherwise it raises a clear error. The column is then cast to **string** so that seaborn treats it as a categorical variable rather than a numeric one. Finally, the unique quality values are extracted and sorted numerically, producing an ordered list (`unique_qualities`) that will be used to control the bar order and colour mapping.\nvisualization: The `plot` function ties together the data preparation and visual styling steps. It first runs the transformation logic, then builds the colour palette, draws the seaborn `countplot`, adds a custom legend, adjusts tick orientation, and sets a wrapped title. The function returns the Matplotlib `plt` object so the caller can display or further modify the figure (e.g., `chart = plot(data)`). This encapsulation makes the whole visualisation reproducible with a single function call.",
+      "numeric_outputs": {},
+      "repair_attempts": 0,
+      "self_corrected": false,
+      "ground_truth": {
+        "counts": {
+          "3": 10,
+          "4": 53,
+          "5": 681,
+          "6": 638,
+          "7": 199,
+          "8": 18
+        },
+        "mean_quality": 5.636,
+        "modal_quality": 5,
+        "balanced": false,
+        "pct_in_top_two_classes": 82.49
+      },
+      "expected_method": [
+        "descriptive_statistics",
+        "distribution_analysis"
+      ],
+      "acceptable_methods": [
+        "descriptive_statistics",
+        "distribution_analysis",
+        "frequency_count"
+      ],
+      "expected_chart": [
+        "bar",
+        "hist"
+      ],
+      "tolerance": 0.01,
+      "kind": "mixed",
+      "error": null,
+      "raw": {
+        "chart_status": true
+      }
+    },
+    {
+      "id": "wine_q2",
+      "dataset": "wine_quality",
+      "question": "Which physicochemical properties are most strongly correlated with wine quality? Show the relationships.",
+      "declared_method": null,
+      "declared_chart": "bar",
+      "code": "import seaborn as sns\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport numpy as np\n\n# solution plan\n# i. Compute the Pearson correlation between each physicochemical property and wine quality.\n# ii. Create a DataFrame of these correlations, sort by absolute correlation strength.\n# iii. Plot a bar chart showing correlation values, using color to indicate positive vs negative correlation.\n# iv. Add a legend for the sign, rotate x\u2011axis labels for readability, and set a descriptive title.\n\ndef plot(data: pd.DataFrame):\n    # Compute correlations with the target variable 'quality'\n    corr_series = data.corr()['quality'].drop('quality')\n    # Build a DataFrame for plotting\n    df_corr = corr_series.reset_index()\n    df_corr.columns = ['property', 'correlation']\n    # Determine sign for coloring\n    df_corr['sign'] = np.where(df_corr['correlation'] >= 0, 'Positive', 'Negative')\n    # Sort by absolute correlation strength\n    df_corr['abs_corr'] = df_corr['correlation'].abs()\n    df_corr = df_corr.sort_values('abs_corr', ascending=False).drop(columns='abs_corr')\n    # Create the bar plot\n    plt.figure(figsize=(10, 6))\n    barplot = sns.barplot(\n        x='property',\n        y='correlation',\n        hue='sign',\n        data=df_corr,\n        palette={'Positive': 'steelblue', 'Negative': 'indianred'}\n    )\n    # Rotate x\u2011axis labels for legibility\n    plt.xticks(rotation=45, ha='right')\n    # Add a horizontal line at y=0 for reference\n    plt.axhline(0, color='gray', linewidth=0.8)\n    # Adjust legend\n    plt.legend(title='Correlation Sign')\n    # Title (wrap handled by matplotlib automatically)\n    plt.title('Which physicochemical properties are most strongly correlated with wine quality? Show the relationships.', wrap=True)\n    return plt\n\nchart = plot(data)",
+      "executed": true,
+      "execution_error": null,
+      "stdout": "",
+      "artifact": "C:\\Users\\janha\\Downloads\\FYP\\Benchmark\\benchmark-fyp\\results\\artifacts\\lida\\wine_q2.png",
+      "final_answer": "accessibility: The chart is a vertical bar chart that shows each physicochemical property on the x\u2011axis and its Pearson correlation with wine quality on the y\u2011axis. Positive correlations are coloured steelblue, negative correlations indianred. The figure size (10\u202f\u00d7\u202f6 inches) provides enough space for all property labels, which are rotated 45\u00b0 for readability. A gray horizontal line at y\u202f=\u202f0 helps the viewer see which bars are above (positive) or below (negative) zero. The legend clarifies the colour\u2011sign mapping, and the title explains the purpose: to identify which properties are most strongly linked to wine quality.\ntransformation: First the Pearson correlation between every column and the target column *quality* is computed. The target itself is removed, leaving a Series of correlations. The Series is turned into a DataFrame with columns *property* and *correlation*. A new column *sign* records whether the correlation is non\u2011negative (Positive) or negative (Negative). The absolute value of each correlation is stored in *abs_corr* so the rows can be sorted from strongest to weakest relationship, after which the helper column is dropped. The resulting DataFrame is ready for plotting.\nvisualization: The seaborn `barplot` draws one bar per property, using the *correlation* values for bar height. The `hue='sign'` argument applies the colour palette defined earlier, so positive and negative bars are visually distinct. After the function finishes, `chart = plot(data)` executes the whole pipeline, returning the Matplotlib figure object that contains the completed bar chart.",
+      "numeric_outputs": {},
+      "repair_attempts": 0,
+      "self_corrected": false,
+      "ground_truth": {
+        "top_3_by_abs_correlation": [
+          "alcohol",
+          "volatile_acidity",
+          "sulphates"
+        ],
+        "correlations": {
+          "alcohol": 0.4762,
+          "volatile_acidity": -0.3906,
+          "sulphates": 0.2514,
+          "citric_acid": 0.2264,
+          "total_sulfur_dioxide": -0.1851,
+          "density": -0.1749,
+          "chlorides": -0.1289,
+          "fixed_acidity": 0.1241,
+          "ph": -0.0577,
+          "free_sulfur_dioxide": -0.0507,
+          "residual_sugar": 0.0137
+        },
+        "strongest_positive": "alcohol",
+        "strongest_negative": "volatile_acidity"
+      },
+      "expected_method": [
+        "correlation"
+      ],
+      "acceptable_methods": [
+        "correlation",
+        "feature_importance",
+        "linear_regression"
+      ],
+      "expected_chart": [
+        "heatmap",
+        "bar"
+      ],
+      "tolerance": 0.03,
+      "kind": "mixed",
+      "error": null,
+      "raw": {
+        "chart_status": true
+      }
+    },
+    {
+      "id": "wine_q3",
+      "dataset": "wine_quality",
+      "question": "Do high-quality wines (quality >= 7) have significantly higher alcohol content than low-quality wines (quality <= 4)?",
+      "declared_method": null,
+      "declared_chart": "box",
+      "code": "import seaborn as sns\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport matplotlib.patches as mpatches\n# solution plan\n# i.  Create a quality_group column classifying wines as 'Low (<=4)' or 'High (>=7)'.\n# ii. Filter the dataset to keep only these two groups.\n# iii. Use a seaborn boxplot to compare the distribution of alcohol content across the groups.\n# iv. Add a custom legend showing the colors for each quality group.\ndef plot(data: pd.DataFrame):\n    # --- start of stub ---\n    df = data.copy()\n    # Ensure quality is numeric\n    df['quality'] = pd.to_numeric(df['quality'], errors='coerce')\n    df['quality_group'] = pd.NA\n    df.loc[df['quality'] <= 4, 'quality_group'] = 'Low (<=4)'\n    df.loc[df['quality'] >= 7, 'quality_group'] = 'High (>=7)'\n    df = df[df['quality_group'].notna()]\n\n    palette = sns.color_palette('Set2', 2)\n\n    ax = sns.boxplot(\n        x='quality_group',\n        y='alcohol',\n        data=df,\n        palette=palette,\n        width=0.6,\n        linewidth=1.2\n    )\n    ax.set_xlabel('Quality Group')\n    ax.set_ylabel('Alcohol (% vol)')\n\n    handles = [\n        mpatches.Patch(color=palette[0], label='Low (<=4)'),\n        mpatches.Patch(color=palette[1], label='High (>=7)')\n    ]\n    ax.legend(handles=handles, title='Quality Group')\n    # --- end of stub ---\n    plt.title('Do high-quality wines (quality >= 7) have significantly higher alcohol content than low-quality wines (quality <= 4)?', wrap=True)\n    return plt\n\nchart = plot(data)",
+      "executed": true,
+      "execution_error": null,
+      "stdout": "",
+      "artifact": "C:\\Users\\janha\\Downloads\\FYP\\Benchmark\\benchmark-fyp\\results\\artifacts\\lida\\wine_q3.png",
+      "final_answer": "accessibility: The chart is a **Seaborn boxplot** that visualises the distribution of the *alcohol* percentage for two distinct wine quality groups: *Low (<=4)* and *High (>=7)*. The colour palette used is Seaborn's **Set2** with two colours, one for each group, which provides a colour\u2011blind\u2011friendly, pastel look. The x\u2011axis shows the quality group, the y\u2011axis shows alcohol (% vol), and a custom legend clarifies which colour corresponds to which group. The overall goal is to answer the question: *Do high\u2011quality wines have significantly higher alcohol content than low\u2011quality wines?* The main insight a viewer can extract is whether the median, inter\u2011quartile range, and outliers differ noticeably between the two groups, indicating a relationship between quality and alcohol level.\ntransformation: This block prepares the data for visualisation. It first makes a copy of the input DataFrame to avoid mutating the original. The *quality* column is coerced to a numeric type, turning any non\u2011numeric entries into NaN. A new column *quality_group* is created and populated: rows with quality \u2264\u202f4 are labelled \"Low (<=4)\" and rows with quality \u2265\u202f7 are labelled \"High (>=7)\". All other rows (e.g., quality 5\u20116) are discarded by keeping only rows where *quality_group* is not NA. The result is a clean subset containing only the two groups of interest.\nvisualization: This section builds the visual output. A two\u2011colour **Set2** palette is defined and passed to `sns.boxplot`, which draws a box for each *quality_group* showing the distribution of *alcohol*. The box width and line thickness are tuned for readability. Axis labels are added for clarity. Custom legend handles are created with the same colours to explicitly label the groups. Finally, a descriptive title is set (wrapped to avoid overflow) and the Matplotlib figure object (`plt`) is returned so the caller can display or further modify the plot.",
+      "numeric_outputs": {},
+      "repair_attempts": 1,
+      "self_corrected": true,
+      "ground_truth": {
+        "test": "Welch two-sample t-test",
+        "mean_alcohol_high": 11.518,
+        "mean_alcohol_low": 10.2159,
+        "n_high": 217,
+        "n_low": 63,
+        "t_statistic": 9.7131,
+        "p_value": 0.0,
+        "significant_at_0.05": true
+      },
+      "expected_method": [
+        "t_test"
+      ],
+      "acceptable_methods": [
+        "t_test",
+        "welch_t_test",
+        "mann_whitney_u"
+      ],
+      "expected_chart": [
+        "box",
+        "violin",
+        "hist",
+        "none"
+      ],
+      "tolerance": 0.05,
+      "kind": "stat",
+      "error": null,
+      "raw": {
+        "chart_status": true
+      }
+    },
+    {
+      "id": "wine_q4",
+      "dataset": "wine_quality",
+      "question": "Visualise how alcohol content varies across every quality level, showing the spread within each level, not just the average.",
+      "declared_method": null,
+      "declared_chart": "violin",
+      "code": "import seaborn as sns\nimport pandas as pd\nimport matplotlib.pyplot as plt\nfrom matplotlib.lines import Line2D\n\n# solution plan\n# i. Convert quality to categorical (string) for proper ordering.\n# ii. Use a violin plot to display the full distribution (spread) of alcohol for each quality level.\n# iii. Apply a qualitative palette and add a custom legend mapping colors to quality levels.\n# iv. Ensure axis labels are clear and layout is tight.\n\ndef plot(data: pd.DataFrame):\n    # Ensure quality is treated as categorical for proper ordering\n    data['quality'] = data['quality'].astype(str)\n\n    # Create the violin plot to show distribution of alcohol per quality level\n    ax = sns.violinplot(\n        x='quality',\n        y='alcohol',\n        data=data,\n        inner='quartile',\n        palette='Set2',\n        cut=0\n    )\n\n    # Build a custom legend mapping each quality level to its color\n    unique_qualities = sorted(data['quality'].unique())\n    palette = sns.color_palette('Set2', n_colors=len(unique_qualities))\n    handles = [\n        Line2D(\n            [0], [0],\n            marker='o',\n            color='w',\n            label=f'Quality {q}',\n            markerfacecolor=palette[i],\n            markersize=10\n        )\n        for i, q in enumerate(unique_qualities)\n    ]\n    ax.legend(handles=handles, title='Quality Level')\n\n    # Axis labels and layout\n    ax.set_xlabel('Quality')\n    ax.set_ylabel('Alcohol (% vol)')\n    plt.tight_layout()\n    plt.title('Visualise how alcohol content varies across every quality level, showing the spread within each level, not just the average.', wrap=True)\n    return plt\n\nchart = plot(data)",
+      "executed": true,
+      "execution_error": null,
+      "stdout": "",
+      "artifact": "C:\\Users\\janha\\Downloads\\FYP\\Benchmark\\benchmark-fyp\\results\\artifacts\\lida\\wine_q4.png",
+      "final_answer": "accessibility: The chart produced by the `plot` function is a **violin plot** that visualises the distribution of the `alcohol` variable for each wine `quality` level. It uses Seaborn's qualitative **\"Set2\" palette**, giving each quality category a distinct, pastel\u2011ish hue. The violins display the full spread of the data, with an inner quartile marker that highlights the median and the 25th/75th percentiles. Axis labels (`Quality` on the x\u2011axis, `Alcohol (% vol)` on the y\u2011axis) and a concise title explain that the purpose is to show how alcohol content varies across quality levels, not just the average. A custom legend maps each colour to its corresponding quality level, making the plot easy to read for users with colour\u2011vision deficiencies. The main insight a viewer can draw is the relative shape, width, and central tendency of the alcohol distribution for each quality \u2013 e.g., higher\u2011quality wines may have a narrower, higher\u2011alcohol distribution, while lower\u2011quality wines show a broader spread.\ntransformation: Before visualising, the code **converts the `quality` column to a string** (categorical) type. This ensures that Seaborn treats each quality level as a distinct category and respects the natural ordering when plotting on the x\u2011axis, rather than interpreting the values as continuous numbers.\nvisualization: This block builds the visual representation:\n1. **`sns.violinplot`** creates a violin for each `quality` category, mapping `alcohol` values on the y\u2011axis. `inner='quartile'` adds markers for the median and quartiles, `palette='Set2'` supplies the colour scheme, and `cut=0` prevents the violins from extending beyond the data range.\n2. The code extracts the sorted unique quality levels and generates a matching colour palette.\n3. A list of **custom legend handles** (`Line2D` objects) is built so each colour is explicitly labelled as \"Quality X\".\n4. The legend is attached to the axes with a title.\n5. Axis labels are set, the layout is tightened to avoid clipping, and a descriptive title (wrapped) is added.\n6. Finally, the Matplotlib `plt` object is returned for further use or display.\nTogether these steps produce a clear, colour\u2011coded violin plot that communicates both central tendency and variability of alcohol content across wine quality levels.",
+      "numeric_outputs": {},
+      "repair_attempts": 0,
+      "self_corrected": false,
+      "ground_truth": {
+        "mean_alcohol_by_quality": {
+          "3": 9.955,
+          "4": 10.2651,
+          "5": 9.8997,
+          "6": 10.6295,
+          "7": 11.4659,
+          "8": 12.0944
+        },
+        "trend": "increasing above quality 5"
+      },
+      "expected_method": [
+        "groupby_aggregation",
+        "distribution_analysis"
+      ],
+      "acceptable_methods": [
+        "groupby_aggregation",
+        "distribution_analysis"
+      ],
+      "expected_chart": [
+        "box",
+        "violin",
+        "strip"
+      ],
+      "tolerance": 0.05,
+      "kind": "viz",
+      "error": null,
+      "raw": {
+        "chart_status": true
+      }
+    },
+    {
+      "id": "wine_q5",
+      "dataset": "wine_quality",
+      "question": "Are there outliers in residual sugar and total sulfur dioxide? Identify them and say whether they should be removed.",
+      "declared_method": null,
+      "declared_chart": "box",
+      "code": "import seaborn as sns\nimport pandas as pd\nimport matplotlib.pyplot as plt\nfrom matplotlib.patches import Patch\n\n# solution plan\n# i.  Melt the two relevant columns ('residual_sugar' and 'total_sulfur_dioxide') into a long format.\n# ii.  Use a seaborn boxplot to display distributions side\u2011by\u2011side, which will automatically show outlier points.\n# iii. Create a custom legend mapping each variable to its boxplot color.\ndef plot(data: pd.DataFrame):\n    # Prepare data: keep only the two columns of interest and reshape to long format\n    df_long = data[['residual_sugar', 'total_sulfur_dioxide']].melt(\n        var_name='variable', value_name='value'\n    )\n    \n    # Define a color palette for the two variables\n    palette = sns.color_palette('Set2', n_colors=2)\n    color_map = dict(zip(['residual_sugar', 'total_sulfur_dioxide'], palette))\n    \n    # Create the boxplot\n    ax = sns.boxplot(\n        x='variable',\n        y='value',\n        data=df_long,\n        palette=color_map,\n        showfliers=True,\n        linewidth=1.2\n    )\n    \n    # Customize legend with the same colors used in the boxplot\n    legend_handles = [\n        Patch(facecolor=color_map[var], edgecolor='black', label=var.replace('_', ' '))\n        for var in color_map\n    ]\n    ax.legend(handles=legend_handles, title='Variable', loc='upper right')\n    \n    # Improve axis labels\n    plt.xticks(rotation=0)\n    plt.xlabel('')\n    plt.ylabel('Value')\n    plt.title('Are there outliers in residual sugar and total sulfur dioxide? Identify them and say whether they should be removed.', wrap=True)\n    return plt\n\nchart = plot(data)",
+      "executed": true,
+      "execution_error": null,
+      "stdout": "",
+      "artifact": "C:\\Users\\janha\\Downloads\\FYP\\Benchmark\\benchmark-fyp\\results\\artifacts\\lida\\wine_q5.png",
+      "final_answer": "accessibility: The chart is a side\u2011by\u2011side boxplot that visualises the distributions of **residual_sugar** and **total_sulfur_dioxide**. Two pastel colours from Seaborn's **Set2** palette are assigned via *color_map* \u2013 the first colour to residual_sugar and the second to total_sulfur_dioxide. The *sns.boxplot* call draws a box for each variable, showing median, inter\u2011quartile range, whiskers, and outlier points (because *showfliers=True*). A custom legend built with *Patch* mirrors the colour\u2011to\u2011variable mapping, placed in the upper\u2011right. Axis labels are cleaned, the x\u2011axis tick labels are kept horizontal, and a descriptive title explains the purpose: to spot outliers and decide if they should be removed. The main insight a viewer gains is the presence (or absence) of points beyond the whiskers, i.e., potential outliers for each variable.\ntransformation: The transformation step selects the two columns of interest from the original DataFrame and reshapes them from wide to long format using *melt*. The resulting *df_long* has two columns: *variable* (holding the original column name) and *value* (the numeric measurement). This tidy format is required by Seaborn so that the boxplot can treat the variable names as categorical x\u2011axis values.\nvisualization: Here the actual visual element is created. *sns.boxplot* draws the boxes using the long\u2011format data, applies the custom colour map, displays outlier points, and sets a thicker line for visual clarity. The function then returns the Matplotlib *plt* object, allowing the caller to render the figure (e.g., with *plt.show()*) or further customise it.",
+      "numeric_outputs": {},
+      "repair_attempts": 1,
+      "self_corrected": true,
+      "ground_truth": {
+        "iqr_outliers_residual_sugar": 155,
+        "iqr_outliers_total_sulfur_dioxide": 55,
+        "max_residual_sugar": 15.5,
+        "max_total_sulfur_dioxide": 289.0,
+        "method": "1.5 x IQR rule"
+      },
+      "expected_method": [
+        "outlier_detection"
+      ],
+      "acceptable_methods": [
+        "outlier_detection",
+        "descriptive_statistics",
+        "distribution_analysis"
+      ],
+      "expected_chart": [
+        "box",
+        "hist",
+        "scatter"
+      ],
+      "tolerance": 0.05,
+      "kind": "mixed",
+      "error": null,
+      "raw": {
+        "chart_status": true
+      }
+    },
+    {
+      "id": "wine_q6",
+      "dataset": "wine_quality",
+      "question": "Build a model that predicts wine quality from its physicochemical properties. Report how well it performs and which features drive the prediction.",
+      "declared_method": null,
+      "declared_chart": "bar",
+      "code": "import seaborn as sns\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport numpy as np\nimport matplotlib.patches as mpatches\n\ndef plot(data: pd.DataFrame):\n    # Prepare features and target\n    X = data.drop(columns=['quality'])\n    y = data['quality']\n\n    # Simple train\u2011test split (20% test)\n    np.random.seed(42)\n    test_mask = np.random.rand(len(data)) < 0.2\n    X_train, X_test = X[~test_mask], X[test_mask]\n    y_train, y_test = y[~test_mask], y[test_mask]\n\n    # Baseline prediction: mean of training target\n    y_pred = np.full_like(y_test, fill_value=y_train.mean(), dtype=float)\n\n    # Performance metrics\n    rmse = np.sqrt(((y_test - y_pred) ** 2).mean())\n    ss_res = ((y_test - y_pred) ** 2).sum()\n    ss_tot = ((y_test - y_test.mean()) ** 2).sum()\n    r2 = 1 - ss_res / ss_tot if ss_tot != 0 else float('nan')\n\n    # Feature importance proxy: absolute correlation with target\n    corr_series = data.corr()['quality'].drop('quality')\n    feat_imp_df = pd.DataFrame({\n        'feature': corr_series.index,\n        'importance': corr_series.abs()\n    }).sort_values(by='importance', ascending=False)\n\n    # Plot feature importances\n    plt.figure(figsize=(8, 6))\n    sns.barplot(\n        x='importance',\n        y='feature',\n        data=feat_imp_df,\n        palette='viridis'\n    )\n    plt.xlabel('Importance (|Correlation|)')\n    plt.ylabel('Feature')\n    plt.tight_layout()\n\n    # Add legend with performance metrics\n    legend_text = f'RMSE: {rmse:.2f}\\\\nR\u00b2: {r2:.2f}'\n    patch = mpatches.Patch(color='none', label=legend_text)\n    plt.legend(handles=[patch], title='Model Performance', loc='lower right')\n\n    plt.title('Build a model that predicts wine quality from its physicochemical properties. Report how well it performs and which features drive the prediction.', wrap=True)\n    return plt\n\nchart = plot(data)",
+      "executed": false,
+      "execution_error": "{'message': \"Cannot perform reduction 'mean' with string dtype\", 'traceback': 'Traceback (most recent call last):\\n  File \"C:\\\\Users\\\\janha\\\\Downloads\\\\FYP\\\\Benchmark\\\\benchmark-fyp\\\\venvs\\\\lida\\\\Lib\\\\site-packages\\\\lida\\\\components\\\\executor.py\", line 156, in execute\\n    exec(code, ex_locals)\\n  File \"<string>\", line 54, in <module>\\n  File \"<string>\", line 19, in plot\\n  File \"C:\\\\Users\\\\janha\\\\Downloads\\\\FYP\\\\Benchmark\\\\benchmark-fyp\\\\venvs\\\\lida\\\\Lib\\\\site-packages\\\\pandas\\\\util\\\\_decorators.py\", line 336, in wrapper\\n    return func(*args, **kwargs)\\n           ^^^^^^^^^^^^^^^^^^^^^\\n  File \"C:\\\\Users\\\\janha\\\\Downloads\\\\FYP\\\\Benchmark\\\\benchmark-fyp\\\\venvs\\\\lida\\\\Lib\\\\site-packages\\\\pandas\\\\core\\\\series.py\", line 8113, in mean\\n    return NDFrame.mean(\\n           ^^^^^^^^^^^^^\\n  File \"C:\\\\Users\\\\janha\\\\Downloads\\\\FYP\\\\Benchmark\\\\benchmark-fyp\\\\venvs\\\\lida\\\\Lib\\\\site-packages\\\\pandas\\\\core\\\\generic.py\", line 11819, in mean\\n    return self._stat_function(\\n           ^^^^^^^^^^^^^^^^^^^^\\n  File \"C:\\\\Users\\\\janha\\\\Downloads\\\\FYP\\\\Benchmark\\\\benchmark-fyp\\\\venvs\\\\lida\\\\Lib\\\\site-packages\\\\pandas\\\\core\\\\generic.py\", line 11773, in _stat_function\\n    return self._reduce(\\n           ^^^^^^^^^^^^^\\n  File \"C:\\\\Users\\\\janha\\\\Downloads\\\\FYP\\\\Benchmark\\\\benchmark-fyp\\\\venvs\\\\lida\\\\Lib\\\\site-packages\\\\pandas\\\\core\\\\series.py\", line 7480, in _reduce\\n    result = delegate._reduce(name, skipna=skipna, **kwds)\\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n  File \"C:\\\\Users\\\\janha\\\\Downloads\\\\FYP\\\\Benchmark\\\\benchmark-fyp\\\\venvs\\\\lida\\\\Lib\\\\site-packages\\\\pandas\\\\core\\\\arrays\\\\string_.py\", line 968, in _reduce\\n    raise TypeError(f\"Cannot perform reduction \\'{name}\\' with string dtype\")\\nTypeError: Cannot perform reduction \\'mean\\' with string dtype\\n'}",
+      "stdout": "",
+      "artifact": null,
+      "final_answer": "accessibility: This section defines the visual appearance of the chart. A medium\u2011sized (8\u00d76 inches) figure is created and a horizontal bar plot is drawn with the `viridis` colour palette, which provides a perceptually uniform gradient. The x\u2011axis shows the absolute correlation (treated as feature importance) and the y\u2011axis lists the feature names. Labels, a tight layout, and a descriptive title make the chart self\u2011explanatory. A legend in the lower\u2011right corner displays the model\u2019s performance metrics (RMSE and R\u00b2) without adding a coloured patch, keeping the focus on the data.\ntransformation: Here the raw DataFrame is transformed for modelling. The target column `quality` is separated from the predictors. A reproducible 80/20 train\u2011test split is performed using a random mask. A naive baseline model predicts the mean quality of the training set for every test instance. RMSE and R\u00b2 are computed to quantify baseline performance. Feature importance is approximated by the absolute Pearson correlation of each predictor with the target, and the results are stored in `feat_imp_df` sorted from most to least important.\nvisualization: This block executes the step\u2011by\u2011step creation of the visualization. It starts a new figure, draws the bar plot using the pre\u2011computed `feat_imp_df`, adds axis labels, and applies a tight layout to avoid clipping. The previously prepared legend patch (containing RMSE and R\u00b2) is attached, and a wrapped title explains the modelling goal. Finally, the Matplotlib `plt` object is returned so the caller can display or further modify the chart.",
+      "numeric_outputs": {},
+      "repair_attempts": 1,
+      "self_corrected": false,
+      "ground_truth": {
+        "model": "OLS linear regression, all 11 predictors",
+        "r_squared_in_sample": 0.3606,
+        "coefficients": {
+          "fixed_acidity": 0.025,
+          "volatile_acidity": -1.0836,
+          "citric_acid": -0.1826,
+          "residual_sugar": 0.0163,
+          "chlorides": -1.8742,
+          "free_sulfur_dioxide": 0.0044,
+          "total_sulfur_dioxide": -0.0033,
+          "density": -17.8812,
+          "ph": -0.4137,
+          "sulphates": 0.9163,
+          "alcohol": 0.2762
+        },
+        "largest_abs_coefficient": "density"
+      },
+      "expected_method": [
+        "linear_regression"
+      ],
+      "acceptable_methods": [
+        "linear_regression",
+        "random_forest",
+        "gradient_boosting",
+        "ridge_regression",
+        "ordinal_regression"
+      ],
+      "expected_chart": [
+        "bar",
+        "scatter",
+        "none"
+      ],
+      "tolerance": 0.1,
+      "kind": "stat",
+      "error": null,
+      "raw": {
+        "chart_status": false
+      }
+    },
+    {
+      "id": "wine_q7",
+      "dataset": "wine_quality",
+      "question": "Is volatile acidity negatively associated with wine quality? Quantify the association and comment on whether it implies causation.",
+      "declared_method": null,
+      "declared_chart": "scatter",
+      "code": "import seaborn as sns\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\n# solution plan\n# i. Clean data, compute Pearson correlation, create scatter with hue, add regression line, annotate, and set legend.\n\ndef plot(data: pd.DataFrame):\n    # --- start of stub ---\n    df = data.copy()\n    df['volatile_acidity'] = pd.to_numeric(df['volatile_acidity'], errors='coerce')\n    df['quality'] = pd.to_numeric(df['quality'], errors='coerce')\n    df = df.dropna(subset=['volatile_acidity', 'quality'])\n\n    corr = df['volatile_acidity'].corr(df['quality'])\n\n    fig, ax = plt.subplots(figsize=(8, 6))\n\n    sns.scatterplot(\n        x='volatile_acidity',\n        y='quality',\n        hue='quality',\n        palette='viridis',\n        data=df,\n        ax=ax,\n        s=60,\n        edgecolor='black',\n        legend=False\n    )\n\n    sns.regplot(\n        x='volatile_acidity',\n        y='quality',\n        data=df,\n        scatter=False,\n        ax=ax,\n        color='red',\n        ci=None\n    )\n\n    ax.text(\n        0.05,\n        0.95,\n        f'Pearson r = {corr:.2f}\\\\n(negative association if r < 0)',\n        transform=ax.transAxes,\n        verticalalignment='top',\n        bbox=dict(boxstyle='round,pad\nchart = plot(data)",
+      "executed": false,
+      "execution_error": "{'message': 'unterminated string literal (detected at line 47) (<unknown>, line 47)', 'traceback': 'Traceback (most recent call last):\\n  File \"C:\\\\Users\\\\janha\\\\Downloads\\\\FYP\\\\Benchmark\\\\benchmark-fyp\\\\venvs\\\\lida\\\\Lib\\\\site-packages\\\\lida\\\\components\\\\executor.py\", line 154, in execute\\n    ex_locals = get_globals_dict(code, data)\\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n  File \"C:\\\\Users\\\\janha\\\\Downloads\\\\FYP\\\\Benchmark\\\\benchmark-fyp\\\\venvs\\\\lida\\\\Lib\\\\site-packages\\\\lida\\\\components\\\\executor.py\", line 53, in get_globals_dict\\n    tree = ast.parse(code_string)\\n           ^^^^^^^^^^^^^^^^^^^^^^\\n  File \"C:\\\\Program Files\\\\WindowsApps\\\\PythonSoftwareFoundation.Python.3.11_3.11.2544.0_x64__qbz5n2kfra8p0\\\\Lib\\\\ast.py\", line 50, in parse\\n    return compile(source, filename, mode, flags,\\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n  File \"<unknown>\", line 47\\n    bbox=dict(boxstyle=\\'round,pad\\n                       ^\\nSyntaxError: unterminated string literal (detected at line 47)\\n'}",
+      "stdout": "",
+      "artifact": null,
+      "final_answer": "accessibility: The chart is a scatter plot that maps `volatile_acidity` (x\u2011axis) to `quality` (y\u2011axis). Each point is coloured according to its quality value using the continuous **viridis** palette, which provides a perceptually\u2011uniform gradient from dark purple to yellow\u2011green. Points are drawn with a size of 60 and a black edge to improve legibility. A red linear regression line is over\u2011laid (scatter disabled) to show the overall trend. An annotation in the upper\u2011left corner displays the Pearson correlation coefficient, helping the viewer quickly assess the strength and direction of the relationship. The visual design therefore highlights a negative (or positive) association between acidity and quality, making the insight immediately apparent.\ntransformation: First the input DataFrame is duplicated to avoid mutating the original. The columns `volatile_acidity` and `quality` are forced to numeric type; any non\u2011numeric entries become NaN (`errors='coerce'`). Rows missing either of these values are then removed with `dropna`, ensuring that subsequent calculations work on clean data. Finally, the Pearson correlation between the two cleaned columns is computed and stored in `corr` for later annotation.\nvisualization: A Matplotlib figure and a single Axes object are created with a moderate size of 8\u202f\u00d7\u202f6 inches, providing enough space for the points, colour gradient and annotation. All subsequent Seaborn plotting functions receive this `ax` so that the entire visualization is built on the same canvas. By separating figure creation from the actual drawing steps, the code keeps the layout logic distinct from data transformation and styling.",
+      "numeric_outputs": {},
+      "repair_attempts": 1,
+      "self_corrected": false,
+      "ground_truth": {
+        "pearson_r": -0.3906,
+        "p_value": 0.0,
+        "direction": "negative",
+        "significant_at_0.05": true,
+        "implies_causation": false
+      },
+      "expected_method": [
+        "correlation"
+      ],
+      "acceptable_methods": [
+        "correlation",
+        "linear_regression",
+        "t_test"
+      ],
+      "expected_chart": [
+        "scatter",
+        "box",
+        "none"
+      ],
+      "tolerance": 0.03,
+      "kind": "stat",
+      "error": null,
+      "raw": {
+        "chart_status": false
+      }
+    },
+    {
+      "id": "wine_q8",
+      "dataset": "wine_quality",
+      "question": "Show the relationship between density and alcohol content, with a fitted trend line, and explain the pattern.",
+      "declared_method": null,
+      "declared_chart": "scatter",
+      "code": "import seaborn as sns\nimport pandas as pd\nimport matplotlib.pyplot as plt\n# \n\ndef plot(data: pd.DataFrame):\n    # Create figure and axis\n    fig, ax = plt.subplots(figsize=(8, 6))\n\n    # Scatter plot of density vs alcohol, colored by wine quality\n    sns.scatterplot(\n        data=data,\n        x='density',\n        y='alcohol',\n        hue='quality',\n        palette='viridis',\n        ax=ax,\n        legend='brief'\n    )\n\n    # Add a fitted trend line (linear regression)\n    sns.regplot(\n        data=data,\n        x='density',\n        y='alcohol',\n        scatter=False,\n        ax=ax,\n        color='red',\n        line_kws={'label': 'Trend line'}\n    )\n\n    # Configure legend to include both quality categories and the trend line\n    handles, labels = ax.get_legend_handles_labels()\n    # Ensure the trend line label appears in the legend\n    if 'Trend line' not in labels:\n        handles.append(ax.lines[-1])\n        labels.append('Trend line')\n    ax.legend(handles=handles, labels=labels, title='Quality', loc='best')\n\n    # Axis labels and title\n    ax.set_xlabel('Density')\n    ax.set_ylabel('Alcohol')\n    plt.title('Show the relationship between density and alcohol content, with a fitted trend line, and explain the pattern.', wrap=True)\n\n    # Add a textual explanation of the observed pattern (e.g., correlation)\n    corr = data['density'].corr(data['alcohol'])\n    ax.text(\n        0.05,\n        0.95,\n        f'Correlation (density \u2194 alcohol): {corr:.2f}',\n        transform=ax.transAxes,\n        verticalalignment='top',\n        fontsize=10,\n        bbox=dict(facecolor='white', alpha=0.6, edgecolor='none')\n    )\n\n    return plt\n\nchart = plot(data)",
+      "executed": true,
+      "execution_error": null,
+      "stdout": "",
+      "artifact": "C:\\Users\\janha\\Downloads\\FYP\\Benchmark\\benchmark-fyp\\results\\artifacts\\lida\\wine_q8.png",
+      "final_answer": "accessibility: The chart is an 8\u2011by\u20116\u2011inch scatter plot that maps wine density (x\u2011axis) against alcohol content (y\u2011axis). Each point is coloured by the wine's quality using the continuous 'viridis' palette, giving a gradient from low to high quality. A red linear\u2011regression trend line is overlaid to show the overall direction of the relationship. The legend combines the quality colour key and the trend\u2011line label. The title explains the purpose: to visualise the relationship between density and alcohol and to interpret the pattern. A small textbox in the upper\u2011left displays the Pearson correlation coefficient, summarising the strength and sign of the association.\ntransformation: Computes the Pearson correlation between the 'density' and 'alcohol' columns of the supplied DataFrame. This numeric summary (a value between \u20131 and\u202f1) quantifies the linear relationship and is later displayed on the plot.\nvisualization: Creates the figure and axis, draws a scatter plot of density vs. alcohol coloured by quality, adds a red linear\u2011regression line, builds a combined legend that includes the trend line, labels the axes, sets a descriptive title, inserts a textbox with the correlation value, and finally returns the Matplotlib pyplot object for display.",
+      "numeric_outputs": {},
+      "repair_attempts": 0,
+      "self_corrected": false,
+      "ground_truth": {
+        "pearson_r": -0.4962,
+        "direction": "negative",
+        "strength": "strong",
+        "explanation": "ethanol is less dense than water, so higher alcohol lowers overall density"
+      },
+      "expected_method": [
+        "correlation",
+        "linear_regression"
+      ],
+      "acceptable_methods": [
+        "correlation",
+        "linear_regression",
+        "scatter_analysis"
+      ],
+      "expected_chart": [
+        "scatter"
+      ],
+      "tolerance": 0.03,
+      "kind": "viz",
+      "error": null,
+      "raw": {
+        "chart_status": true
+      }
+    }
+  ]
+}
